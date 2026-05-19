@@ -205,6 +205,7 @@
   .modal-actions .btn{height:48px;font-size:15px}
   .mt-auto{margin-top:auto}
 </style>
+<base target="_blank">
 </head>
 <body>
 <div class="ambient"></div>
@@ -565,6 +566,7 @@ const App = {
     main.appendChild(screen);
     if(step.type === 'question') this.bindQuestion(step, screen);
     if(step.type === 'submit')   setTimeout(()=>{ if(STEPS[this.state.currentIdx].id==='submit') this.next(); }, 1800);
+    if(step.type === 'feedback')  setTimeout(()=>{ this.uploadToCloud(); }, 800);
   },
 
   tplWelcome(){
@@ -1011,6 +1013,21 @@ const App = {
         </div>
       </div>`;
   },
+
+  uploadToCloud(){
+    const a = this.state.answers;
+    const br = computeBranch(a);
+    const info = BRANCH_INFO[br];
+    const tags = computeTags(a);
+    const alert = computeClinicAlert(a, tags);
+    const filledCount = Object.keys(a).filter(k=>{
+      const v = a[k]; if(v == null) return false;
+      if(Array.isArray(v)) return v.length>0;
+      if(typeof v === 'object') return Object.keys(v).length>0;
+      return v !== '';
+    }).length;
+    uploadSurveyData(a, br, info ? info.name : '', computeAge(a.BIRTH), tags, alert, filledCount);
+  },
   contactConsultant(){ alert('已通知您的专属咨询师，将尽快与您联系。'); },
   viewSummary(){
     const a = this.state.answers;
@@ -1032,6 +1049,64 @@ const App = {
   exitConfirm(){ this.saveState(); this.closeExitModal(); alert('您的进度已保存，可随时回到本链接继续。'); },
 };
 document.addEventListener('DOMContentLoaded', ()=>App.init());
+</script>
+
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/1.1.0/cloudbase.full.js"></script>
+<script>
+// 腾讯云云开发数据上报
+const CLOUDBASE_UPLOADED_KEY = 'fhp_cloudbase_uploaded_v1';
+const ENV_ID = 'yuecheng-survey-d4fucklsf6b68aaf';
+const COLLECTION = 'survey_answers';
+
+async function initCloudBase() {
+  try {
+    if (typeof cloudbase === 'undefined') return null;
+    const app = cloudbase.init({ env: ENV_ID });
+    await app.auth().anonymousAuthProvider().signIn();
+    return app;
+  } catch(e) {
+    console.error('CloudBase init failed', e);
+    return null;
+  }
+}
+
+async function uploadSurveyData(answers, branch, branchName, age, tags, alertInfo, filledCount) {
+  try {
+    // 防重复上报：24小时内同一浏览器不再上报
+    const last = localStorage.getItem(CLOUDBASE_UPLOADED_KEY);
+    if (last) {
+      const hours = (Date.now() - parseInt(last)) / (1000 * 60 * 60);
+      if (hours < 24) {
+        console.log('CloudBase: already uploaded within 24h');
+        return; }
+    }
+    
+    const app = await initCloudBase();
+    if (!app) return;
+    
+    const db = app.database();
+    await db.collection(COLLECTION).add({
+      data: {
+        answers: answers,
+        branch: branch,
+        branchName: branchName,
+        age: age,
+        tags: tags,
+        alert: alertInfo,
+        filledCount: filledCount,
+        userAgent: navigator.userAgent,
+        screenWidth: window.innerWidth,
+        createdAt: new Date(),
+        timestamp: Date.now()
+      }
+    });
+    
+    localStorage.setItem(CLOUDBASE_UPLOADED_KEY, Date.now().toString());
+    console.log('CloudBase: upload success');
+  } catch(e) {
+    console.error('CloudBase upload failed', e);
+  }
+}
 </script>
 </body>
 </html>
