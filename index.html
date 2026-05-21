@@ -967,9 +967,15 @@ const App = {
           let arr = this.state.answers[q.field] ? [...this.state.answers[q.field]] : [];
           if(excV){
             if(v === excV){
-              arr = arr.includes(excV) ? [] : [excV];
+              const wasSelected = arr.includes(excV);
+              arr = wasSelected ? [] : [excV];
               this.state.answers[q.field] = arr;
-              this.saveState(); this.rerenderMulti(root); this.renderFooter(step); return;
+              this.saveState(); this.rerenderMulti(root); this.renderFooter(step);
+              // 用户选中（而非取消）排他选项时，自动进入下一题
+              if(!wasSelected){
+                setTimeout(()=>this.next(), 320);
+              }
+              return;
             }else{
               arr = arr.filter(x=>x !== excV);
             }
@@ -1115,8 +1121,14 @@ const App = {
       el.addEventListener('click', ()=>{
         const v = el.dataset.v;
         let arr = this.state.answers[subF] ? [...this.state.answers[subF]] : [];
+        let triggerNext = false;
         if(subExc){
-          if(v === subExc){ arr = arr.includes(subExc) ? [] : [subExc]; }
+          if(v === subExc){
+            const wasSelected = arr.includes(subExc);
+            arr = wasSelected ? [] : [subExc];
+            // 选中（而非取消）排他选项时，自动进入下一题
+            if(!wasSelected) triggerNext = true;
+          }
           else{
             arr = arr.filter(x=>x!==subExc);
             if(arr.includes(v)) arr = arr.filter(x=>x!==v);
@@ -1134,6 +1146,9 @@ const App = {
         const hint = root.querySelector('.multi-hint .count');
         if(hint) hint.textContent = arr.length;
         this.renderFooter(step);
+        if(triggerNext){
+          setTimeout(()=>this.next(), 320);
+        }
       });
     });
   },
@@ -1343,10 +1358,10 @@ document.addEventListener('DOMContentLoaded', ()=>App.init());
 
 <script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
 <script>
-// 腾讯云云开发数据上报
+// 腾讯云云开发数据上报（通过云函数 notify-new-survey 中转：写库 + 企业微信群通知）
 const CLOUDBASE_UPLOADED_KEY = 'fhp_cloudbase_uploaded_v1';
 const ENV_ID = 'yuecheng-survey-d4fucklsf6b68aaf';
-const COLLECTION = 'survey_answers';
+const CLOUD_FUNCTION = 'notify-new-survey';
 
 async function initCloudBase() {
   try {
@@ -1368,14 +1383,16 @@ async function uploadSurveyData(answers, branch, branchName, age, tags, alertInf
       const hours = (Date.now() - parseInt(last)) / (1000 * 60 * 60);
       if (hours < 24) {
         console.log('CloudBase: already uploaded within 24h');
-        return; }
+        return;
+      }
     }
-    
+
     const app = await initCloudBase();
     if (!app) return;
-    
-    const db = app.database();
-    await db.collection(COLLECTION).add({
+
+    // 调用云函数 notify-new-survey：云函数内部会写数据库 + 调用企业微信 webhook 发群通知
+    const result = await app.callFunction({
+      name: CLOUD_FUNCTION,
       data: {
         answers: answers,
         branch: branch,
@@ -1384,22 +1401,28 @@ async function uploadSurveyData(answers, branch, branchName, age, tags, alertInf
         tags: tags,
         alert: alertInfo,
         filledCount: filledCount,
+        contact: {
+          name: (answers && answers.NAME) || '',
+          phone: (answers && answers.PHONE) || '',
+          city: (answers && answers.CITY) || ''
+        },
         userAgent: navigator.userAgent,
         screenWidth: window.innerWidth,
-        createdAt: new Date(),
         timestamp: Date.now()
       }
     });
-    
+
+    const ret = (result && result.result) || {};
+    console.log('Survey: upload + notify success', ret);
+
     localStorage.setItem(CLOUDBASE_UPLOADED_KEY, Date.now().toString());
     // 本地用户已完成 +1（下次访问欢迎页时显示+1）
     try{
       const cnt = parseInt(localStorage.getItem('fhp_user_submitted') || '0', 10);
       localStorage.setItem('fhp_user_submitted', String((isNaN(cnt)?0:cnt) + 1));
     }catch(e){}
-    console.log('CloudBase: upload success');
   } catch(e) {
-    console.error('CloudBase upload failed', e);
+    console.error('Cloud function call failed', e);
   }
 }
 </script>
