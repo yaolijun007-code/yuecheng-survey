@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#F7F5F2">
 <meta name="format-detection" content="telephone=no">
-<title>抗衰与长寿管理中心 · 精准健康</title>
+<title>抗衰与长寿管理中心 · 首诊评估</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   :root{
@@ -62,59 +62,35 @@
   .body-sm{font-size:13px;line-height:1.6;color:var(--t3)}
   .micro{font-size:11px;letter-spacing:.6px;color:var(--t3)}
   .accent{color:var(--klein)}
-  .welcome{justify-content:space-between;padding-top:20px}
-  .welcome .brand{display:flex;flex-direction:column;align-items:center;margin-top:8px}
-  .hero-illustration{width:100%;max-width:240px;height:auto;display:block;margin:0 auto 14px;filter:drop-shadow(0 4px 16px rgba(43,95,117,.08))}
-  .hero-illustration svg{width:100%;height:auto;display:block}
+  .welcome{justify-content:space-between;padding-top:24px}
+  .welcome .brand{display:flex;flex-direction:column;align-items:center;margin-top:32px}
   .brand-mark{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--klein) 0%,var(--klein-light) 100%);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-blue);margin-bottom:24px;position:relative}
   .brand-mark::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 50%)}
   .brand-mark svg{width:32px;height:32px;color:#fff;position:relative;z-index:1}
   .brand-name{font-size:13px;color:var(--t2);letter-spacing:2px;font-weight:400}
   .brand-name .center{color:var(--klein);font-weight:500}
-  .welcome-hero{margin-top:32px}
-  .welcome-hero .title-cn{font-size:36px;line-height:1.15;font-weight:600;letter-spacing:-.8px;color:var(--t1);margin-bottom:10px}
+  .welcome-hero{margin-top:60px}
+  .welcome-hero .title-cn{font-size:38px;line-height:1.15;font-weight:600;letter-spacing:-.8px;color:var(--t1);margin-bottom:10px}
   .welcome-hero .title-cn .accent{background:linear-gradient(135deg,var(--klein) 0%,var(--klein-light) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .welcome-hero .title-en{font-size:13px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;font-weight:300;margin-top:14px}
-  .welcome-hero .subtitle{margin-top:20px;font-size:16px;line-height:1.7;color:var(--t2);max-width:320px}
-  .social-proof{display:flex;align-items:center;gap:10px;margin-top:18px;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-  .social-proof .avatars{display:flex;padding-left:8px}
-  .social-proof .avatars .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--klein-light),var(--klein-deep));border:2px solid var(--card);margin-left:-10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:600}
-  .social-proof p{margin:0;font-size:12px;color:var(--t2);line-height:1.5}
-  .value-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-  .value-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--klein-glow);border:1px solid var(--line-strong);font-size:12px;color:var(--klein);font-weight:500}
-  .value-tag svg{width:14px;height:14px}
-  @media (max-height:700px){
-    .welcome{padding-top:14px}
-    .welcome .brand{margin-top:4px}
-    .hero-illustration{max-width:180px;margin-bottom:8px}
-    .welcome-hero{margin-top:20px}
-    .welcome-hero .title-cn{font-size:30px}
-    .welcome-hero .subtitle{margin-top:14px;font-size:15px;line-height:1.6}
-  }
-  @media (max-height:600px){
-    .hero-illustration{max-width:140px;margin-bottom:4px}
-    .welcome-hero{margin-top:12px}
-    .welcome-hero .title-cn{font-size:26px}
-    .welcome-hero .title-en{margin-top:8px}
-    .welcome-hero .subtitle{margin-top:10px;font-size:14px}
-  }
-  .meta-row{display:flex;gap:0;margin-top:28px;background:var(--card);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 4px}
+  .welcome-hero .subtitle{margin-top:28px;font-size:16px;line-height:1.7;color:var(--t2);max-width:300px}
+  .meta-row{display:flex;gap:0;margin-top:36px;background:var(--card);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 4px}
   .meta-item{flex:1;text-align:center;position:relative}
   .meta-item+.meta-item::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:1px;background:var(--line)}
   .meta-item .num-val{font-size:22px;font-weight:600;color:var(--t1);letter-spacing:-.3px}
   .meta-item .num-val .unit{font-size:12px;color:var(--t3);font-weight:400;margin-left:2px}
   .meta-item .lbl{font-size:11px;color:var(--t3);margin-top:4px;letter-spacing:.5px}
-  .intro-list{margin-top:28px;display:flex;flex-direction:column;gap:14px}
-  .intro-step{display:flex;gap:14px;align-items:flex-start;padding:16px 16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-md)}
-  .intro-step .step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--klein-glow);color:var(--klein);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;border:1px solid var(--line-strong)}
-  .intro-step .step-content h4{font-size:15px;font-weight:600;color:var(--t1);margin:4px 0 4px}
+  .intro-list{margin-top:36px;display:flex;flex-direction:column;gap:18px}
+  .intro-step{display:flex;gap:16px;align-items:flex-start;padding:18px 18px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-md)}
+  .intro-step .step-num{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--klein-glow);color:var(--klein);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;border:1px solid var(--line-strong)}
+  .intro-step .step-content h4{font-size:15px;font-weight:600;color:var(--t1);margin:6px 0 4px}
   .intro-step .step-content p{font-size:13px;color:var(--t3);margin:0;line-height:1.5}
-  .privacy-card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;margin-top:20px}
-  .privacy-list{display:flex;flex-direction:column;gap:14px;margin-top:8px}
-  .privacy-item{display:flex;gap:12px;align-items:flex-start}
+  .privacy-card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;margin-top:24px}
+  .privacy-list{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+  .privacy-item{display:flex;gap:14px;align-items:flex-start}
   .privacy-icon{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--klein-glow),var(--klein-glow-sm));display:flex;align-items:center;justify-content:center;color:var(--klein)}
   .privacy-icon svg{width:16px;height:16px}
-  .privacy-item h4{font-size:14px;font-weight:600;color:var(--t1);margin:4px 0 2px}
+  .privacy-item h4{font-size:14px;font-weight:600;color:var(--t1);margin:6px 0 2px}
   .privacy-item p{font-size:12.5px;color:var(--t3);margin:0;line-height:1.55}
   .q-head{margin-bottom:24px}
   .q-title{font-size:23px;line-height:1.35;font-weight:600;color:var(--t1);letter-spacing:-.2px;margin-top:14px}
@@ -138,23 +114,6 @@
   .num-input-field .lbl{font-size:14px;color:var(--t2);min-width:48px}
   .num-input-field input{flex:1;border:none;outline:none;background:transparent;font-size:22px;font-weight:500;color:var(--t1);font-variant-numeric:tabular-nums;letter-spacing:.5px;text-align:right;padding:0;min-width:0}
   .num-input-field .unit{font-size:14px;color:var(--t3);min-width:28px;text-align:left}
-  .contact-group{display:flex;flex-direction:column;gap:14px;margin-top:8px}
-  .contact-field{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 18px;transition:border-color .25s var(--ease);position:relative}
-  .contact-field:focus-within{border-color:var(--klein)}
-  .contact-field .lbl-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t3);margin-bottom:4px;letter-spacing:.3px}
-  .contact-field .lbl-row .required{color:var(--klein);font-size:13px;line-height:1}
-  .contact-field .lbl-row .optional{color:var(--t4);font-size:10.5px;padding:2px 8px;border-radius:99px;background:var(--bg-soft)}
-  .contact-field input{width:100%;border:none;outline:none;background:transparent;font-size:17px;color:var(--t1);padding:2px 0;font-family:inherit}
-  .contact-field input::placeholder{color:var(--t4);font-weight:300}
-  .contact-tip{margin-top:18px;padding:14px 16px;background:var(--klein-glow-sm);border-radius:14px;border:1px solid var(--line-strong);display:flex;align-items:flex-start;gap:10px}
-  .contact-tip svg{flex-shrink:0;width:16px;height:16px;color:var(--klein);margin-top:1px}
-  .contact-tip p{margin:0;font-size:12.5px;color:var(--t2);line-height:1.55}
-  .contact-field.error{border-color:#E07B5C}
-  .contact-field.error .lbl-row{color:#E07B5C}
-  .intimacy-note{margin-top:24px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-md);padding:20px 22px}
-  .intimacy-note p{margin:0;font-size:14.5px;line-height:1.7;color:var(--t2)}
-  .intimacy-note p+p{margin-top:10px}
-  .intimacy-note .strong{color:var(--t1);font-weight:500}
   .wheel-picker{margin-top:8px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:14px 0;position:relative;display:flex;gap:0;overflow:hidden}
   .wheel-picker::before,.wheel-picker::after{content:"";position:absolute;left:0;right:0;height:62px;pointer-events:none;z-index:2}
   .wheel-picker::before{top:0;background:linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,0) 100%)}
@@ -245,21 +204,6 @@
   .modal-actions{display:flex;gap:10px}
   .modal-actions .btn{height:48px;font-size:15px}
   .mt-auto{margin-top:auto}
-  .report-card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-md);padding:20px;margin-top:16px}
-  .report-card h4{font-size:15px;font-weight:600;color:var(--t1);margin:0 0 4px}
-  .report-card p{font-size:13px;color:var(--t3);margin:0 0 14px;line-height:1.5}
-  .report-options{display:flex;flex-wrap:wrap;gap:8px}
-  .report-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:var(--bg-soft);border:1.5px solid var(--line);font-size:13px;color:var(--t2);cursor:pointer;transition:all .2s var(--ease)}
-  .report-chip.selected{background:var(--klein);border-color:var(--klein);color:#fff;box-shadow:var(--sh-blue)}
-  .report-chip.selected svg{color:#fff}
-  .report-chip svg{width:14px;height:14px;color:var(--t3)}
-  .copy-row{display:flex;gap:10px;align-items:center;margin-top:16px;padding:14px 16px;background:var(--bg-soft);border-radius:14px;border:1px solid var(--line)}
-  .copy-row .wx-id{flex:1;font-size:15px;font-weight:600;color:var(--klein);letter-spacing:.5px}
-  .copy-btn{flex-shrink:0;padding:8px 16px;border-radius:10px;background:var(--klein);color:#fff;font-size:13px;font-weight:500}
-  .share-row{display:flex;gap:10px;margin-top:14px}
-  .share-btn{flex:1;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:500;background:var(--card);border:1.5px solid var(--line);color:var(--t2);transition:all .2s var(--ease)}
-  .share-btn:active{transform:scale(.98);background:var(--klein-glow)}
-  .channel-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--gold-glow);border:1px solid rgba(196,168,130,.2);font-size:11px;color:var(--gold);font-weight:500;margin-bottom:16px}
 </style>
 </head>
 <body>
@@ -270,7 +214,7 @@
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
     </button>
     <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-label num" id="progressLabel">0 / 24</div>
+    <div class="progress-label num" id="progressLabel">0 / 22</div>
   </header>
   <main class="main" id="main"></main>
   <footer class="footer hide" id="footer">
@@ -292,23 +236,13 @@
   </div>
 </div>
 <script>
-/* ========== 全渠道参数追踪 ========== */
-const CHANNEL = {
-  utm_source:   new URLSearchParams(location.search).get('utm_source')   || 'organic',
-  utm_medium:   new URLSearchParams(location.search).get('utm_medium')   || '',
-  utm_campaign: new URLSearchParams(location.search).get('utm_campaign') || '',
-  channel:      new URLSearchParams(location.search).get('channel')      || 'direct',
-  referrer:     document.referrer || ''
-};
-
 const STEPS=[
   {id:'welcome',type:'welcome',showTopbar:false,showFooter:false},
-  {id:'privacy',type:'privacy',showTopbar:false,showFooter:true,btnText:'我已了解，开始评估',btnMeta:'端到端加密 · 仅健康管理师与医师查阅'},
-  {id:'A0',type:'contact',section:'A 段·基础信息',showTopbar:true,showFooter:true,btnText:'继续填写',btnMeta:'用于推送您的个性化评估摘要'},
-  {id:'A0b',type:'report-upload',section:'A 段·基础信息',showTopbar:true,showFooter:true,btnText:'继续',btnMeta:'选填 · 有助于更精准解读'},
+  {id:'intro',type:'intro',showTopbar:false,showFooter:true,btnText:'开始评估',btnMeta:'21–22 题 · 约 6–8 分钟'},
+  {id:'privacy',type:'privacy',showTopbar:false,showFooter:true,btnText:'我已知晓并同意',btnMeta:'信息加密存储 · 仅供本中心医师查阅'},
   {id:'A1',type:'question',section:'A 段·基础信息',question:{field:'BIRTH',type:'date',title:'您的出生年月',desc:'用于精确计算生理年龄分期，是评估的核心依据之一'}},
   {id:'A2',type:'question',section:'A 段·基础信息',question:{field:'MENO',type:'single',title:'您目前的月经与生育状态',desc:'如同时符合多项，请优先选择特殊状态',options:[{v:'④',label:'怀孕中'},{v:'⑤',label:'产后 2 年内'},{v:'⑥',label:'备孕中'},{v:'⑦',label:'哺乳期暂时停经'},{v:'①',label:'月经规律'},{v:'②',label:'月经不规律但未停经'},{v:'③',label:'已停经 ≥ 1 年'}]}},
-  {id:'A3',type:'question',section:'A 段·基础信息',question:{field:'HW',type:'number-dual',title:'您的身高与体重',desc:'用于计算 BMI 并核对体检数据',fields:[{key:'HT',label:'身高',unit:'cm',min:130,max:200,placeholder:'162'},{key:'WT',label:'体重',unit:'kg',min:30,max:150,placeholder:'52'}]}},
+  {id:'A3',type:'question',section:'A 段·基础信息',question:{field:'HW',type:'number-dual',title:'您的身高与体重',desc:'用于计算 BMI 并核对体检报告数据',fields:[{key:'HT',label:'身高',unit:'cm',min:130,max:200,placeholder:'162'},{key:'WT',label:'体重',unit:'kg',min:30,max:150,placeholder:'52'}]}},
   {id:'A4',type:'question',section:'A 段·基础信息',question:{field:'WT3Y',type:'single',title:'与 3 年前相比，您的体重变化',options:[{v:'①',label:'减轻 3kg 以上'},{v:'②',label:'基本不变'},{v:'③',label:'增加 3–5kg'},{v:'④',label:'增加 5–10kg'},{v:'⑤',label:'增加 10kg 以上'}]}},
   {id:'B1',type:'question',section:'B 段·主观觉察',question:{field:'LOOK',type:'scale',title:'您觉得自己目前看起来比实际年龄……',desc:'主观衰老感是国际衰老研究公认的健康寿命预测因子',options:[{v:'①',label:'年轻 5 岁以上'},{v:'②',label:'年轻 3–5 岁'},{v:'③',label:'年轻 1–3 岁'},{v:'④',label:'相符'},{v:'⑤',label:'老 1–3 岁'},{v:'⑥',label:'老 3–5 岁'},{v:'⑦',label:'老 5 岁以上'}]}},
   {id:'B2',type:'question',section:'B 段·主观觉察',question:{field:'CHG5Y',type:'multi',title:'与 5 年前相比，您身体最明显的变化',desc:'请选择 1–3 项最显著的变化',maxSelect:3,exclusiveValue:'⑩',options:[{v:'①',label:'精力下降'},{v:'②',label:'睡眠变差'},{v:'③',label:'皮肤变化（暗沉/松弛/皱纹/色斑）'},{v:'④',label:'体重增加且难减'},{v:'⑤',label:'性欲降低'},{v:'⑥',label:'月经变化'},{v:'⑦',label:'情绪波动'},{v:'⑧',label:'记忆力下降'},{v:'⑨',label:'关节不适'},{v:'⑩',label:'没有明显变化'}]}},
@@ -319,7 +253,6 @@ const STEPS=[
   {id:'D2',type:'question',section:'D 段·六维快筛',question:{field:'RH',type:'multi',title:'激素与生殖',desc:'近半年您出现过哪些？',maxSelect:7,exclusiveValue:'⑧',dynamicHide:(a)=>['④','⑦','③'].includes(a.MENO)?['①','②','③']:[],options:[{v:'①',label:'月经周期变化'},{v:'②',label:'经量异常'},{v:'③',label:'经前症状加重'},{v:'④',label:'潮热或夜汗'},{v:'⑤',label:'阴道干涩或性交不适'},{v:'⑥',label:'性欲减退'},{v:'⑦',label:'头发变细或脱发增多'},{v:'⑧',label:'都没有'}]}},
   {id:'D3',type:'question',section:'D 段·六维快筛',question:{field:'GUT',type:'multi',title:'肠道与免疫',desc:'近半年您出现过哪些？',maxSelect:7,exclusiveValue:'⑦',options:[{v:'①',label:'便秘或腹泻（每周 ≥ 2 次）'},{v:'②',label:'腹胀腹气频繁'},{v:'③',label:'食物耐受变差（乳制品/麸质/某些蔬果）'},{v:'④',label:'易感冒（每年 ≥ 3 次）'},{v:'⑤',label:'过敏反复（鼻炎/皮疹/食物）'},{v:'⑥',label:'口腔溃疡反复'},{v:'⑦',label:'都没有'}]}},
   {id:'D4',type:'question',section:'D 段·六维快筛',question:{field:'BR',type:'multi',title:'神经与肌骨',desc:'近半年您出现过哪些？',maxSelect:7,exclusiveValue:'⑦',options:[{v:'①',label:'入睡困难或夜间易醒（每周 ≥ 3 天）'},{v:'②',label:'记忆或专注下降'},{v:'③',label:'情绪低落或易怒'},{v:'④',label:'关节响或晨僵'},{v:'⑤',label:'肌肉松弛感或上臂赘肉增多'},{v:'⑥',label:'平衡感下降或腰背疼'},{v:'⑦',label:'都没有'}]}},
-  {id:'intimacy-intro',type:'intimacy-intro',showTopbar:true,showFooter:true,btnText:'我已了解 · 继续',btnMeta:'任何题目都可选「不愿回答」或「都没有」'},
   {id:'D5',type:'question',section:'D 段·六维快筛',question:{field:'VAG',type:'multi',title:'私密健康状况',desc:'近 1 年内您出现过哪些？最多 3 项',maxSelect:3,exclusiveValue:'⑦',options:[{v:'①',label:'反复阴道炎或外阴炎（≥ 2 次/年）'},{v:'②',label:'异常分泌物（颜色/气味/量异常）'},{v:'③',label:'外阴瘙痒或灼热感'},{v:'④',label:'反复尿路感染（≥ 2 次/年）'},{v:'⑤',label:'同房后不适（疼痛/出血/灼热）'},{v:'⑥',label:'因妇科症状使用过抗生素或抗真菌药'},{v:'⑦',label:'都没有'}]}},
   {id:'branch-transition',type:'branch-transition'},
   {id:'B1.1',type:'question',section:'B1 育龄期评估',question:{field:'B1_PLAN',type:'single',title:'您目前对生育的规划',options:[{v:'①',label:'计划 1 年内备孕'},{v:'②',label:'计划 1–3 年内备孕'},{v:'③',label:'3 年以上再考虑'},{v:'④',label:'暂不考虑'},{v:'⑤',label:'不打算生育'}]}},
@@ -329,7 +262,7 @@ const STEPS=[
   {id:'B1.4b',type:'question',section:'B1 育龄期评估',showIf:(a)=>a.B1_OVA==='①',question:{field:'B1_OVA_R',type:'single',title:'您的检测结果是否提示卵巢储备下降？',options:[{v:'①',label:'是，明显下降'},{v:'②',label:'是，临界值'},{v:'③',label:'否，正常'},{v:'④',label:'当时正常但现在不确定'}]}},
   {id:'B1.5',type:'question',section:'B1 育龄期评估',question:{field:'B1_FAM',type:'multi',title:'您母亲或姐妹的绝经年龄与妇科风险',maxSelect:5,exclusiveValue:'⑦',options:[{v:'①',label:'< 45 岁绝经'},{v:'②',label:'45–50 岁绝经'},{v:'③',label:'50–55 岁绝经'},{v:'④',label:'> 55 岁绝经'},{v:'⑤',label:'有姐妹卵巢早衰史'},{v:'⑥',label:'自身免疫病家族史'},{v:'⑦',label:'不清楚'}]}},
   {id:'B1.6',type:'question',section:'B1 育龄期评估',question:{field:'B1_SKIN',type:'multi',title:'近 2 年您的皮肤变化',desc:'最多选择 2 项',maxSelect:2,exclusiveValue:'⑥',options:[{v:'①',label:'暗沉、气色变差'},{v:'②',label:'出现细纹（眼周/法令纹）'},{v:'③',label:'毛孔变粗、出油变多'},{v:'④',label:'弹性下降'},{v:'⑤',label:'痘痘或痘印反复'},{v:'⑥',label:'没有明显变化'}]}},
-  {id:'B1.7',type:'question',section:'B1 育龄期评估',question:{field:'B1_SEX',type:'scale',title:'您目前的性生活满意度',desc:'本题可选「不愿回答」',options:[{v:'①',label:'非常满意'},{v:'②',label:'满意'},{v:'③',label:'一般'},{v:'④',label:'不太满意'},{v:'⑤',label:'不满意（含频次过低）'},{v:'⑥',label:'不愿回答'}]}},
+  {id:'B1.7',type:'question',section:'B1 育龄期评估',question:{field:'B1_SEX',type:'scale',title:'您目前的性生活满意度',options:[{v:'①',label:'非常满意'},{v:'②',label:'满意'},{v:'③',label:'一般'},{v:'④',label:'不太满意'},{v:'⑤',label:'不满意（含频次过低）'}]}},
   {id:'B1.8',type:'question',section:'B1 育龄期评估',question:{field:'B1_GUT_H',type:'multi',title:'您的肠道与抗生素相关史',desc:'最多 3 项',maxSelect:3,exclusiveValue:'⑦',options:[{v:'①',label:'反复肠易激或慢性腹泻'},{v:'②',label:'近 2 年使用过 ≥ 3 次抗生素疗程'},{v:'③',label:'长期或反复使用抗酸药（PPI/H2RA）'},{v:'④',label:'饮食偏好高糖或精加工食品'},{v:'⑤',label:'长期服用益生菌或益生元'},{v:'⑥',label:'经常摄入发酵食物（酸奶/泡菜/纳豆等）'},{v:'⑦',label:'都没有'}]}},
   {id:'B2.1',type:'question',section:'B2 围产期评估',question:{field:'B2_STAGE',type:'single',title:'您目前所处的阶段',options:[{v:'①',label:'孕中（孕 12 周后）'},{v:'②',label:'产后 0–3 个月'},{v:'③',label:'产后 3–6 个月'},{v:'④',label:'产后 6–12 个月'},{v:'⑤',label:'产后 12–24 个月'}]}},
   {id:'B2.2',type:'question',section:'B2 围产期评估',skipIf:(a)=>a.B2_STAGE==='①',skipValue:'⑤',question:{field:'B2_DELIV',type:'single',title:'您本胎的分娩方式',options:[{v:'①',label:'顺产'},{v:'②',label:'顺产侧切'},{v:'③',label:'剖宫产'},{v:'④',label:'顺转剖'},{v:'⑤',label:'尚未分娩'}]}},
@@ -373,16 +306,7 @@ const STEPS=[
   {id:'feedback',type:'feedback',showTopbar:false,showFooter:false}
 ];
 
-const STORAGE_KEY = 'fhp_universal_v1';
-const REPORT_CHIP_OPTIONS = [
-  {v:'blood', label:'血常规'},
-  {v:'hormone6', label:'性激素六项'},
-  {v:'amh', label:'AMH'},
-  {v:'thyroid', label:'甲状腺功能'},
-  {v:'gut', label:'肠道菌群检测'},
-  {v:'bmd', label:'骨密度 DXA'},
-  {v:'other', label:'其他体检报告'}
-];
+const STORAGE_KEY = 'fhp_intake_v1';
 
 // 建立 id → idx 索引
 const STEP_IDX = {};
@@ -405,10 +329,7 @@ function computeBranch(answers){
 }
 function computeAge(birth){
   if(!birth || !birth.y) return 35;
-  const now = new Date();
-  let age = now.getFullYear() - birth.y;
-  if(birth.m && (now.getMonth()+1) < birth.m) age--;
-  return age;
+  return new Date().getFullYear() - birth.y;
 }
 const BRANCH_INFO = {
   B1:{name:'育龄期评估',  en:'REPRODUCTIVE PHASE',     desc:'我们将了解您的卵巢储备、月经特征与备孕状态'},
@@ -424,33 +345,33 @@ function computeTags(a){
   const tags = [];
   const T = (level, code, name) => tags.push({level, code, name});
   // S 级
-  if(Array.isArray(a.B6_RISK) && a.B6_RISK.some(v=>v!=='⑦')) T('S','POI_HIGH','建议优先评估卵巢功能');
-  if(Array.isArray(a.B6_TEST) && a.B6_TEST.includes('⑦') && Array.isArray(a.B6_PAT) && a.B6_PAT.length>0) T('S','POI_UNDX','建议完善卵巢功能检测');
+  if(Array.isArray(a.B6_RISK) && a.B6_RISK.some(v=>v!=='⑦')) T('S','POI_HIGH','卵巢早衰高危');
+  if(Array.isArray(a.B6_TEST) && a.B6_TEST.includes('⑦') && Array.isArray(a.B6_PAT) && a.B6_PAT.length>0) T('S','POI_UNDX','卵巢早衰未诊断');
   if(Array.isArray(a.B6_SYM) && a.B6_SYM.filter(v=>v!=='⑧').length>=3) T('S','POI_SYM','卵巢早衰症候群');
-  if(a.B6_FERT==='①') T('S','POI_FERT','生育时间窗评估紧迫');
-  if(['①','②'].includes(a.B2_MOOD)) T('S','PPD_RISK','建议关注产后情绪状态');
+  if(a.B6_FERT==='①') T('S','POI_FERT','卵巢早衰生育紧迫');
+  if(['①','②'].includes(a.B2_MOOD)) T('S','PPD_RISK','产后抑郁风险');
   if(Array.isArray(a.B5_GSM)){
     const cnt = a.B5_GSM.filter(v=>v!=='⑧').length;
-    if(cnt>=3 || a.B5_GSM.includes('⑦')) T('S','GSM_UNDX','建议评估泌尿生殖健康');
+    if(cnt>=3 || a.B5_GSM.includes('⑦')) T('S','GSM_UNDX','绝经后 GSM 未就医');
   }
   if(a.B1_OVA==='①' && ['①','②'].includes(a.B1_OVA_R)) T('S','OVA_LOW_KNOWN','已知卵巢储备下降');
-  if(a.B1_OVA==='③') T('S','OVA_CONV','卵巢储备评估窗口期');
-  if(a.B5_BMD==='④') T('S','BMD_CONV','骨密度评估窗口期');
+  if(a.B1_OVA==='③') T('S','OVA_CONV','卵巢储备转化窗口');
+  if(a.B5_BMD==='④') T('S','BMD_CONV','骨密度转化窗口');
   if(Array.isArray(a.B3_HIST) && a.B3_HIST.filter(v=>v!=='⑦').length>=3) T('S','HIGH_SPEND','高抗衰投入意愿');
   // 高级
-  if(['④','⑤'].includes(a.B4_HOT)) T('high','VASOMOTOR_SEV','围绝经期血管舒缩症状显著');
-  if(Array.isArray(a.B2_PELV) && a.B2_PELV.filter(v=>!['⑤','⑥'].includes(v)).length>=2) T('high','PELV_HIGH','骨盆底功能需关注');
-  if(Array.isArray(a.B2_VAG) && (a.B2_VAG.includes('①')||a.B2_VAG.includes('②'))) T('high','PERI_VAG_INF','围产期阴道感染需关注');
-  if(['②','③','④'].includes(a.B4_HRT)) T('high','HRT_EDU','HRT 认知教育窗口');
+  if(['④','⑤'].includes(a.B4_HOT)) T('high','VASOMOTOR_SEV','围绝经期重症');
+  if(Array.isArray(a.B2_PELV) && a.B2_PELV.filter(v=>!['⑤','⑥'].includes(v)).length>=2) T('high','PELV_HIGH','骨盆底重症候群');
+  if(Array.isArray(a.B2_VAG) && (a.B2_VAG.includes('①')||a.B2_VAG.includes('②'))) T('high','PERI_VAG_INF','围产期阴道感染');
+  if(['②','③','④'].includes(a.B4_HRT)) T('high','HRT_EDU','HRT 教育窗口');
   if((Array.isArray(a.B4_SEX) && a.B4_SEX.filter(v=>!['⑥','⑦'].includes(v)).length>=3) ||
-     (Array.isArray(a.B4_GSM) && a.B4_GSM.filter(v=>v!=='⑦').length>=3)) T('high','GSM_HIGH','泌尿生殖健康需关注');
-  if(Array.isArray(a.B5_COG) && a.B5_COG.filter(v=>v!=='⑥').length>=3) T('high','COG_RISK','认知功能需关注');
-  if(Array.isArray(a.B5_SARC) && a.B5_SARC.filter(v=>v!=='⑥').length>=3) T('high','SARC_RISK','肌少症筛查建议');
-  if(Array.isArray(a.B1_FAM) && (a.B1_FAM.includes('①')||a.B1_FAM.includes('⑤'))) T('high','EARLY_MENO_FAM','早绝经家族史');
+     (Array.isArray(a.B4_GSM) && a.B4_GSM.filter(v=>v!=='⑦').length>=3)) T('high','GSM_HIGH','GSM 重症');
+  if(Array.isArray(a.B5_COG) && a.B5_COG.filter(v=>v!=='⑥').length>=3) T('high','COG_RISK','认知减退风险');
+  if(Array.isArray(a.B5_SARC) && a.B5_SARC.filter(v=>v!=='⑥').length>=3) T('high','SARC_RISK','肌少症风险');
+  if(Array.isArray(a.B1_FAM) && (a.B1_FAM.includes('①')||a.B1_FAM.includes('⑤'))) T('high','EARLY_MENO_FAM','卵巢早衰家族风险');
   // 中级
-  if(Array.isArray(a.CHG5Y) && a.CHG5Y.filter(v=>v!=='⑩').length>=2) T('mid','MULTI_DECLINE','多维度衰老信号');
-  if(['④','⑤'].includes(a.PEER)) T('mid','SELF_DECLINE','自评衰老感较强');
-  if(Array.isArray(a.VAG) && a.VAG.filter(v=>v!=='⑦').length>=2) T('mid','VAG_DISRUPT','阴道微生态紊乱信号');
+  if(Array.isArray(a.CHG5Y) && a.CHG5Y.filter(v=>v!=='⑩').length>=2) T('mid','MULTI_DECLINE','多维度衰老');
+  if(['④','⑤'].includes(a.PEER)) T('mid','SELF_DECLINE','自评衰老感强');
+  if(Array.isArray(a.VAG) && a.VAG.filter(v=>v!=='⑦').length>=2) T('mid','VAG_DISRUPT','阴道微生态紊乱');
   if(Array.isArray(a.VAG) && a.VAG.includes('⑥')) T('mid','RECUR_INF','反复感染史');
   if(Array.isArray(a.B1_GUT_H)){
     const hits = ['②','③','④'].filter(v=>a.B1_GUT_H.includes(v));
@@ -464,86 +385,22 @@ function computeTags(a){
 /* 面诊提示 */
 function computeClinicAlert(answers, tags){
   if(tags.some(t=>t.code==='POI_HIGH'))
-    return {level:'S',tag:'临床优先 · 专家团队对接',title:'建议尽快完善卵巢功能评估',
-      desc:'建议您预约专科面诊，结合 AMH、FSH、性激素六项等专项检测，明确卵巢功能状态。'};
+    return {level:'S',tag:'临床优先 · CMO 直接对接',title:'卵巢功能需要尽快面诊',
+      desc:'建议您预约本中心妇产科医师面诊，结合 AMH、FSH、性激素六项等专项检测，明确卵巢功能状态。'};
   if(tags.some(t=>t.code==='POI_FERT'))
-    return {level:'S',tag:'生育时间窗评估',title:'建议尽快进行生育评估',
-      desc:'卵巢功能与生育意愿同时存在，时间窗较为关键。建议尽快预约面诊。'};
+    return {level:'S',tag:'生育时间窗紧迫',title:'建议尽快进行生育评估',
+      desc:'卵巢功能与生育意愿同时存在，时间窗较为关键。建议尽快预约本中心面诊。'};
   if(tags.some(t=>t.code==='PPD_RISK'))
-    return {level:'S',tag:'情绪状态需要专业支持',title:'建议尽快获得专业支持',
+    return {level:'S',tag:'产后情绪需要专业支持',title:'建议尽快与本中心医师沟通',
       desc:'您的情绪状态值得被重视。专业的产后心理支持对您和宝宝同样重要。'};
   if(answers.B5_BMD==='③')
-    return {level:'S',tag:'已确诊骨质疏松',title:'建议专科医师面诊',
+    return {level:'S',tag:'已确诊骨质疏松',title:'建议本中心妇产科医师面诊',
       desc:'结合您的激素与代谢评估，本中心可提供综合管理方案。'};
   const high = tags.find(t=>t.level==='high');
-  if(high) return {level:'high',tag:'建议尽早面诊',title:'专家团队将为您出具个性化建议',
-      desc:'您的部分评估指标提示需要进一步关注，健康管理师将在 24 小时内与您联系。'};
+  if(high) return {level:'high',tag:'建议尽早面诊',title:'本中心医师将为您出具个性化建议',
+      desc:'您的部分评估指标提示需要进一步关注，咨询师将在 48 小时内与您联系。'};
   return null;
 }
-
-const ACADEMIC_NOTES = {
-  'BIRTH': '生理年龄（Chronological Age）是衰老评估的基线参照。国际衰老研究协会（AFAR）建议以精确出生年月作为分层起点，而非简单年龄段。',
-  'MENO': '月经状态是 female aging 分期的核心锚点。参考 STRAW+10（Stages of Reproductive Aging Workshop）国际分期标准，不同阶段的激素波动模式与干预窗口存在显著差异。',
-  'HW': 'BMI 与腰臀比是代谢衰老的体表指标。WHO 与中国营养学会均将其列为健康风险评估的必采基线数据，用于后续代谢-内分泌维度的交叉验证。',
-  'WT3Y': '体重轨迹（Weight Trajectory）比单点体重更能反映代谢稳态变化。JAMA Intern Med 研究表明，3 年内体重波动 >5% 与胰岛素抵抗风险显著相关。',
-  'LOOK': '主观衰老感（Subjective Age）是健康寿命（Healthspan）的独立预测因子。British Journal of Psychology 荟萃分析显示，感觉自己"比实际年龄老"的人群，未来 10 年慢病发生率高出 25–41%。',
-  'CHG5Y': '身体变化自述是功能衰退的早期信号。老年医学领域将"近 5 年显著变化"视为功能性衰老（Functional Decline）的敏感筛查窗口。',
-  'PEER': '社会比较衰老感（Relative Subjective Aging）反映个体对自身健康资源的主观评估，与心理弹性和健康行为依从性密切相关。',
-  'GOAL': '健康期望寿命（Desired Healthspan）是精准干预的目标锚点。明确客户的真实期望，有助于匹配差异化的干预强度与资源配置。',
-  'TOP': '优先改善方向决定干预路径的排序逻辑。基于六维衰老模型的优先级矩阵，可避免因多目标并行导致的干预碎片化。',
-  'CV': '心血管-代谢维度（CV·ME）涵盖血管内皮功能、血糖稳态与脂质代谢。该维度异常通常是全身衰老进程的"首发哨兵"。',
-  'RH': '激素-生殖维度（RH）评估下丘脑-垂体-卵巢轴（HPO Axis）的功能状态。性激素波动是女性特异性衰老的核心驱动力。',
-  'GUT': '肠道与免疫维度（IM）反映肠-脑-轴（Gut-Brain Axis）与黏膜免疫稳态。肠道菌群失调（Dysbiosis）已被证实与系统性低度炎症和代谢衰老密切相关。',
-  'BR': '脑-神经维度（BR）评估认知储备、情绪调节与神经可塑性。该维度的早期变化往往先于器质性病变出现。',
-  'VAG': '阴道微生态（Vaginal Microbiome）是泌尿生殖健康的核心屏障。乳杆菌主导型菌群与雌激素水平、局部免疫状态形成三角调控网络。',
-  'B1_PLAN': '生育规划直接影响卵巢储备评估的紧迫性。AMH 与 AFC 的检测时机、解读标准均需结合生育时间窗进行个性化校准。',
-  'B1_CYCLE': '月经周期长度是 HPO 轴节律性的外在表现。正常周期 21–35 天，偏离此区间提示卵泡发育或黄体功能异常。',
-  'B1_FLOW': '经量变化是子宫内膜功能与凝血-纤溶系统的综合反映。突然减少需警惕卵巢储备下降或宫腔粘连。',
-  'B1_OVA': 'AMH（抗苗勒管激素）与 AFC（窦卵泡计数）是卵巢储备的"金标准"双指标。AMH < 1.1 ng/mL 或 AFC < 5–7 枚提示储备下降。',
-  'B1_OVA_R': '卵巢储备下降的界定需结合年龄分层。对于 < 35 岁女性，AMH < 1.1 ng/mL 即属异常；≥ 35 岁则需结合 FSH/LH 比值综合判断。',
-  'B1_FAM': '绝经年龄的母系遗传度约为 50–85%。家族性早绝经史（< 45 岁）是 POI（原发性卵巢功能不全）的高危信号。',
-  'B1_SKIN': '皮肤衰老是内外源性衰老的"可视窗口"。胶原流失速率、糖化终产物（AGEs）积累与雌激素水平呈显著相关性。',
-  'B1_SEX': '性生活质量是生殖健康与亲密关系的综合指标。FSFI（女性性功能指数）已被纳入多国妇科常规评估体系。',
-  'B1_GUT_H': '抗生素使用史与肠道菌群多样性呈负相关。≥ 3 次/年的抗生素暴露可使菌群恢复周期延长至 6–12 个月。',
-  'B2_STAGE': '围产期分期是产后恢复评估的基础框架。不同阶段的激素撤退速度、盆底组织重塑程度存在显著差异。',
-  'B2_DELIV': '分娩方式影响盆底神经肌肉损伤模式。剖宫产虽降低产道损伤，但激素骤变对盆底支持的削弱同样存在。',
-  'B2_WT_R': '产后体重滞留（Postpartum Weight Retention）> 5 kg 是远期代谢综合征的独立危险因素。Am J Clin Nutr 建议产后 6–12 个月作为干预黄金窗。',
-  'B2_MOOD': '该问题整合 EPDS（爱丁堡产后抑郁量表）核心条目与 PHQ-2 框架。产后 2 周内的持续情绪低落需优先获得专业支持。',
-  'B2_PELV': '骨盆底功能障碍（PFD）在产后女性中发生率 30–50%。早期识别漏尿、脱垂信号可显著降低远期手术需求。',
-  'B2_SKIN': '产后脱发（Telogen Effluvium）与雌激素骤降相关，通常产后 3–6 个月达峰。黄褐斑则与激素-紫外线协同作用有关。',
-  'B2_FEED': '哺乳状态影响激素恢复轨迹。纯母乳女性的雌孕激素水平恢复较慢，这既是保护也是评估时需校准的变量。',
-  'B2_VAG': '围产期阴道菌群处于剧烈重塑期。孕期 pH 升高与产后菌群重建延迟，均增加感染复发风险。',
-  'B3_DECL': '"走下坡路"的主观感知是功能衰退的心理标记。Gerontology 研究证实，这种感知比客观指标更早预测 5 年内的功能下降。',
-  'B3_CYCLE': '35 岁后周期缩短（< 25 天）常提示卵泡期缩短与 FSH 代偿性升高，是卵巢储备下降的敏感信号。',
-  'B3_WT_D': '代谢适应性下降是衰老的核心特征之一。基础代谢率每十年下降 2–3%，相同热量摄入下的增重风险随之递增。',
-  'B3_PMS': '经前综合征（PMS）加重与黄体期孕酮-别孕烯醇酮通路失衡相关。严重 PMS 可能是围绝经期情绪波动的早期预警。',
-  'B3_SEX': '性欲与阴道润滑度受雌激素-睾酮双轴调控。35 岁后两者均呈下降趋势，但个体差异极大，需精准评估。',
-  'B3_HIST': '抗衰手段的系统性与依从性是干预效果的关键调节变量。碎片化尝试（< 3 个月）通常难以产生可检测的生物学效应。',
-  'B3_PRI': '健康老去优先序反映个体的价值排序与风险感知。不同优先级对应不同的检测组合与干预靶点。',
-  'B4_MENO': 'STRAW+10 分期将围绝经期细分为早期、晚期与绝经后期。分期准确性直接影响激素干预的获益-风险评估。',
-  'B4_HOT': '潮热（Vasomotor Symptoms）是围绝经期最具特征性的症状。MRS（Menopause Rating Scale）将其列为核心评估条目。',
-  'B4_SLEEP': 'PSQI（匹兹堡睡眠质量指数）是国际通用的睡眠评估工具。睡眠紊乱与围绝经期激素波动、褪黑素分泌减少均密切相关。',
-  'B4_MOOD': '该问题整合 PHQ-2 抑郁筛查与 MRS 情绪域。围绝经期女性抑郁风险较育龄期升高 2–3 倍，需主动筛查。',
-  'B4_SEX': 'FSFI（女性性功能指数）核心三域（欲望、唤起、疼痛）在围绝经期均可能受雌激素下降影响。干涩与疼痛是最常见的就诊主诉。',
-  'B4_SOMA': 'MRS 躯体域涵盖关节痛、心悸、头痛等 7 项。这些症状虽非特异性，但集群出现提示系统性激素撤退效应。',
-  'B4_HRT': 'MHT（Menopausal Hormone Therapy）是围绝经期症状管理的一线方案。NAMS（北美绝经学会）2023 立场声明强调个体化获益-风险权衡。',
-  'B4_GSM': 'GSM（Genitourinary Syndrome of Menopause）是绝经后泌尿生殖道萎缩的规范术语。阴道干涩、反复感染与性交痛是其三联征。',
-  'B5_YRS': '停经年限决定 GSM 与骨质疏松的进展阶段。停经 5 年内是骨量快速丢失期，也是干预的最佳窗口。',
-  'B5_HRT': 'MHT 使用时长与心血管、乳腺风险的关联呈时间依赖性。"窗口期假说"认为，< 60 岁或停经 < 10 年内启动获益最大。',
-  'B5_BMD': 'DXA（双能 X 线吸收法）是骨密度评估的金标准。T 值 ≤ -2.5 为骨质疏松，-1.0 至 -2.5 为骨量减少，均需分层管理。',
-  'B5_CV': '绝经后女性心血管风险每 5 年递增，与雌激素对血管内皮的保护作用消失直接相关。综合风险评估需纳入血脂、血糖、血压三维数据。',
-  'B5_COG': '认知减退的早期信号包括找词困难、注意力涣散与执行功能下降。这些主诉比 MMSE 量表更早出现，是认知储备筛查的敏感指标。',
-  'B5_SARC': 'SARC-F 是肌少症（Sarcopenia）的国际简易筛查工具。握力下降、步速减慢与反复跌倒是其外在表现。',
-  'B5_SEX': '绝经后性生活质量受 GSM、伴侣关系与心理因素三重影响。主动询问是打破"绝经后无性"社会刻板印象的第一步。',
-  'B5_GSM': '绝经后 GSM 发生率 50–70%，但就诊率不足 15%。反复感染、干涩与尿频尿急是提示 GSM 存在的三大红旗症状。',
-  'B6_PAT': '40 岁前月经异常需优先排除 POI（Primary Ovarian Insufficiency）。月经稀发、过少或闭经 > 4 个月均属于警示信号。',
-  'B6_TEST': 'POI 诊断需满足：闭经 > 4 个月 + FSH > 25–40 IU/L（两次间隔 4 周）。AMH、染色体与甲状腺功能为必查扩展项。',
-  'B6_RISK': 'POI 的已知病因包括医源性（手术/放化疗）、遗传（FMR1 前突变）、自身免疫与特发性。家族史与既往史是病因分层的关键。',
-  'B6_SYM': 'POI 症状与自然绝经类似，但出现更早且更剧烈。潮热、阴道干涩与情绪波动在 40 岁前出现需高度警惕。',
-  'B6_FERT': 'POI 患者的生育窗口极度有限。若仍有生育意愿，需尽快转诊生殖医学中心评估卵子冷冻或赠卵可行性。',
-  'B6_HORM': '长期口服避孕药可能掩盖 POI 的自然病程。停药后若持续闭经，需警惕药物掩盖下的卵巢储备耗竭。',
-  'B6_TX': 'POI 的医学干预包括激素替代（保护骨骼与心血管）、生育力保存与中医辅助。DHEA 与辅酶 Q10 的循证证据尚不充分。'
-};
 
 const App = {
   state:{ currentIdx:0, answers:{}, history:[0] },
@@ -574,6 +431,7 @@ const App = {
       const br = computeBranch(this.state.answers);
       if(!cur.id.startsWith(br+'.')) return STEP_IDX['submit'];
       let nextIdx = this.state.currentIdx + 1;
+      // skipIf/showIf 处理
       while(nextIdx < STEPS.length){
         const s = STEPS[nextIdx];
         if(!s.id || !s.id.startsWith(br+'.')) return STEP_IDX['submit'];
@@ -632,14 +490,7 @@ const App = {
   },
   onPrimary(){
     const cur = STEPS[this.state.currentIdx];
-    if(cur.type === 'welcome' || cur.type === 'privacy' || cur.type === 'intimacy-intro' || cur.type === 'branch-transition' || cur.type === 'submit'){
-      this.next(); return;
-    }
-    if(cur.type === 'contact'){
-      if(!this.isContactValid()){ this.shake(); this.flagContactErrors(); return; }
-      this.next(); return;
-    }
-    if(cur.type === 'report-upload'){
+    if(cur.type === 'welcome' || cur.type === 'intro' || cur.type === 'privacy' || cur.type === 'branch-transition' || cur.type === 'submit'){
       this.next(); return;
     }
     if(cur.type === 'question'){
@@ -676,20 +527,6 @@ const App = {
       document.getElementById('primaryBtn').disabled = !this.isAnswered(q, step);
       return;
     }
-    if(step.type === 'contact'){
-      ft.classList.remove('hide');
-      document.getElementById('primaryBtnText').textContent = step.btnText || '继续填写';
-      document.getElementById('btnMeta').textContent = step.btnMeta || '';
-      document.getElementById('primaryBtn').disabled = !this.isContactValid();
-      return;
-    }
-    if(step.type === 'report-upload'){
-      ft.classList.remove('hide');
-      document.getElementById('primaryBtnText').textContent = step.btnText || '继续';
-      document.getElementById('btnMeta').textContent = step.btnMeta || '';
-      document.getElementById('primaryBtn').disabled = false;
-      return;
-    }
     ft.classList.remove('hide');
     document.getElementById('primaryBtnText').textContent = step.btnText || '继续';
     document.getElementById('btnMeta').textContent = step.btnMeta || '';
@@ -700,14 +537,12 @@ const App = {
     let pct = 0, label = '';
     if(cur.type === 'question'){
       const answered = this.state.history.filter(i => STEPS[i] && STEPS[i].type==='question').length;
-      const total = 24;
+      const total = 22;
       pct = Math.min(100, (answered/total)*100);
       label = `${answered} / ${total}`;
     }else if(cur.type === 'welcome'){ pct = 0; label = ''; }
-    else if(cur.type === 'privacy'){ pct = 3; label = '3%'; }
-    else if(cur.type === 'contact'){ pct = 6; label = '6%'; }
-    else if(cur.type === 'report-upload'){ pct = 9; label = '9%'; }
-    else if(cur.type === 'intimacy-intro'){ pct = 52; label = '52%'; }
+    else if(cur.type === 'intro'){ pct = 2; label = '2%'; }
+    else if(cur.type === 'privacy'){ pct = 5; label = '5%'; }
     else if(cur.type === 'branch-transition'){ pct = 64; label = '64%'; }
     else if(cur.type === 'submit'){ pct = 100; label = '100%'; }
     else if(cur.type === 'feedback'){ pct = 100; label = ''; }
@@ -721,132 +556,73 @@ const App = {
     screen.className = 'screen ' + step.type;
     screen.dataset.step = step.id;
     if(step.type === 'welcome')                screen.innerHTML = this.tplWelcome();
+    else if(step.type === 'intro')             screen.innerHTML = this.tplIntro();
     else if(step.type === 'privacy')           screen.innerHTML = this.tplPrivacy();
-    else if(step.type === 'contact')           screen.innerHTML = this.tplContact();
-    else if(step.type === 'report-upload')   screen.innerHTML = this.tplReportUpload();
-    else if(step.type === 'intimacy-intro')    screen.innerHTML = this.tplIntimacyIntro();
     else if(step.type === 'branch-transition') screen.innerHTML = this.tplBranchTransition();
     else if(step.type === 'submit')            screen.innerHTML = this.tplSubmit();
     else if(step.type === 'feedback')          screen.innerHTML = this.tplFeedback();
     else if(step.type === 'question')          screen.innerHTML = this.tplQuestion(step);
     main.appendChild(screen);
     if(step.type === 'question') this.bindQuestion(step, screen);
-    if(step.type === 'contact')  this.bindContact(screen);
-    if(step.type === 'report-upload') this.bindReportUpload(screen);
-    if(step.type === 'submit')   setTimeout(()=>{ if(STEPS[this.state.currentIdx].id==='submit') this.next(); }, 2200);
+    if(step.type === 'submit')   setTimeout(()=>{ if(STEPS[this.state.currentIdx].id==='submit') this.next(); }, 1800);
     if(step.type === 'feedback')  setTimeout(()=>{ this.uploadToCloud(); }, 800);
   },
 
   tplWelcome(){
-    const channelName = {
-      'wechat':'微信生态',
-      'xiaohongshu':'小红书',
-      'douyin':'抖音',
-      'zhihu':'知乎',
-      'partner':'合作机构',
-      'direct':'直接访问'
-    }[CHANNEL.channel] || '';
-    const channelBadge = channelName ? `<div class="channel-badge"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>来自 ${channelName}</div>` : '';
     return `
       <div class="welcome stagger">
         <div class="brand">
-          <div class="hero-illustration" aria-hidden="true">
-            <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="centerCore" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#4A8FAF"/>
-                  <stop offset="100%" stop-color="#1A3F52"/>
-                </linearGradient>
-                <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#C4A882" stop-opacity="0.22"/>
-                  <stop offset="100%" stop-color="#C4A882" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-              <ellipse cx="120" cy="90" rx="105" ry="72" fill="url(#goldGlow)"/>
-              <ellipse cx="120" cy="90" rx="85" ry="60" fill="none" stroke="#2B5F75" stroke-opacity="0.12" stroke-width="0.8"/>
-              <ellipse cx="120" cy="90" rx="62" ry="44" fill="none" stroke="#2B5F75" stroke-opacity="0.18" stroke-width="0.8" stroke-dasharray="3 3"/>
-              <g stroke="#2B5F75" stroke-opacity="0.3" stroke-width="0.8" stroke-linecap="round">
-                <line x1="120" y1="90" x2="120" y2="35"/>
-                <line x1="120" y1="90" x2="190" y2="63"/>
-                <line x1="120" y1="90" x2="190" y2="117"/>
-                <line x1="120" y1="90" x2="120" y2="145"/>
-                <line x1="120" y1="90" x2="50" y2="117"/>
-                <line x1="120" y1="90" x2="50" y2="63"/>
-              </g>
-              <g>
-                <circle cx="120" cy="30" r="5.5" fill="#FFFDFA" stroke="#2B5F75" stroke-width="1.5"/>
-                <circle cx="120" cy="30" r="2.2" fill="#2B5F75"/>
-                <circle cx="195" cy="60" r="5.5" fill="#FFFDFA" stroke="#2B5F75" stroke-width="1.5"/>
-                <circle cx="195" cy="60" r="2.2" fill="#2B5F75"/>
-                <circle cx="195" cy="120" r="5.5" fill="#FFFDFA" stroke="#C4A882" stroke-width="1.5"/>
-                <circle cx="195" cy="120" r="2.2" fill="#C4A882"/>
-                <circle cx="120" cy="150" r="5.5" fill="#FFFDFA" stroke="#2B5F75" stroke-width="1.5"/>
-                <circle cx="120" cy="150" r="2.2" fill="#2B5F75"/>
-                <circle cx="45" cy="120" r="5.5" fill="#FFFDFA" stroke="#C4A882" stroke-width="1.5"/>
-                <circle cx="45" cy="120" r="2.2" fill="#C4A882"/>
-                <circle cx="45" cy="60" r="5.5" fill="#FFFDFA" stroke="#2B5F75" stroke-width="1.5"/>
-                <circle cx="45" cy="60" r="2.2" fill="#2B5F75"/>
-              </g>
-              <circle cx="120" cy="90" r="24" fill="url(#centerCore)"/>
-              <circle cx="120" cy="90" r="24" fill="none" stroke="#fff" stroke-opacity="0.28" stroke-width="0.6"/>
-              <ellipse cx="113" cy="82" rx="10" ry="5" fill="#fff" opacity="0.28"/>
-              <path d="M 65 90 Q 120 30 175 90" fill="none" stroke="#C4A882" stroke-opacity="0.4" stroke-width="1" stroke-linecap="round"/>
-            </svg>
+          <div class="brand-mark">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5c-3 0-5.5 2.5-5.5 5.5 0 4 5.5 9 5.5 9s5.5-5 5.5-9c0-3-2.5-5.5-5.5-5.5z"/><circle cx="12" cy="10" r="1.5" fill="currentColor"/></svg>
           </div>
-          <div class="brand-name">抗衰与长寿管理中心 · <span class="center">精准健康评估</span></div>
+          <div class="brand-name">嘉兴悦程妇产医院 · <span class="center">抗衰与长寿管理中心</span></div>
         </div>
         <div class="welcome-hero">
-          ${channelBadge}
-          <div class="eyebrow">AGING RISK PROFILING</div>
-          <h1 class="title-cn">六维衰老风险<br><span class="accent">精准评估</span></h1>
-          <div class="title-en">Six-Dimension Aging Assessment</div>
-          <p class="subtitle">基于 STRAW+10 女性生殖衰老分期、MRS 围绝经期量表、PSQI 睡眠质量指数、SARC-F 肌少症筛查等国际标准化工具，结合肠道微生态与器官系统衰老模型，生成您的个性化衰老画像。</p>
-          <div class="value-tags">
-            <div class="value-tag"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>标准化量表体系</div>
-            <div class="value-tag"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>循证医学框架</div>
-            <div class="value-tag"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>六维系统评估</div>
-          </div>
-          <div class="academic-badges" style="margin-top:18px;display:flex;flex-wrap:wrap;gap:6px">
-            <span style="font-size:10px;color:var(--t3);padding:4px 10px;border-radius:99px;background:var(--bg-soft);border:1px solid var(--line)">STRAW+10</span>
-            <span style="font-size:10px;color:var(--t3);padding:4px 10px;border-radius:99px;background:var(--bg-soft);border:1px solid var(--line)">MRS</span>
-            <span style="font-size:10px;color:var(--t3);padding:4px 10px;border-radius:99px;background:var(--bg-soft);border:1px solid var(--line)">PSQI</span>
-            <span style="font-size:10px;color:var(--t3);padding:4px 10px;border-radius:99px;background:var(--bg-soft);border:1px solid var(--line)">SARC-F</span>
-            <span style="font-size:10px;color:var(--t3);padding:4px 10px;border-radius:99px;background:var(--bg-soft);border:1px solid var(--line)">FSFI</span>
-            <span style="font-size:10px;color:var(--t3);padding:4px 10px;border-radius:99px;background:var(--bg-soft);border:1px solid var(--line)">PHQ-2</span>
-          </div>
+          <div class="eyebrow">FIRST VISIT ASSESSMENT</div>
+          <h1 class="title-cn">为您定制的<br><span class="accent">长寿医学</span>首诊评估</h1>
+          <div class="title-en">Personalized Longevity Profiling</div>
+          <p class="subtitle">通过六维器官系统衰老评估，与您的体检报告整合为完整的健康画像，由本中心医师为您出具个性化解读。</p>
         </div>
         <div class="meta-row">
           <div class="meta-item"><div class="num-val num">6–8<span class="unit">分钟</span></div><div class="lbl">预计时长</div></div>
-          <div class="meta-item"><div class="num-val num">24<span class="unit">题</span></div><div class="lbl">个性化路径</div></div>
+          <div class="meta-item"><div class="num-val num">21–22<span class="unit">题</span></div><div class="lbl">个性化路径</div></div>
           <div class="meta-item"><div class="num-val num">6<span class="unit">维度</span></div><div class="lbl">系统评估</div></div>
         </div>
-        <div class="mt-auto" style="padding-top:32px">
+        <div class="mt-auto" style="padding-top:36px">
           <button class="btn btn-primary" onclick="App.next()">
             <span>开始评估</span>
             <span class="arrow"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></span>
           </button>
-          <div class="btn-meta" style="margin-top:14px">本评估为初筛工具 · 不出具临床诊断 · 不替代临床问诊</div>
+          <div class="btn-meta" style="margin-top:14px">您的所有信息将被严格保密 · 仅供本中心医师查阅</div>
         </div>
       </div>`;
   },
-  tplPrivacy  tplPrivacy(){
+  tplIntro(){
     return `
       <div class="stagger">
-        <div style="margin-top:8px"><div class="eyebrow">PRIVACY & FLOW</div></div>
-        <h2 class="h-large" style="margin:14px 0 8px">您的信息<br>受到严格保护</h2>
-        <p class="body-md">本评估遵循国际医学伦理标准与中国数据安全规范，对您的所有信息承担保密义务。完成评估后，您将获得：</p>
+        <div style="margin-top:8px"><div class="eyebrow">EVALUATION FLOW</div></div>
+        <h2 class="h-large" style="margin:14px 0 8px">接下来您将完成<br>四个评估模块</h2>
+        <p class="body-md">每一题都将进入您的专属健康档案，作为医师面诊的依据。</p>
         <div class="intro-list">
           <div class="intro-step"><div class="step-num num">1</div><div class="step-content"><h4>基础信息与生理状态</h4><p>建立评估基线，识别您当前所处的生理阶段</p></div></div>
           <div class="intro-step"><div class="step-num num">2</div><div class="step-content"><h4>主观衰老与身体觉察</h4><p>您身体发出的信号，往往比检测指标更早</p></div></div>
           <div class="intro-step"><div class="step-num num">3</div><div class="step-content"><h4>健康目标与优先方向</h4><p>明确您希望保持的状态，匹配最适合的干预路径</p></div></div>
           <div class="intro-step"><div class="step-num num">4</div><div class="step-content"><h4>六维器官系统快筛</h4><p>心血管 · 代谢 · 免疫 · 激素 · 脑神经 · 肌骨</p></div></div>
         </div>
+      </div>`;
+  },
+  tplPrivacy(){
+    return `
+      <div class="stagger">
+        <div style="margin-top:8px"><div class="eyebrow">PRIVACY & ETHICS</div></div>
+        <h2 class="h-large" style="margin:14px 0 8px">您的信息<br>受到严格保护</h2>
+        <p class="body-md">本中心遵循国际医学伦理标准与中国数据安全规范，对您的所有信息承担保密义务。</p>
         <div class="privacy-card">
           <div class="privacy-list">
             <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div><div><h4>端到端加密存储</h4><p>所有数据加密上链，传输与存储全程加密</p></div></div>
-            <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div><h4>持证人员权限查阅</h4><p>由本中心健康管理师与医师专属调阅</p></div></div>
+            <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div><h4>仅医师权限查阅</h4><p>由抗衰与长寿管理中心持证医师专属调阅</p></div></div>
             <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div><h4>不出具临床诊断</h4><p>评估结果用于健康管理建议，不替代临床诊断与处方</p></div></div>
-            <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div><div><h4>可随时删除</h4><p>您可随时通过健康管理师申请删除全部档案数据</p></div></div>
+            <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div><div><h4>可随时删除</h4><p>您可随时通过咨询师申请删除全部档案数据</p></div></div>
           </div>
         </div>
         <p class="body-sm" style="margin-top:18px;text-align:center">点击下方按钮即表示您已阅读并同意以上条款</p>
@@ -1160,140 +936,6 @@ const App = {
     return false;
   },
 
-  /* 联系信息页 - 校验 */
-  isContactValid(){
-    const c = this.state.answers.CONTACT || {};
-    const nameOk  = typeof c.name === 'string'  && c.name.trim().length >= 2 && c.name.trim().length <= 10;
-    const phoneOk = typeof c.phone === 'string' && /^1[3-9]\d{9}$/.test(c.phone.trim());
-    return nameOk && phoneOk;
-  },
-  flagContactErrors(){
-    const c = this.state.answers.CONTACT || {};
-    const nameField  = document.querySelector('.contact-field[data-k="name"]');
-    const phoneField = document.querySelector('.contact-field[data-k="phone"]');
-    const nameOk  = typeof c.name === 'string'  && c.name.trim().length >= 2 && c.name.trim().length <= 10;
-    const phoneOk = typeof c.phone === 'string' && /^1[3-9]\d{9}$/.test(c.phone.trim());
-    if(nameField)  nameField.classList.toggle('error',  !nameOk);
-    if(phoneField) phoneField.classList.toggle('error', !phoneOk);
-  },
-  bindContact(root){
-    if(!this.state.answers.CONTACT) this.state.answers.CONTACT = { name:'', phone:'', wechat:'', city:'' };
-    root.querySelectorAll('.contact-field input').forEach(inp=>{
-      const key = inp.dataset.k;
-      inp.value = (this.state.answers.CONTACT[key] || '');
-      inp.addEventListener('input', (e)=>{
-        let v = e.target.value;
-        if(key === 'phone') v = v.replace(/[^\d]/g, '').slice(0, 11);
-        if(key === 'name')  v = v.slice(0, 10);
-        if(key === 'wechat') v = v.slice(0, 30);
-        if(key === 'city') v = v.slice(0, 20);
-        e.target.value = v;
-        this.state.answers.CONTACT[key] = v;
-        this.saveState();
-        const field = e.target.closest('.contact-field');
-        if(field && field.classList.contains('error')) field.classList.remove('error');
-        document.getElementById('primaryBtn').disabled = !this.isContactValid();
-      });
-    });
-  },
-
-  tplContact(){
-    const c = this.state.answers.CONTACT || {};
-    return `
-      <div class="q-head stagger">
-        <div class="q-meta">
-          <span class="seg">A 段·基础信息</span>
-          <span class="dot"></span>
-          <span class="num">A0</span>
-        </div>
-        <h2 class="q-title">请留下您的联系方式</h2>
-        <p class="q-desc">完成评估后，健康管理师将通过微信或电话与您联系，推送您的个性化评估摘要与解读建议。</p>
-      </div>
-      <div class="contact-group stagger">
-        <div class="contact-field" data-k="name">
-          <div class="lbl-row"><span class="required">*</span><span>姓名</span></div>
-          <input type="text" data-k="name" placeholder="您的真实姓名" autocomplete="name" inputmode="text" value="${(c.name||'').replace(/"/g,'&quot;')}">
-        </div>
-        <div class="contact-field" data-k="phone">
-          <div class="lbl-row"><span class="required">*</span><span>手机号</span></div>
-          <input type="tel" data-k="phone" placeholder="11 位手机号码" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" value="${(c.phone||'')}">
-        </div>
-        <div class="contact-field" data-k="wechat">
-          <div class="lbl-row"><span>微信号</span><span class="optional">选填</span></div>
-          <input type="text" data-k="wechat" placeholder="便于健康管理师加您微信沟通" autocomplete="off" value="${(c.wechat||'').replace(/"/g,'&quot;')}">
-        </div>
-        <div class="contact-field" data-k="city">
-          <div class="lbl-row"><span>所在城市</span><span class="optional">选填</span></div>
-          <input type="text" data-k="city" placeholder="例如：杭州" autocomplete="off" value="${(c.city||'').replace(/"/g,'&quot;')}">
-        </div>
-        <div class="contact-tip">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <p>您的联系方式仅用于推送评估报告与后续健康跟进，不会用于其他用途，可随时申请删除。</p>
-        </div>
-      </div>`;
-  },
-
-  /* 新增：报告上传意愿页 */
-  tplReportUpload(){
-    const cur = this.state.answers.REPORT_WILL || [];
-    return `
-      <div class="q-head stagger">
-        <div class="q-meta">
-          <span class="seg">A 段·基础信息</span>
-          <span class="dot"></span>
-          <span class="num">A0b</span>
-        </div>
-        <h2 class="q-title">您是否有近期的健康检测报告？</h2>
-        <p class="q-desc">上传报告有助于健康管理师为您生成更精准的衰老画像。如果您暂时没有，可以直接跳过。</p>
-      </div>
-      <div class="stagger" style="margin-top:8px">
-        <div class="report-card">
-          <h4>选择您已有的报告类型</h4>
-          <p>多选 · 健康管理师将在后续联系中指导您如何提交</p>
-          <div class="report-options">
-            ${REPORT_CHIP_OPTIONS.map(o=>`
-              <div class="report-chip ${cur.includes(o.v)?'selected':''}" data-v="${o.v}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                ${o.label}
-              </div>
-            `).join('')}
-          </div>
-        </div>
-        <div class="contact-tip" style="margin-top:16px">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <p>肠道菌群检测报告是本中心衰老评估的核心数据源之一，如有报告请优先勾选。</p>
-        </div>
-      </div>`;
-  },
-  bindReportUpload(root){
-    const chips = root.querySelectorAll('.report-chip');
-    chips.forEach(chip=>{
-      chip.addEventListener('click', ()=>{
-        const v = chip.dataset.v;
-        let arr = this.state.answers.REPORT_WILL ? [...this.state.answers.REPORT_WILL] : [];
-        if(arr.includes(v)) arr = arr.filter(x=>x!==v);
-        else arr.push(v);
-        this.state.answers.REPORT_WILL = arr;
-        this.saveState();
-        chips.forEach(c=>c.classList.toggle('selected', arr.includes(c.dataset.v)));
-      });
-    });
-  },
-
-  tplIntimacyIntro(){
-    return `
-      <div class="stagger" style="padding-top:8px">
-        <div class="eyebrow">INTIMATE HEALTH</div>
-        <h2 class="h-large" style="margin:14px 0 8px">接下来涉及<br>您的私密健康</h2>
-        <p class="body-md">阴道菌群、泌尿生殖系统与性生活状态，是评估激素水平、免疫平衡与衰老进程的重要维度。这些信息往往比常规体检指标更早反映身体变化。</p>
-        <div class="intimacy-note">
-          <p><span class="strong">关于隐私</span>：所有回答全程加密存储，仅本中心健康管理师与医师可见，不会用于任何其他场景。</p>
-          <p><span class="strong">关于回答</span>：每道题都设有「都没有」或「不愿回答」选项，您可以选择跳过任何不愿表达的内容。</p>
-          <p><span class="strong">关于价值</span>：愿意分享得越完整，健康管理师为您出具的建议就越贴近实际状态。</p>
-        </div>
-      </div>`;
-  },
-
   tplSubmit(){
     return `
       <div class="submit-screen">
@@ -1305,7 +947,7 @@ const App = {
           </div>
         </div>
         <h2 class="transition-title">评估正在加密提交</h2>
-        <p class="transition-sub">您的回答正在进入专属健康档案<br>请稍候</p>
+        <p class="transition-sub">您的回答正在进入本中心专属医疗档案<br>请稍候</p>
       </div>`;
   },
   tplFeedback(){
@@ -1328,87 +970,50 @@ const App = {
       {n:'肌 · 骨',       e:'MS',    s:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>'},
       {n:'阴道微生态',     e:'VAG',   s:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'},
     ];
-    const wxId = 'yaolijun01';
     return `
-      <div style="padding:0 20px 32px;padding-top:28px" class="stagger">
+      <div style="padding:0 24px 32px;padding-top:32px" class="stagger">
         <div class="eyebrow">ASSESSMENT COMPLETED</div>
-        <h1 class="h-display" style="margin:12px 0 8px;font-size:28px">评估已完成</h1>
-        <p class="body-md" style="margin-bottom:18px">您的回答已记录。健康管理师将结合您的健康资料进行初步整理，预计 <b style="color:var(--klein)">3 个工作日内</b>与您联系。</p>
-
+        <h1 class="h-display" style="margin:14px 0 10px">评估已完成<br>感谢您的认真填写</h1>
+        <p class="body-md">您的回答已记录。医师将结合您的体检报告生成专属解读，预计 <b style="color:var(--klein)">3 个工作日内</b>由咨询师与您联系。</p>
         ${alert ? `
           <div class="clinic-alert ${alert.level==='S'?'s-level':'high-level'}">
             <span class="alert-tag">${alert.tag}</span>
             <h3 class="alert-title">${alert.title}</h3>
             <p class="alert-desc">${alert.desc}</p>
           </div>` : ''}
-
-        <div class="feedback-card" style="padding:20px">
+        <div class="feedback-card">
           <div class="micro" style="letter-spacing:1.5px;color:var(--gold);font-weight:500">YOUR PROFILE</div>
-          <h3 style="margin:8px 0 4px;font-size:17px;font-weight:600">个性化评估路径</h3>
-          <p class="body-sm" style="margin:0 0 10px">${info.name} · ${filledCount} 项数据已采集</p>
+          <h3 style="margin:8px 0 4px;font-size:18px;font-weight:600">个性化评估路径</h3>
+          <p class="body-sm" style="margin:0 0 4px">${info.name} · ${filledCount} 项数据已采集</p>
           <div class="six-dim-grid">
             ${dims.map(d=>`<div class="dim-cell"><div class="dim-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">${d.s}</svg></div><div class="dim-name">${d.n}</div><div class="dim-en">${d.e}</div></div>`).join('')}
           </div>
         </div>
-
-        <div class="feedback-card" style="padding:20px">
+        <div class="feedback-card">
           <div class="micro" style="letter-spacing:1.5px;color:var(--gold);font-weight:500">NEXT STEPS</div>
-          <h3 style="margin:8px 0 0;font-size:17px;font-weight:600">接下来</h3>
+          <h3 style="margin:8px 0 0;font-size:18px;font-weight:600">接下来</h3>
           <div class="timeline">
             <div class="timeline-item"><div class="timeline-dot done"></div><div class="timeline-content"><h5>问卷数据已加密提交</h5><p>${filledCount} 项结构化数据 · 已进入您的专属档案</p></div></div>
-            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>健康管理师正在初步整理</h5><p>结合您的回答与体检资料进行多维交叉分析</p></div></div>
-            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>健康管理师将与您联系</h5><p>${alert && alert.level==='S' ? '24 小时内' : (alert ? '48 小时内' : '3 个工作日内')} · 电话或微信沟通</p></div></div>
-            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>专家面诊与方案制定（如需）</h5><p>由本中心专家团队为您出具个性化干预方案</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>医师正在整合您的体检报告</h5><p>多组学数据与主观觉察交叉分析</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>咨询师将与您联系</h5><p>${alert && alert.level==='S' ? '24 小时内' : (alert ? '48 小时内' : '3 个工作日内')} · 安排面诊或电话沟通</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>本中心妇产科医师面诊</h5><p>由 CMO 张召菊主任医师团队为您出具个性化方案</p></div></div>
           </div>
         </div>
-
-        <div class="feedback-card" style="padding:20px;text-align:center">
-          <div class="micro" style="letter-spacing:1.5px;color:var(--gold);font-weight:500">CONTACT</div>
-          <h3 style="margin:10px 0 4px;font-size:17px;font-weight:600">添加专属健康管理师</h3>
-          <p class="body-sm" style="margin:0 0 14px">微信一对一沟通 · 获取评估解读与干预建议</p>
-          <div class="copy-row">
-            <div class="wx-id">${wxId}</div>
-            <button class="copy-btn" onclick="App.copyWx()">复制微信号</button>
-          </div>
-        </div>
-
-        <div class="feedback-card" style="padding:20px">
-          <div class="micro" style="letter-spacing:1.5px;color:var(--gold);font-weight:500">VALUE</div>
-          <h3 style="margin:8px 0 10px;font-size:17px;font-weight:600">您将获得</h3>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-soft);border-radius:14px;border:1px solid var(--line)">
-              <div style="flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--klein-glow);display:flex;align-items:center;justify-content:center;color:var(--klein)"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-              <div><h4 style="margin:0 0 2px;font-size:15px;font-weight:600">个性化衰老画像</h4><p style="margin:0;font-size:13px;color:var(--t3);line-height:1.5">基于六维模型的可视化衰老进程图谱，标注各维度风险等级与干预优先级。</p></div>
-            </div>
-            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-soft);border-radius:14px;border:1px solid var(--line)">
-              <div style="flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--klein-glow);display:flex;align-items:center;justify-content:center;color:var(--klein)"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg></div>
-              <div><h4 style="margin:0 0 2px;font-size:15px;font-weight:600">专家一对一解读</h4><p style="margin:0;font-size:13px;color:var(--t3);line-height:1.5">健康管理师结合您的问卷数据与体检报告，进行 30 分钟一对一电话/微信深度解读。</p></div>
-            </div>
-            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-soft);border-radius:14px;border:1px solid var(--line)">
-              <div style="flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--klein-glow);display:flex;align-items:center;justify-content:center;color:var(--klein)"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div>
-              <div><h4 style="margin:0 0 2px;font-size:15px;font-weight:600">肠道菌群检测优惠</h4><p style="margin:0;font-size:13px;color:var(--t3);line-height:1.5">完成评估的客户可享肠道微生态专项检测专属通道与解读服务。</p></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="share-row">
-          <button class="share-btn" onclick="App.shareSurvey()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-            分享给有需要的女性朋友
-          </button>
-          <button class="share-btn" onclick="App.contactConsultant()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
-            健管师邀约交流
-          </button>
-        </div>
-
-        <div style="text-align:center;margin-top:24px">
+        <div style="text-align:center;margin-top:32px">
           <div class="micro">本评估为初筛工具 · 不出具诊断结论 · 不替代临床问诊</div>
-          <div class="micro" style="margin-top:8px;color:var(--t4)">抗衰与长寿管理中心 · 精准健康</div>
+          <div class="micro" style="margin-top:10px;color:var(--t4)">嘉兴悦程妇产医院 · 抗衰与长寿管理中心</div>
+        </div>
+        <div style="padding-top:24px">
+          <button class="btn btn-primary" onclick="App.contactConsultant()">
+            <span>联系我的专属咨询师</span>
+            <span class="arrow"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></span>
+          </button>
+          <button class="btn btn-ghost" onclick="App.viewSummary()" style="margin-top:8px">查看填写摘要</button>
         </div>
       </div>`;
   },
-  uploadToCloud(){  uploadToCloud(){
+
+  uploadToCloud(){
     const a = this.state.answers;
     const br = computeBranch(a);
     const info = BRANCH_INFO[br];
@@ -1422,59 +1027,7 @@ const App = {
     }).length;
     uploadSurveyData(a, br, info ? info.name : '', computeAge(a.BIRTH), tags, alert, filledCount);
   },
-  copyWx(){
-    const wxId = 'yaolijun01';
-    if(navigator.clipboard){ navigator.clipboard.writeText(wxId).then(()=>alert('微信号已复制，请前往微信添加')); }
-    else{ alert('微信号：' + wxId + '，请手动复制前往微信添加'); }
-  },
-  shareSurvey(){
-    const url = location.origin + location.pathname + '?channel=referral&utm_source=share&utm_medium=wechat';
-    if(navigator.share){ navigator.share({title:'六维衰老风险评估',text:'我刚刚完成了一个基于循证医学的女性衰老风险评估，推荐你也试试',url}); }
-    else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>alert('链接已复制，可分享给有需要的女性朋友')); }
-    else{ alert('分享链接：' + url); }
-  },
-  async contactConsultant(){
-    const btn = event.target.closest('.share-btn') || event.target;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>提交中…';
-    btn.disabled = true;
-    try {
-      const app = await initCloudBase();
-      if (!app) { throw new Error('CloudBase not ready'); }
-      const contact = (this.state.answers && this.state.answers.CONTACT) ? {
-        name:   (this.state.answers.CONTACT.name   || '').trim(),
-        phone:  (this.state.answers.CONTACT.phone  || '').trim(),
-        wechat: (this.state.answers.CONTACT.wechat || '').trim(),
-        city:   (this.state.answers.CONTACT.city   || '').trim()
-      } : { name:'', phone:'', wechat:'', city:'' };
-      const res = await app.callFunction({
-        name: NOTIFY_FUNCTION,
-        data: {
-          action:      'consult_request',
-          contact:     contact,
-          channel:     CHANNEL,
-          userAgent:   navigator.userAgent,
-          timestamp:   Date.now()
-        }
-      });
-      if (res && res.result && res.result.success) {
-        btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>已通知';
-        btn.style.background = 'var(--klein)';
-        btn.style.color = '#fff';
-        btn.style.borderColor = 'var(--klein)';
-        setTimeout(()=>{
-          alert('已通知健康管理师！对方将在企业微信中收到提醒，并尽快与您联系安排一对一交流。');
-        }, 200);
-      } else {
-        throw new Error('Cloud function returned non-success');
-      }
-    } catch(e) {
-      console.error('Consult request failed', e);
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-      alert('网络波动，通知未成功。请复制微信号 yaolijun01 直接联系健康管理师。');
-    }
-  },
+  contactConsultant(){ alert('已通知您的专属咨询师，将尽快与您联系。'); },
   viewSummary(){
     const a = this.state.answers;
     const tags = computeTags(a);
@@ -1499,10 +1052,10 @@ document.addEventListener('DOMContentLoaded', ()=>App.init());
 
 <script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
 <script>
-// 腾讯云云开发 - 调用云函数（写库 + 企微通知）
-const CLOUDBASE_UPLOADED_KEY = 'fhp_universal_uploaded_v1';
+// 腾讯云云开发数据上报
+const CLOUDBASE_UPLOADED_KEY = 'fhp_cloudbase_uploaded_v1';
 const ENV_ID = 'yuecheng-survey-d4fucklsf6b68aaf';
-const NOTIFY_FUNCTION = 'notify-new-survey';
+const COLLECTION = 'survey_answers';
 
 async function initCloudBase() {
   try {
@@ -1518,55 +1071,39 @@ async function initCloudBase() {
 
 async function uploadSurveyData(answers, branch, branchName, age, tags, alertInfo, filledCount) {
   try {
+    // 防重复上报：24小时内同一浏览器不再上报
     const last = localStorage.getItem(CLOUDBASE_UPLOADED_KEY);
     if (last) {
       const hours = (Date.now() - parseInt(last)) / (1000 * 60 * 60);
       if (hours < 24) {
         console.log('CloudBase: already uploaded within 24h');
-        return;
-      }
+        return; }
     }
-
+    
     const app = await initCloudBase();
     if (!app) return;
-
-    const contact = (answers && answers.CONTACT) ? {
-      name:   (answers.CONTACT.name   || '').trim(),
-      phone:  (answers.CONTACT.phone  || '').trim(),
-      wechat: (answers.CONTACT.wechat || '').trim(),
-      city:   (answers.CONTACT.city   || '').trim()
-    } : { name:'', phone:'', wechat:'', city:'' };
-
-    const payload = {
-      action:      'submit_survey',
-      contact:     contact,
-      answers:     answers,
-      branch:      branch,
-      branchName:  branchName,
-      age:         age,
-      tags:        tags,
-      alert:       alertInfo,
-      filledCount: filledCount,
-      reportWill:  answers.REPORT_WILL || [],
-      channel:     CHANNEL,
-      userAgent:   navigator.userAgent,
-      screenWidth: window.innerWidth,
-      timestamp:   Date.now()
-    };
-
-    const res = await app.callFunction({
-      name: NOTIFY_FUNCTION,
-      data: payload
+    
+    const db = app.database();
+    await db.collection(COLLECTION).add({
+      data: {
+        answers: answers,
+        branch: branch,
+        branchName: branchName,
+        age: age,
+        tags: tags,
+        alert: alertInfo,
+        filledCount: filledCount,
+        userAgent: navigator.userAgent,
+        screenWidth: window.innerWidth,
+        createdAt: new Date(),
+        timestamp: Date.now()
+      }
     });
-
-    if (res && res.result && res.result.success) {
-      localStorage.setItem(CLOUDBASE_UPLOADED_KEY, Date.now().toString());
-      console.log('Survey: upload + notify success', res.result);
-    } else {
-      console.warn('Survey: cloud function returned non-success', res);
-    }
+    
+    localStorage.setItem(CLOUDBASE_UPLOADED_KEY, Date.now().toString());
+    console.log('CloudBase: upload success');
   } catch(e) {
-    console.error('Survey upload failed', e);
+    console.error('CloudBase upload failed', e);
   }
 }
 </script>
