@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FBFCFE">
+<meta name="format-detection" content="telephone=no">
+<title>松柏纪 · 男性长寿医学首诊评估</title>
+<style>
+/* ============================================================
+   松柏纪 · 男性长寿医学首诊评估 H5
+   设计系统：克莱因蓝 #002FA7 主 / 白 / 深棕强调 / 深灰提示 / 金黄隐私
+   架构：欢迎 → 知情同意 → 基础信息 → 主问卷11题 → 自动路由1分支 → 提交 → 反馈
+   ============================================================ */
+
+:root{
+  /* —— 克莱因蓝主色系 —— */
+  --klein:#002FA7;
+  --klein-deep:#001E6E;
+  --klein-light:#1E4DC4;
+  --klein-glow:rgba(0,47,167,.06);
+  --klein-glow-md:rgba(0,47,167,.12);
+  --klein-glow-sm:rgba(0,47,167,.04);
+
+  /* —— 深棕强调（沉香深棕，男性气质）—— */
+  --brown:#5D4037;
+  --brown-deep:#3E2723;
+  --brown-soft:#795548;
+  --brown-glow:rgba(93,64,55,.08);
+  --brown-glow-md:rgba(93,64,55,.14);
+
+  /* —— 金黄（隐私提醒专用）—— */
+  --gold:#C9A227;
+  --gold-deep:#9C7A14;
+  --gold-soft:#E0B84A;
+  --gold-glow:rgba(201,162,39,.10);
+  --gold-bg:rgba(201,162,39,.06);
+
+  /* —— 文字层级 —— */
+  --t1:#0A0E27;
+  --t2:#4A5170;
+  --t3:#8B92A8;   /* 深灰小提示 */
+  --t4:#B8BFD0;
+
+  /* —— 背景 —— */
+  --bg:#FBFCFE;
+  --bg-soft:#F4F7FC;
+  --card:rgba(255,255,255,.86);
+  --card-solid:#FFFFFF;
+  --line:rgba(10,14,39,.07);
+  --line-soft:rgba(10,14,39,.045);
+
+  /* —— 警示等级（与女性版/云函数对齐）—— */
+  --alert-s:#C62828;     /* S级 红 */
+  --alert-high:#E8820C;  /* 高 橙 */
+  --alert-normal:#2E7D52;/* 普通 绿 */
+
+  /* —— 圆角 —— */
+  --r-sm:14px;
+  --r-md:18px;
+  --r-lg:24px;
+  --r-xl:28px;
+
+  /* —— 安全区 —— */
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+html,body{
+  height:100%;
+  background:var(--bg);
+  color:var(--t1);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",
+    "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow:hidden;
+}
+
+/* 等宽数字（题号、字段编码、量表刻度） */
+.mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
+  font-family:"SF Mono",ui-monospace,"JetBrains Mono",Consolas,"Roboto Mono",monospace;}
+
+/* —— 氛围背景：克莱因蓝 + 深棕双光晕 —— */
+#bg-atmos{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+#bg-atmos .glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;}
+#bg-atmos .g1{width:60vw;height:60vw;max-width:480px;max-height:480px;
+  background:radial-gradient(circle,var(--klein-glow-md),transparent 70%);
+  top:-12vh;right:-18vw;}
+#bg-atmos .g2{width:55vw;height:55vw;max-width:420px;max-height:420px;
+  background:radial-gradient(circle,var(--brown-glow-md),transparent 70%);
+  bottom:-10vh;left:-16vw;}
+#bg-atmos .grain{position:absolute;inset:0;opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* —— App 容器 —— */
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;}
+
+/* —— 顶部进度条 —— */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:50;
+  padding-top:var(--safe-top);
+  background:linear-gradient(180deg,var(--bg) 60%,transparent);
+  pointer-events:none;}
+#progress-track{height:2.5px;background:var(--line);margin:0;}
+#progress-fill{height:100%;width:0%;
+  background:linear-gradient(90deg,var(--klein),var(--gold-soft));
+  transition:width .5s cubic-bezier(.4,0,.2,1);border-radius:0 2px 2px 0;}
+#step-meta{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 20px 0;font-size:12px;color:var(--t3);
+  opacity:0;transition:opacity .3s;}
+#step-meta.show{opacity:1;}
+#step-meta .chap{color:var(--klein);font-weight:600;letter-spacing:.3px;}
+
+/* —— 滚动区 —— */
+#scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:calc(var(--safe-top) + 56px) 20px calc(var(--safe-bottom) + 120px);
+  scroll-behavior:smooth;}
+
+/* —— 卡片场景容器 —— */
+.scene{max-width:480px;margin:0 auto;width:100%;}
+
+/* —— 题型卡片 —— */
+.qcard{background:var(--card);backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px 22px;box-shadow:0 1px 2px rgba(10,14,39,.03),
+    0 8px 24px rgba(10,14,39,.04),0 24px 48px rgba(10,14,39,.03);}
+
+/* —— 题号与题干 —— */
+.qnum{display:inline-flex;align-items:center;gap:7px;
+  font-size:12.5px;color:var(--klein);font-weight:600;letter-spacing:.5px;
+  margin-bottom:12px;}
+.qnum .qcode{color:var(--t4);font-weight:500;}
+.qnum .req{color:var(--brown);font-size:13px;}
+.qtitle{font-size:20px;line-height:1.45;font-weight:600;color:var(--t1);
+  letter-spacing:-.2px;margin-bottom:8px;}
+.qhint{font-size:13.5px;color:var(--t3);line-height:1.6;margin-bottom:18px;}
+.qhint.multi{color:var(--brown-soft);font-weight:500;}
+
+/* —— 选项（单选/多选）—— */
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt{position:relative;display:flex;align-items:center;gap:13px;
+  padding:15px 16px;background:var(--card-solid);
+  border:1.5px solid var(--line);border-radius:var(--r-md);
+  cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);
+  font-size:15.5px;color:var(--t1);line-height:1.45;}
+.opt:active{transform:scale(.985);}
+.opt .mark{flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--t4);transition:all .22s;position:relative;}
+.opt.multi .mark{border-radius:7px;}
+.opt .idx{flex-shrink:0;width:24px;height:24px;border-radius:7px;
+  background:var(--bg-soft);color:var(--t3);font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;transition:all .22s;}
+.opt .otext{flex:1;}
+.opt.selected{border-color:var(--klein);background:var(--klein-glow);
+  box-shadow:0 0 0 3px var(--klein-glow-sm);}
+.opt.selected .mark{border-color:var(--klein);background:var(--klein);}
+.opt.selected .mark::after{content:"";position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:8px;height:8px;border-radius:50%;background:#fff;}
+.opt.multi.selected .mark::after{width:6px;height:10px;border-radius:0;
+  background:transparent;border:2px solid #fff;border-top:0;border-left:0;
+  top:42%;transform:translate(-50%,-50%) rotate(45deg);}
+.opt.selected .idx{background:var(--klein);color:#fff;}
+.opt.disabled{opacity:.4;pointer-events:none;filter:grayscale(.5);}
+
+/* —— 学术注释卡片（灰底 + 暖金左边）—— */
+.note{margin-top:16px;background:var(--bg-soft);
+  border-left:3px solid var(--gold-soft);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:13px 15px;font-size:12.5px;line-height:1.7;color:var(--t2);}
+.note .ntag{display:inline-flex;align-items:center;gap:5px;
+  color:var(--gold-deep);font-weight:700;font-size:11.5px;
+  letter-spacing:.5px;margin-bottom:4px;}
+.note em{color:var(--brown-soft);font-style:normal;font-weight:600;}
+
+/* —— 隐私承诺卡片（金黄）—— */
+.privacy-box{margin-top:16px;background:var(--gold-bg);
+  border:1px solid var(--gold-glow);border-radius:var(--r-md);
+  padding:14px 16px;font-size:13px;line-height:1.7;color:var(--brown-deep);}
+.privacy-box .ptag{display:inline-flex;align-items:center;gap:6px;
+  color:var(--gold-deep);font-weight:700;font-size:12.5px;margin-bottom:5px;}
+.privacy-box .lock{font-size:14px;}
+
+/* —— 量表（1-10 滑块）—— */
+.scale-wrap{margin-top:6px;}
+.scale-ends{display:flex;justify-content:space-between;
+  font-size:12.5px;color:var(--t3);margin-bottom:14px;}
+.scale-ends b{color:var(--brown);font-weight:600;}
+.scale-track{position:relative;height:46px;display:flex;align-items:center;}
+.scale-dots{display:flex;justify-content:space-between;width:100%;}
+.scale-dot{width:30px;height:30px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--card-solid);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--t3);font-weight:600;cursor:pointer;
+  transition:all .18s;}
+.scale-dot:active{transform:scale(.9);}
+.scale-dot.active{border-color:var(--klein);background:var(--klein);
+  color:#fff;transform:scale(1.15);box-shadow:0 4px 12px var(--klein-glow-md);}
+.scale-dot.inrange{border-color:var(--klein-light);background:var(--klein-glow);}
+.scale-val{text-align:center;margin-top:14px;font-size:14px;color:var(--t2);}
+.scale-val b{color:var(--klein);font-size:22px;font-weight:700;}
+
+/* —— 排序题（E01 困扰排序）—— */
+.rank-list{display:flex;flex-direction:column;gap:10px;}
+.rank-item{display:flex;align-items:center;gap:12px;
+  padding:14px 15px;background:var(--card-solid);
+  border:1.5px solid var(--line);border-radius:var(--r-md);
+  transition:all .22s;cursor:pointer;}
+.rank-item:active{transform:scale(.985);}
+.rank-item.picked{border-color:var(--klein);background:var(--klein-glow);}
+.rank-item .rk-badge{flex-shrink:0;width:28px;height:28px;border-radius:8px;
+  background:var(--bg-soft);color:var(--t3);font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;transition:all .22s;}
+.rank-item.picked .rk-badge{background:var(--klein);color:#fff;}
+.rank-item .rk-text{flex:1;font-size:15px;line-height:1.4;}
+.rank-item .rk-order{flex-shrink:0;font-size:12px;color:var(--klein);
+  font-weight:700;letter-spacing:.3px;}
+.rank-tip{margin-top:14px;font-size:12.5px;color:var(--t3);
+  text-align:center;line-height:1.6;}
+.rank-tip.warn{color:var(--brown);}
+
+/* —— 文本/数字输入 —— */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:14px;color:var(--t2);
+  font-weight:600;margin-bottom:8px;}
+.field label .req{color:var(--brown);}
+.field .sub{font-size:12px;color:var(--t3);font-weight:400;margin-left:6px;}
+.field input{width:100%;padding:14px 16px;font-size:16px;
+  background:var(--card-solid);border:1.5px solid var(--line);
+  border-radius:var(--r-md);color:var(--t1);transition:all .2s;
+  -webkit-appearance:none;}
+.field input:focus{outline:none;border-color:var(--klein);
+  box-shadow:0 0 0 3px var(--klein-glow-sm);}
+.field input.err{border-color:var(--alert-s);
+  box-shadow:0 0 0 3px rgba(198,40,40,.08);}
+.field .err-msg{font-size:12px;color:var(--alert-s);margin-top:6px;
+  opacity:0;height:0;transition:all .2s;overflow:hidden;}
+.field .err-msg.show{opacity:1;height:auto;}
+.field-row{display:flex;gap:12px;}
+.field-row .field{flex:1;margin-bottom:0;}
+.calc-hint{font-size:12px;color:var(--klein);margin-top:6px;font-weight:500;}
+
+/* —— 日期选择（出生年月）—— */
+.date-pick{display:flex;gap:12px;}
+.date-pick .seg{flex:1;}
+.date-pick select{width:100%;padding:14px 12px;font-size:16px;
+  background:var(--card-solid);border:1.5px solid var(--line);
+  border-radius:var(--r-md);color:var(--t1);-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B92A8' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;}
+.date-pick select:focus{outline:none;border-color:var(--klein);}
+
+/* —— 底部按钮 —— */
+#footer{position:fixed;bottom:0;left:0;right:0;z-index:40;
+  padding:14px 20px calc(var(--safe-bottom) + 16px);
+  background:linear-gradient(0deg,var(--bg) 70%,transparent);
+  display:flex;gap:12px;align-items:center;}
+.btn{flex:1;padding:16px;font-size:16.5px;font-weight:600;
+  border:none;border-radius:var(--r-md);cursor:pointer;
+  transition:all .22s cubic-bezier(.4,0,.2,1);letter-spacing:.3px;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--klein),var(--klein-light));
+  color:#fff;box-shadow:0 6px 20px var(--klein-glow-md);}
+.btn-primary:disabled{background:var(--line);color:var(--t4);
+  box-shadow:none;cursor:not-allowed;}
+.btn-ghost{flex:0 0 auto;width:54px;padding:16px 0;background:var(--card-solid);
+  border:1.5px solid var(--line);color:var(--t2);font-size:20px;}
+.btn-text{background:transparent;color:var(--t3);font-size:14px;
+  flex:0 0 auto;padding:16px 12px;}
+.btn-skip{background:var(--card-solid);border:1.5px solid var(--gold-glow);
+  color:var(--gold-deep);}
+
+/* —— 欢迎页 —— */
+.welcome{text-align:center;padding-top:4vh;}
+.welcome .hero{margin:0 auto 28px;width:100%;max-width:280px;}
+.welcome .brand-cn{font-size:15px;color:var(--brown);letter-spacing:8px;
+  font-weight:600;margin-bottom:10px;padding-left:8px;}
+.welcome h1{font-size:27px;line-height:1.4;font-weight:700;
+  color:var(--t1);letter-spacing:-.4px;margin-bottom:6px;}
+.welcome .en{font-size:12.5px;color:var(--t3);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:24px;font-weight:500;}
+.welcome .meta-card{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:6px 0;margin:0 auto 22px;text-align:left;
+  backdrop-filter:blur(20px);}
+.welcome .meta-row{display:flex;padding:13px 20px;font-size:14px;
+  border-bottom:1px solid var(--line-soft);}
+.welcome .meta-row:last-child{border-bottom:none;}
+.welcome .meta-row .k{flex:0 0 84px;color:var(--klein);font-weight:600;}
+.welcome .meta-row .v{flex:1;color:var(--t2);}
+.welcome .org{font-size:13px;color:var(--t3);margin-top:18px;line-height:1.7;}
+
+/* —— 通用内容页（知情同意/隐私铺垫/章节过渡）—— */
+.page h2{font-size:23px;font-weight:700;line-height:1.4;
+  color:var(--t1);margin-bottom:8px;letter-spacing:-.3px;}
+.page .lead{font-size:14.5px;color:var(--t2);line-height:1.75;margin-bottom:20px;}
+.page .sec{margin-bottom:18px;}
+.page p{font-size:14.5px;color:var(--t2);line-height:1.8;margin-bottom:12px;}
+.page p b{color:var(--t1);font-weight:600;}
+.page .em-brown{color:var(--brown);font-weight:600;}
+
+/* —— 知情同意条款卡片 —— */
+.consent-card{background:var(--card-solid);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:20px;margin-bottom:18px;}
+.consent-card .ctitle{display:flex;align-items:center;gap:8px;
+  font-size:15px;font-weight:700;color:var(--brown);margin-bottom:14px;}
+.consent-card ol{list-style:none;counter-reset:ci;}
+.consent-card li{counter-increment:ci;position:relative;padding-left:30px;
+  font-size:13.5px;line-height:1.7;color:var(--t2);margin-bottom:13px;}
+.consent-card li:last-child{margin-bottom:0;}
+.consent-card li::before{content:counter(ci);position:absolute;left:0;top:1px;
+  width:21px;height:21px;border-radius:6px;background:var(--klein-glow);
+  color:var(--klein);font-size:11.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;}
+.consent-card li b{color:var(--t1);font-weight:600;}
+
+/* —— 二次知情同意（隐私模块全屏）—— */
+.consent2{text-align:center;padding-top:6vh;}
+.consent2 .shield{width:64px;height:64px;margin:0 auto 20px;
+  border-radius:18px;background:var(--gold-bg);border:1px solid var(--gold-glow);
+  display:flex;align-items:center;justify-content:center;font-size:30px;}
+.consent2 h2{font-size:22px;font-weight:700;color:var(--t1);margin-bottom:6px;}
+.consent2 .sub{font-size:13px;color:var(--gold-deep);font-weight:600;
+  letter-spacing:.5px;margin-bottom:20px;}
+.consent2 .body{background:var(--gold-bg);border:1px solid var(--gold-glow);
+  border-radius:var(--r-lg);padding:20px;text-align:left;margin-bottom:24px;}
+.consent2 .body p{font-size:13.5px;line-height:1.75;color:var(--brown-deep);
+  margin-bottom:12px;}
+.consent2 .body p:last-child{margin-bottom:0;}
+
+/* —— 提交/反馈页 —— */
+.done{text-align:center;padding-top:6vh;}
+.done .check{width:76px;height:76px;margin:0 auto 22px;border-radius:50%;
+  background:linear-gradient(135deg,var(--klein),var(--klein-light));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 30px var(--klein-glow-md);}
+.done .check svg{width:38px;height:38px;}
+.done h2{font-size:24px;font-weight:700;margin-bottom:10px;}
+.done .lead{font-size:14.5px;color:var(--t2);line-height:1.8;
+  max-width:340px;margin:0 auto 24px;}
+.result-card{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:22px;margin-bottom:16px;text-align:left;
+  backdrop-filter:blur(20px);}
+.result-card .rc-head{font-size:12.5px;color:var(--klein);font-weight:700;
+  letter-spacing:.5px;margin-bottom:14px;}
+.result-card .dim-row{display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--line-soft);}
+.result-card .dim-row:last-child{border-bottom:none;}
+.result-card .dim-name{flex:1;font-size:15px;font-weight:600;color:var(--t1);}
+.result-card .dim-level{font-size:13px;font-weight:700;padding:4px 12px;
+  border-radius:20px;}
+.lv-normal{background:rgba(46,125,82,.1);color:var(--alert-normal);}
+.lv-watch{background:rgba(232,130,12,.1);color:var(--alert-high);}
+.lv-focus{background:rgba(198,40,40,.1);color:var(--alert-s);}
+.next-card{background:var(--brown-glow);border:1px solid var(--brown-glow-md);
+  border-radius:var(--r-lg);padding:18px 20px;margin-bottom:16px;text-align:left;}
+.next-card .nc-head{display:flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:700;color:var(--brown);margin-bottom:10px;}
+.next-card p{font-size:14px;color:var(--brown-deep);line-height:1.7;}
+
+/* —— 退出确认弹窗 —— */
+#modal-mask{position:fixed;inset:0;z-index:100;background:rgba(10,14,39,.4);
+  backdrop-filter:blur(4px);display:none;align-items:flex-end;
+  justify-content:center;}
+#modal-mask.show{display:flex;animation:fade .25s;}
+.modal{background:var(--card-solid);width:100%;max-width:480px;
+  border-radius:var(--r-xl) var(--r-xl) 0 0;padding:26px 22px;
+  padding-bottom:calc(var(--safe-bottom) + 26px);animation:slideup .3s;}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:8px;text-align:center;}
+.modal p{font-size:14px;color:var(--t2);text-align:center;line-height:1.6;
+  margin-bottom:20px;}
+.modal .mbtns{display:flex;gap:12px;}
+
+/* —— 动画 —— */
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes sceneIn{from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}}
+.scene-anim{animation:sceneIn .42s cubic-bezier(.16,1,.3,1);}
+.stagger>*{opacity:0;animation:sceneIn .5s cubic-bezier(.16,1,.3,1) forwards;}
+.stagger>*:nth-child(1){animation-delay:.02s}
+.stagger>*:nth-child(2){animation-delay:.08s}
+.stagger>*:nth-child(3){animation-delay:.14s}
+.stagger>*:nth-child(4){animation-delay:.20s}
+.stagger>*:nth-child(5){animation-delay:.26s}
+.stagger>*:nth-child(6){animation-delay:.32s}
+.stagger>*:nth-child(7){animation-delay:.38s}
+
+/* —— 小屏适配 iPhone SE —— */
+@media (max-height:670px){
+  .welcome{padding-top:1vh;}
+  .welcome .hero{max-width:200px;margin-bottom:18px;}
+  .welcome h1{font-size:23px;}
+  .qtitle{font-size:18px;}
+}
+@media (max-width:340px){
+  #scroll{padding-left:16px;padding-right:16px;}
+  .qcard{padding:22px 18px;}
+}
+
+/* —— 加载态 —— */
+#loading{position:fixed;inset:0;z-index:200;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .4s;}
+#loading.hide{opacity:0;pointer-events:none;}
+.spinner{width:36px;height:36px;border:3px solid var(--line);
+  border-top-color:var(--klein);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spinner"></div></div>
+
+<div id="bg-atmos">
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+  <div class="grain"></div>
+</div>
+
+<div id="topbar">
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <div id="step-meta">
+    <span class="chap" id="meta-chap"></span>
+    <span id="meta-count"></span>
+  </div>
+</div>
+
+<div id="app">
+  <div id="scroll"><div id="stage"></div></div>
+  <div id="footer"></div>
+</div>
+
+<div id="modal-mask">
+  <div class="modal">
+    <h3>确认退出？</h3>
+    <p>您的填写进度已自动保存，<br>可随时通过本链接回到这里继续。</p>
+    <div class="mbtns">
+      <button class="btn btn-ghost" style="flex:1;width:auto;font-size:16px" onclick="App.closeExit()">继续填写</button>
+      <button class="btn" style="background:var(--bg-soft);color:var(--t2)" onclick="App.confirmExit()">确认退出</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://web-9b5d875b-aef6-4385-9a3c-3ac0d3e1e1ab.tcloudbaseapp.com/sdk/@cloudbase/js-sdk/2.17.3/cloudbase.full.js"></script>
+<script>
+/* ============================================================
+   松柏纪男性首诊评估 · 数据层
+   ============================================================ */
+
+/* —— 学术注释（折叠展示用，与文档一致）—— */
+const NOTE = {
+  B01:'吸烟通过氧化应激、端粒缩短、内皮功能损伤三条机制路径加速衰老进程，对应 Hallmarks of Aging 中的基因组不稳定性、端粒磨损与慢性炎症三大标志（López-Otín et al., 2023）。烟龄与每日吸烟量是评估累积暴露剂量的核心参数。',
+  B02:'长期饮酒（每日酒精摄入＞20g）与肝脏代谢负担、表观遗传时钟加速、肠道菌群失衡及多组学衰老指标显著相关（Topiwala et al., 2022）。频次评估是肝脏与代谢维度风险分层的基础。',
+  B03:'WHO 推荐成年人每周至少 150 分钟中等强度有氧运动。规律运动通过改善线粒体功能、降低慢性炎症、维持肌肉量与心血管储备，是目前证据等级最高的延寿干预之一（Garatachea et al., 2015）。',
+  C01:'慢性应激通过持续激活下丘脑-垂体-肾上腺轴（HPA轴）、皮质醇升高与昼夜节律紊乱，是 Hallmarks of Aging 中「细胞间通讯改变」与「慢性炎症（Inflammaging）」的重要驱动因素（Sapolsky, 2004; Epel et al., 2004）。人生阶段是评估当前生理应激负荷的临床代理变量。',
+  D01:'精力下降通常反映线粒体功能减退与睡眠结构变化，是男性 35 岁后最早出现的主观衰老信号之一。三年时间窗在记忆准确性与生理变化幅度上取得平衡。',
+  D02:'成年男性 30 岁后骨骼肌量每十年减少 3-8%（Sarcopenia 自然进程，Cruz-Jentoft et al., 2019），体力下降对应 Hallmarks 中「干细胞耗竭」在骨骼肌系统的功能性表现。',
+  D03:'认知效能在 35 岁后逐步下降，反映前额叶皮质功能、海马神经可塑性减弱与脑血流灌注变化（Salthouse, 2009），是 BR（脑神经）维度筛查的核心主观指标。',
+  E01:'男性 35 岁后衰老往往以多系统同步进展为特征。主诉的主导维度与困扰程度排序是临床上识别个体衰老主导路径（dominant aging axis）的标准方法。本题第一困扰将决定您进入哪一专项深度评估模块。',
+  F01:'外源性干预手段会显著影响多组学衰老评估的基线数据解读：外源性激素替代会直接改变激素六项检测结果；干细胞输注与外源生长因子会影响免疫细胞亚群分布与 IGF-1/胰岛素信号轴。如实告知既往干预史是医师准确解读评估报告的前提，符合 GCP 信息披露原则。',
+  G01:'明确的个体化健康目标是长寿医学方案设计的起点。现代长寿医学（Attia, 2023）强调以「健康跨度（healthspan）」为核心目标。本题与 E01 困扰排序交叉验证，确认评估优先级。',
+  H01:'遗传背景对人类衰老进程的贡献约 25-30%（Christensen et al., 2006）。一级亲属早发心脑血管事件是 ASCVD 风险评估的独立危险因素，权重等同于一项主要可控危险因素。',
+  'M1.01':'成年男性最适睡眠时长为 7-8 小时。长期＜6 小时与全因死亡率、心血管事件、认知衰退及代谢综合征风险显著相关（Cappuccio et al., 2010 Meta-analysis）。',
+  'M1.02':'入睡潜伏期＞30 分钟是慢性失眠诊断的核心维度之一（ICSD-3 标准），提示自主神经调节失衡与睡前皮质醇水平异常。',
+  'M1.03':'恢复力（resilience）是线粒体能量代谢、神经调节与免疫稳态的综合反映。恢复时间延长是早期衰老的敏感主观信号，且早于客观指标变化出现（Lipsitz, 2002）。',
+  'M1.04':'晨起疲惫与深睡眠比例不足、皮质醇晨起觉醒反应（CAR）异常相关。长期晨起疲惫提示 HPA 轴功能紊乱与睡眠结构问题。',
+  'M1.05':'餐后嗜睡与餐后血糖波动幅度、胰岛素抵抗早期表现及皮质醇节律异常相关，是 ME（代谢）维度的间接信号。',
+  'M1.06':'主观压力强度与皮质醇水平、炎症因子 IL-6、TNF-α 及端粒缩短速度呈正相关（Epel et al., 2004），是评估慢性应激负荷的标准临床方法。',
+  'M2.01':'性欲水平受总睾酮与游离睾酮、多巴胺奖赏系统、皮质醇水平三路径共同调控，是男性激素轴（HPG轴）功能的综合主观反映。性欲减退是 ADAM 男性更年期筛查量表的核心题项（Morley et al., 2000）。',
+  'M2.02':'晨勃（nocturnal penile tumescence）是夜间 REM 睡眠期阴茎自发勃起，与夜间睾酮峰值、血管内皮功能、副交感神经活性直接相关，是评估男性生殖系统器质性健康的客观主观结合指标。',
+  'M2.03':'EHS（Erection Hardness Score，Mulhall et al., 2007）是国际泌尿外科与男科学界广泛使用的勃起硬度自评工具。EHS ≤ 3 分提示可能存在勃起功能障碍（ED）。',
+  'M2.04':'性生活满意度是综合身体功能、心理状态、伴侣关系的多维度反映，单一生理指标无法替代，与生活质量量表（QoL）密切相关。',
+  'M2.05':'以上症状群构成「迟发性性腺功能减退症（LOH）」的典型临床表现，与游离睾酮水平下降密切相关。三项及以上阳性提示需进行激素六项检测确认（EAU 指南 2022）。',
+  'M2.06':'PDE5 抑制剂使用模式可侧面反映器质性与心理性 ED 的比例：偶发使用且效果良好提示心理性为主，需持续高剂量提示器质性血管或激素问题。',
+  'M2.07':'伴侣反馈是评估性功能问题对生活质量影响的重要外部参照。许多男性低估自身问题严重程度，伴侣反馈往往更能反映客观状态。',
+  'M3.01':'成年期体重在短时间内的非主动变化均具有临床意义。持续增重（尤其腹型肥胖）与胰岛素抵抗、慢性炎症、脂肪肝风险显著相关；非主动减重则提示需排查代谢、内分泌或肿瘤性疾病。',
+  'M3.02':'腹型肥胖（内脏脂肪堆积）较皮下脂肪具有更强的代谢风险，是代谢综合征的核心特征。内脏脂肪分泌的促炎因子是 Inflammaging 的重要来源（Tchkonia & Kirkland, 2018）。',
+  'M3.03':'餐后困倦反映血糖波动幅度与餐后胰岛素峰值，频繁发生提示胰岛素抵抗早期或餐后高血糖，先于空腹血糖与 HbA1c 异常出现。',
+  'M3.04':'上述症状群与胰岛素抵抗、瘦素抵抗、肠道菌群失衡及肝脏解毒功能下降相关。多项症状叠加是 ME 与 IM 维度联合评估的指征。',
+  'M3.05':'以上指标构成「代谢综合征」诊断维度（中国成人血脂异常防治指南 2023）。多项阳性提示需进一步进行 HOMA-IR、FibroScan 与心血管深度筛查。',
+  'M3.06':'既往减重经历反映代谢适应性、自我管理依从性与药物反应特征。多次减重失败往往提示瘦素抵抗、肠道菌群失调或情绪性进食机制需要专项评估。',
+  'M4.01':'以上指标构成 ASCVD 10 年风险预测模型的关键输入变量。多项阳性显著提升 10 年事件风险，需进入进阶 CV 评估通道（含 ApoB、Lp(a)、hs-CRP、冠脉钙化扫描）。',
+  'M4.02':'爬楼气短是评估心肺储备功能与最大摄氧量（VO2max）的简易临床指标。VO2max 是预测全因死亡率最强的单一生理指标之一（Mandsager et al., 2018）。',
+  'M4.03':'上述症状是心血管事件前驱表现的常见描述。多项阳性属于需要立即面诊评估的临床信号，不应延迟。',
+  'M4.04':'家庭血压监测对早期高血压识别敏感度高于诊室血压，可避免「白大衣高血压」与「隐匿性高血压」的误判（ESH 高血压指南 2023）。',
+  'M4.05':'早发心血管疾病家族史是 ASCVD 独立危险因素，其权重相当于一项主要可控危险因素（ACC/AHA 指南 2024）。该题命中提示需进行 Lp(a) 检测。',
+  'M4.06':'当前用药情况影响心血管深度评估的项目选择与解读阈值（如服用他汀者 LDL-C 目标值更严格），是制定个体化下一步评估方案的必要信息。',
+  'M5.01':'上述症状群反映前额叶皮质执行功能、海马区工作记忆功能与默认模式网络（DMN）的整合能力，是认知老化的早期主观信号，先于客观神经心理测试异常出现（Salthouse, 2009）。',
+  'M5.02':'持续情绪低落超过 2 周建议进行 PHQ-9 抑郁筛查问卷与专业精神科评估。本评估为初步识别工具，非诊断结论。',
+  'M5.03':'慢性焦虑通过持续激活交感神经系统与 HPA 轴，长期影响心血管、代谢与免疫功能，是衰老进程中跨系统的负向调节因素。',
+  'M5.04':'睡眠障碍与认知衰退、情绪问题、代谢异常构成「衰老三联征」。深睡眠期脑脊液清除功能（glymphatic system）对 β-淀粉样蛋白清除至关重要，长期睡眠障碍是阿尔茨海默病风险因素（Xie et al., 2013）。',
+  'M5.05':'兴趣减退（anhedonia）是抑郁症核心症状之一，也是男性睾酮水平下降、慢性炎症与多巴胺奖赏系统功能减退的常见伴随表现。本题与 M2.01 性欲变化交叉验证可提高识别准确性。',
+  'M5.06':'既往精神科与睡眠药物使用史影响神经精神维度的深度评估方案选择，部分药物可能影响后续多组学检测的解读基线。',
+  'M6.01':'ADAM 量表第 1 题（关键题项）。性欲水平与游离睾酮水平相关性最强，本题阳性是 ADAM 筛查阳性的必要条件之一。',
+  'M6.02':'ADAM 量表第 2 题。能量减退是男性更年期最常见但常被忽视的症状，与睾酮、皮质醇昼夜节律、线粒体功能多重相关。',
+  'M6.03':'ADAM 量表第 3 题。肌力下降与睾酮、IGF-1、生长激素轴功能衰退相关，对应 MS（肌骨）维度的临床信号。',
+  'M6.04':'ADAM 量表第 4 题。身高减少与骨密度下降、椎体压缩相关，提示骨质疏松风险（男性骨质疏松常被低估），需 DXA 骨密度检测确认。',
+  'M6.05':'ADAM 量表第 5 题（关键题项）。动力与愉悦感减退是男性更年期的情感维度典型表现，本题阳性是 ADAM 筛查阳性的必要条件之一。',
+  'M6.06':'ADAM 量表第 6 题。情绪稳定性下降与神经递质（5-HT、DA）水平与性激素水平变化相关。',
+  'M6.07':'ADAM 量表第 7 题。综合工作效能下降是多系统衰退的功能性表现，整合了认知、体力、情绪三方面影响。'
+};
+
+/* ============================================================
+   STEPS · 完整流程定义
+   类型：welcome / consent / privacy-intro / info / single / multi
+        / scale / rank / consent2 / branch-router / submit
+   ============================================================ */
+
+const MAIN_STEPS = [
+  /* —— 0 欢迎 —— */
+  { id:'welcome', type:'welcome' },
+
+  /* —— 知情同意 —— */
+  { id:'consent', type:'consent' },
+
+  /* —— A01 基础信息 —— */
+  { id:'A01', type:'info', chap:'基础信息', code:'A01',
+    title:'请填写您的基础信息',
+    hint:'共 6 项，请如实填写以便后续个性化报告生成',
+    privacy:'您填写的姓名与手机号将仅用于本次评估报告交付与本中心医师沟通。我们承诺所有信息加密存储，不向任何第三方披露。',
+    note:'完整的基础信息是后续多维度评估解读的前提。年龄、BMI 是国际多组学衰老评估算法（如 GrimAge、PhenoAge）的核心输入变量，影响所有维度的参考阈值与风险分层。' },
+
+  /* —— B01 吸烟 —— */
+  { id:'B01', type:'single', chap:'生活方式', code:'B01',
+    title:'您当前的吸烟状况',
+    opts:['从未吸烟','曾经吸烟，已戒烟 ≥1 年','曾经吸烟，戒烟 ＜1 年',
+      '当前吸烟，每日 ＜10 支','当前吸烟，每日 10-20 支','当前吸烟，每日 ＞20 支'] },
+
+  /* —— B02 饮酒 —— */
+  { id:'B02', type:'single', chap:'生活方式', code:'B02',
+    title:'您当前的饮酒频次',
+    opts:['几乎不饮酒','社交场合偶尔饮（每月 1-3 次）','每周 1-2 次',
+      '每周 3-5 次','几乎每天'] },
+
+  /* —— B03 运动 —— */
+  { id:'B03', type:'single', chap:'生活方式', code:'B03',
+    title:'您每周进行规律运动的频次',
+    hint:'规律运动指每次 ≥30 分钟中等强度',
+    opts:['0 次','1-2 次','3-4 次','5 次及以上'] },
+
+  /* —— C01 人生阶段 —— */
+  { id:'C01', type:'single', chap:'应激负荷', code:'C01',
+    title:'您当前所处的人生奋斗阶段',
+    opts:['爬坡阶段 —— 事业上升期，长期高负荷，压力持续',
+      '躺平阶段 —— 主动或被动减速，压力中等，状态平稳',
+      '享受回报阶段 —— 事业稳定，时间自由度高，压力较低'] },
+
+  /* —— D01 精力 —— */
+  { id:'D01', type:'single', chap:'衰老感知', code:'D01',
+    title:'与 3 年前相比，您当前的精力状态',
+    opts:['明显下降','有所下降','基本相同','略有提升','明显提升'] },
+
+  /* —— D02 体力 —— */
+  { id:'D02', type:'single', chap:'衰老感知', code:'D02',
+    title:'与 3 年前相比，您当前的体力与运动表现',
+    opts:['明显下降','有所下降','基本相同','略有提升','明显提升'] },
+
+  /* —— D03 认知 —— */
+  { id:'D03', type:'single', chap:'衰老感知', code:'D03',
+    title:'与 3 年前相比，您的工作专注力与短期记忆',
+    opts:['明显下降','有所下降','基本相同','略有提升','明显提升'] },
+
+  /* —— E01 困扰排序（决定路由）—— */
+  { id:'E01', type:'rank', chap:'核心主诉', code:'E01',
+    title:'当前最困扰您的健康问题',
+    hint:'请按困扰程度从高到低，依次选出最重要的 3 项',
+    opts:[
+      {k:'A', t:'精力疲劳、易倦、恢复慢'},
+      {k:'B', t:'性功能减退、亲密关系满意度下降'},
+      {k:'C', t:'体重增加、腰腹脂肪堆积、代谢异常'},
+      {k:'D', t:'心血管担忧（血压、心率、家族史）'},
+      {k:'E', t:'注意力下降、情绪波动、睡眠问题'},
+      {k:'F', t:'多系统症状叠加，整体衰老感明显'}
+    ] },
+
+  /* —— F01 既往干预（多选，①互斥）—— */
+  { id:'F01', type:'multi', chap:'既往干预史', code:'F01',
+    title:'您过去 2 年是否使用过以下抗衰相关干预手段',
+    hint:'可多选',
+    exclusive:0,
+    opts:['从未使用过任何此类干预',
+      '干细胞输注或外泌体注射（间充质干细胞、胎盘干细胞等）',
+      'NAD+ 或 NMN 静脉滴注 / 口服补充',
+      '雄激素替代或生长因子治疗（睾酮、HGH、DHEA）',
+      '胎盘素或羊胎素注射',
+      '自体血或 PRP 富血小板血浆治疗',
+      '口服处方药用于抗衰目的（雷帕霉素、二甲双胍等）',
+      '高剂量维生素或抗氧化剂静脉滴注（VitC、谷胱甘肽等）',
+      '其他外源性生物制剂或细胞治疗'] },
+
+  /* —— G01 健康目标 —— */
+  { id:'G01', type:'single', chap:'健康目标', code:'G01',
+    title:'未来 3 年，您最希望保留或恢复的能力是',
+    opts:['持续高强度工作的精力与抗压能力',
+      '性功能与亲密关系的质量',
+      '运动能力与理想体型',
+      '心脑血管健康，预防重大疾病',
+      '清晰的思维、稳定的情绪',
+      '整体生命活力，延缓衰老进程'] },
+
+  /* —— H01 家族史（多选，⑪互斥）—— */
+  { id:'H01', type:'multi', chap:'家族史', code:'H01',
+    title:'您的家族史与本人既往健康问题',
+    hint:'可多选',
+    exclusive:10,
+    opts:['父母或兄弟姐妹有冠心病 / 心梗 / 脑卒中史',
+      '父母或兄弟姐妹有 2 型糖尿病',
+      '一级亲属有恶性肿瘤病史',
+      '一级亲属有早发痴呆（＜65 岁）',
+      '本人确诊高血压',
+      '本人确诊高血脂或脂肪肝',
+      '本人确诊痛风或长期高尿酸血症',
+      '本人有前列腺相关疾病史（前列腺增生、慢性前列腺炎等）',
+      '本人有抑郁或焦虑诊断史',
+      '本人有睡眠呼吸暂停综合征',
+      '以上均无'] }
+];
+
+/* ============================================================
+   分支题库 BRANCHES（按路由进入其中之一）
+   ============================================================ */
+
+const BRANCHES = {
+  /* —— M1 精力管理与恢复力 —— */
+  M1: { name:'精力管理与恢复力评估',
+    intro:'本模块识别您当前的睡眠质量、疲劳恢复模式与慢性应激信号，对应衰老六维框架中 BR（脑神经）+ ME（代谢内分泌）+ IM（免疫炎症）维度。',
+    consent2:null,
+    steps:[
+      { id:'M1.01', type:'single', chap:'M1 精力管理', code:'M1.01',
+        title:'过去 1 年，您工作日的实际平均睡眠时长',
+        opts:['＜5 小时','5-6 小时','6-7 小时','7-8 小时','＞8 小时'] },
+      { id:'M1.02', type:'single', chap:'M1 精力管理', code:'M1.02',
+        title:'过去 1 个月，您平均入睡所需时间',
+        opts:['＜15 分钟','15-30 分钟','30-60 分钟','＞60 分钟'] },
+      { id:'M1.03', type:'single', chap:'M1 精力管理', code:'M1.03',
+        title:'与 1 年前相比，疲劳后恢复到正常状态所需时间',
+        opts:['明显延长','略有延长','基本相同','有所缩短'] },
+      { id:'M1.04', type:'single', chap:'M1 精力管理', code:'M1.04',
+        title:'过去 1 年，晨起后仍感疲惫的频率',
+        opts:['几乎每天','每周 ≥3 天','每周 1-2 天','偶尔','几乎没有'] },
+      { id:'M1.05', type:'single', chap:'M1 精力管理', code:'M1.05',
+        title:'过去 3 个月，下午时段明显注意力下降或瞌睡的频率',
+        opts:['几乎每天','经常','偶尔','几乎没有'] },
+      { id:'M1.06', type:'scale', chap:'M1 精力管理', code:'M1.06',
+        title:'请评估您工作日承受的主观压力强度',
+        leftLabel:'无压力', rightLabel:'难以承受', min:1, max:10 }
+    ]},
+
+  /* —— M2 亲密关系与生殖健康（前置二次知情）—— */
+  M2: { name:'亲密关系与生殖健康评估',
+    intro:'本模块识别男性生殖系统、激素轴功能与亲密关系满意度，对应衰老六维框架中 RH（生殖激素）+ CV（心血管）+ BR（脑神经）维度。',
+    consent2:{ title:'亲密关系与生殖健康',
+      lines:[
+        '本模块涉及性功能、亲密关系等高度隐私内容，关乎您的生殖系统健康与激素轴功能评估，是男性长寿医学评估不可或缺的一环。',
+        '您的回答将仅供本中心持证医师在出具评估报告时参考，全程加密存储，绝不会向任何第三方披露，亦不会出现在任何外部交付材料中。',
+        '本模块完全自愿，您可以选择跳过任意题目。继续填写视为您理解并同意上述条款。' ]},
+    steps:[
+      { id:'M2.01', type:'single', chap:'M2 生殖健康', code:'M2.01',
+        title:'与 3 年前相比，您当前的性欲水平',
+        opts:['明显下降','有所下降','基本相同','略有提升','明显提升'] },
+      { id:'M2.02', type:'single', chap:'M2 生殖健康', code:'M2.02',
+        title:'过去 3 个月，您晨勃出现的频率',
+        opts:['几乎每天','每周 3-5 次','每周 1-2 次','每月数次','几乎没有'] },
+      { id:'M2.03', type:'single', chap:'M2 生殖健康', code:'M2.03',
+        title:'过去 3 个月，性生活时勃起硬度自评',
+        hint:'如近期未进行，请选最近一次的状态；您可以选择不愿回答',
+        opts:['EHS 1 分 —— 增大但不硬','EHS 2 分 —— 硬，但不足以插入',
+          'EHS 3 分 —— 可插入但不充分坚硬','EHS 4 分 —— 完全坚硬，充分维持',
+          '近期未进行性生活','不愿回答'] },
+      { id:'M2.04', type:'scale', chap:'M2 生殖健康', code:'M2.04',
+        title:'您对当前性生活整体满意度的自评',
+        leftLabel:'极不满意', rightLabel:'非常满意', min:1, max:10, canSkip:true },
+      { id:'M2.05', type:'multi', chap:'M2 生殖健康', code:'M2.05',
+        title:'您是否出现下列伴随症状',
+        hint:'可多选', exclusive:6,
+        opts:['体毛减少、胡须生长变慢','肌肉量减少、力量下降','腹型肥胖、腰围增加',
+          '情绪低落、动力下降','潮热、夜间盗汗','记忆力或注意力下降','以上均无'] },
+      { id:'M2.06', type:'single', chap:'M2 生殖健康', code:'M2.06',
+        title:'您是否曾因性功能问题就医或自行用药',
+        hint:'您可以选择不愿回答',
+        opts:['是，曾就医并使用过 PDE5 抑制剂（如万艾可、希爱力等）',
+          '是，自行购买使用过相关西药','是，使用过中草药或保健品调理',
+          '否，从未处理过','不愿回答'] },
+      { id:'M2.07', type:'single', chap:'M2 生殖健康', code:'M2.07',
+        title:'配偶或伴侣对当前亲密关系状态的反馈',
+        hint:'您可以选择不愿回答',
+        opts:['满意','基本满意','有所抱怨','经常抱怨',
+          '不适用 / 当前无固定伴侣','不愿回答'] }
+    ]},
+
+  /* —— M3 代谢与体型管理 —— */
+  M3: { name:'代谢与体型管理评估',
+    intro:'本模块识别您当前的代谢健康、体型变化趋势与代谢综合征风险，对应衰老六维框架中 ME（代谢内分泌）+ IM（免疫炎症）维度。',
+    consent2:null,
+    steps:[
+      { id:'M3.01', type:'single', chap:'M3 代谢体型', code:'M3.01',
+        title:'与 1 年前相比，您的体重变化',
+        opts:['增加 ≥5 kg','增加 2-5 kg','基本不变（±2 kg 以内）',
+          '减少 2-5 kg','减少 ≥5 kg'] },
+      { id:'M3.02', type:'single', chap:'M3 代谢体型', code:'M3.02',
+        title:'您当前的脂肪堆积模式自评',
+        opts:['主要堆积在腹部（苹果型）','主要堆积在臀部与大腿（梨型）',
+          '全身较为均匀分布','体型偏瘦，脂肪不明显'] },
+      { id:'M3.03', type:'single', chap:'M3 代谢体型', code:'M3.03',
+        title:'您餐后 2 小时内是否出现明显困倦、注意力下降',
+        opts:['经常出现，影响下午工作','偶尔出现','基本无影响'] },
+      { id:'M3.04', type:'multi', chap:'M3 代谢体型', code:'M3.04',
+        title:'您是否经常出现以下症状',
+        hint:'可多选', exclusive:5,
+        opts:['饥饿感强烈，难以延后进食','食用甜食或精制碳水后短时间内再次饥饿',
+          '晨起口苦或口干明显','体味或汗味较前明显加重',
+          '对甜食或油腻食物渴求增加','以上均无'] },
+      { id:'M3.05', type:'multi', chap:'M3 代谢体型', code:'M3.05',
+        title:'您是否被诊断或被告知存在以下情况',
+        hint:'可多选', exclusive:6,
+        opts:['空腹血糖升高（≥6.1 mmol/L）','糖耐量异常或 HbA1c 偏高',
+          '甘油三酯升高','脂肪肝（B超或CT影像提示）','尿酸偏高或痛风发作',
+          '腰围 ≥90 cm（亚洲男性中心型肥胖标准）','以上均无 / 不清楚'] },
+      { id:'M3.06', type:'single', chap:'M3 代谢体型', code:'M3.06',
+        title:'过去 1 年，您是否进行过系统的减重尝试',
+        opts:['是，通过饮食控制','是，通过运动训练',
+          '是，使用过减重药物（GLP-1类、奥利司他等）',
+          '是，多种方式结合','否，未尝试'] }
+    ]},
+
+  /* —— M4 心血管系统预防性评估 —— */
+  M4: { name:'心血管系统预防性评估',
+    intro:'本模块识别您当前的心血管事件风险、心肺储备功能与早期警示信号，对应衰老六维框架中 CV（心血管）维度。',
+    consent2:null,
+    steps:[
+      { id:'M4.01', type:'multi', chap:'M4 心血管', code:'M4.01',
+        title:'您是否被诊断或被告知存在以下情况',
+        hint:'可多选', exclusive:5,
+        opts:['高血压（或处于临界血压）','高血脂（LDL-C 或 TC 偏高）',
+          '颈动脉斑块或动脉粥样硬化早期表现','冠脉钙化积分阳性（CAC ＞ 0）',
+          '心电图异常（早搏、ST-T 改变等）','以上均无 / 未做过相关检查'] },
+      { id:'M4.02', type:'single', chap:'M4 心血管', code:'M4.02',
+        title:'您在日常活动中的耐量自评 —— 爬 3 层楼梯时',
+        opts:['完全无气短，轻松完成','略有气短，但很快恢复',
+          '明显气短，需要中途停下休息','几乎无法完成'] },
+      { id:'M4.03', type:'multi', chap:'M4 心血管', code:'M4.03',
+        title:'过去 1 年，您是否出现过下列症状',
+        hint:'可多选', exclusive:5,
+        opts:['胸闷或胸部压迫感（活动后或情绪激动时）','心悸（自觉心跳加快或不规则）',
+          '不明原因的劳累后头晕','平卧时呼吸不畅','双下肢水肿','以上均无'] },
+      { id:'M4.04', type:'single', chap:'M4 心血管', code:'M4.04',
+        title:'您是否定期监测血压',
+        opts:['每天监测','每周监测','偶尔监测','从不监测'] },
+      { id:'M4.05', type:'single', chap:'M4 心血管', code:'M4.05',
+        title:'您的一级亲属是否有早发心血管事件',
+        hint:'一级亲属指父母、兄弟姐妹',
+        opts:['父亲 ＜55 岁发生','母亲 ＜65 岁发生','兄弟姐妹 ＜55 岁发生',
+          '有相关事件但发生年龄不详','无'] },
+      { id:'M4.06', type:'multi', chap:'M4 心血管', code:'M4.06',
+        title:'您当前是否正在服用以下药物',
+        hint:'可多选', exclusive:4,
+        opts:['降压药','他汀类降脂药','阿司匹林或抗血小板药',
+          '心律调节药','以上均无'] }
+    ]},
+
+  /* —— M5 脑神经健康与情绪管理（前置二次知情）—— */
+  M5: { name:'脑神经健康与情绪管理评估',
+    intro:'本模块识别您当前的认知功能、情绪稳定性与神经系统衰老信号，对应衰老六维框架中 BR（脑神经）维度。',
+    consent2:{ title:'脑神经健康与情绪管理',
+      lines:[
+        '本模块涉及您的情绪、心理状态等敏感内容。本评估为筛查工具，非诊断结论，旨在帮助医师识别需要进一步专业评估的方向。',
+        '您的回答将全程加密存储，仅供本中心持证医师参考，不会向任何第三方披露。',
+        '本模块完全自愿，您可以选择跳过任意题目。继续填写视为您理解并同意上述条款。' ]},
+    steps:[
+      { id:'M5.01', type:'multi', chap:'M5 脑健康', code:'M5.01',
+        title:'过去 1 年，您是否经常出现以下情况',
+        hint:'可多选', exclusive:5,
+        opts:['同样的工作内容比 3 年前更耗费精力','经常忘记刚才要做的事或刚说过的话',
+          '阅读复杂内容时难以保持专注','决策疲劳，对小事难以决定',
+          '创造性思维与发散能力下降','以上均不明显'] },
+      { id:'M5.02', type:'single', chap:'M5 脑健康', code:'M5.02',
+        title:'过去 3 个月，您的情绪状态整体自评',
+        hint:'您可以选择不愿回答',
+        opts:['持续愉悦、稳定','基本稳定，偶有波动','经常情绪低落或易怒',
+          '持续情绪低落，影响日常生活','不愿回答'] },
+      { id:'M5.03', type:'single', chap:'M5 脑健康', code:'M5.03',
+        title:'过去 3 个月，您的焦虑感受',
+        opts:['几乎没有','偶尔出现，可自我调节','经常担忧难以放松',
+          '持续焦虑伴随躯体症状（心悸、胸闷、出汗等）'] },
+      { id:'M5.04', type:'single', chap:'M5 脑健康', code:'M5.04',
+        title:'过去 1 个月，入睡困难或夜间觉醒的频率',
+        opts:['几乎没有','偶尔（每周 ＜2 次）','经常（每周 3 次以上）','几乎每晚'] },
+      { id:'M5.05', type:'single', chap:'M5 脑健康', code:'M5.05',
+        title:'您是否经常感到「动力不足、对原本感兴趣的事失去兴趣」',
+        opts:['几乎没有','偶尔','经常','持续如此'] },
+      { id:'M5.06', type:'single', chap:'M5 脑健康', code:'M5.06',
+        title:'您是否曾就情绪或睡眠问题就医或服用相关药物',
+        hint:'您可以选择不愿回答',
+        opts:['是，曾服用过抗抑郁 / 抗焦虑药物','是，曾服用过助眠药物（安眠药、褪黑素等）',
+          '是，使用过中草药或保健品调理','否，从未处理过','不愿回答'] }
+    ]},
+
+  /* —— M6 男性综合衰退专项（ADAM，前置二次知情）—— */
+  M6: { name:'男性综合衰退专项评估',
+    intro:'本模块基于国际通用「老年男性雄激素缺乏症状评估问卷」（ADAM, Morley et al., 2000）的临床适配版本，综合识别男性 35 岁后多系统衰退状态，是 RH+ME+BR+MS 四维度的整合筛查。',
+    consent2:{ title:'男性综合衰退评估',
+      lines:[
+        '本模块为基于 ADAM 量表的临床筛查工具，旨在初步识别男性激素缺乏与多系统衰退状态，非诊断性结论。任何具体诊断需结合实验室检测（如总睾酮、游离睾酮、SHBG）与医师面诊综合判断。',
+        '您的回答将全程加密存储，仅供本中心持证医师参考。',
+        '本模块完全自愿，您可以选择跳过任意题目。继续填写视为您理解并同意上述条款。' ]},
+    steps:[
+      { id:'M6.01', type:'single', chap:'M6 综合衰退', code:'M6.01', adamKey:true,
+        title:'您是否感觉性欲较 3 年前明显下降', opts:['是','否'] },
+      { id:'M6.02', type:'single', chap:'M6 综合衰退', code:'M6.02',
+        title:'您是否感觉精力较前明显不足', opts:['是','否'] },
+      { id:'M6.03', type:'single', chap:'M6 综合衰退', code:'M6.03',
+        title:'您是否感觉力量或耐力下降', opts:['是','否'] },
+      { id:'M6.04', type:'single', chap:'M6 综合衰退', code:'M6.04',
+        title:'您是否感觉身高较年轻时变矮', opts:['是','否'] },
+      { id:'M6.05', type:'single', chap:'M6 综合衰退', code:'M6.05', adamKey:true,
+        title:'您是否感觉对生活的乐趣减少', opts:['是','否'] },
+      { id:'M6.06', type:'single', chap:'M6 综合衰退', code:'M6.06',
+        title:'您是否经常感到伤感或情绪暴躁', opts:['是','否'] },
+      { id:'M6.07', type:'single', chap:'M6 综合衰退', code:'M6.07',
+        title:'您是否感觉工作能力较前下降', opts:['是','否'] }
+    ]}
+};
+
+/* ============================================================
+   计算引擎 · 路由 / 标签 / 警示等级（对齐文档第3/12/13章）
+   ============================================================ */
+
+function calcAge(birth){ // birth = {y, m}
+  if(!birth || !birth.y) return null;
+  return new Date().getFullYear() - parseInt(birth.y,10);
+}
+function calcBMI(ht, wt){
+  if(!ht || !wt) return null;
+  const m = ht/100;
+  return +(wt/(m*m)).toFixed(1);
+}
+
+/* —— 主分支路由（P0 > P1 > P2）—— */
+function computeBranch(A){
+  const age = calcAge(A.A01 && A.A01.birth);
+  // D01-D03 中「明显下降」(即选项①,index 0) 计数
+  const declineCount = ['D01','D02','D03']
+    .filter(k => A[k] === 0).length;
+  const h01Hits = Array.isArray(A.H01)
+    ? A.H01.filter(i => i !== 10).length : 0; // 排除「以上均无」(index 10)
+
+  // P0: AGE≥45 且 D明显下降≥2 且 H01命中≥3 → M6
+  if(age !== null && age >= 45 && declineCount >= 2 && h01Hits >= 3){
+    return 'M6';
+  }
+  // P1: 按 E01 第一困扰
+  const first = A.E01 && A.E01.length ? A.E01[0] : null; // 'A'..'F'
+  const map = { A:'M1', B:'M2', C:'M3', D:'M4', E:'M5', F:'M6' };
+  if(first && map[first]) return map[first];
+  // P2 兜底
+  return 'M1';
+}
+
+/* —— ADAM 评分（M6.01 或 M6.05 阳性 + 任意其他≥3项阳性）—— */
+function adamPositive(A){
+  const yes = code => A[code] === 0; // 选项「是」index 0
+  if(!yes('M6.01') && !yes('M6.05')) return false;
+  const others = ['M6.01','M6.02','M6.03','M6.04','M6.05','M6.06','M6.07']
+    .filter(yes).length;
+  return others >= 3;
+}
+
+/* —— 警示等级 / 面诊优先级（文档第12章 T01-T06）—— */
+function computeAlert(A){
+  const bmi = (A.A01 && A.A01.bmi) || null;
+  const hit = (code, idxArr) => Array.isArray(A[code])
+    ? A[code].filter(i => idxArr.includes(i)).length : 0;
+  const hitCount = (code, exclIdx) => Array.isArray(A[code])
+    ? A[code].filter(i => i !== exclIdx).length : 0;
+
+  const triggers = [];
+
+  // T06 外源激素（绝对强制，最高）
+  if(Array.isArray(A.F01) && A.F01.includes(3)){
+    triggers.push({t:'T06', level:'S', title:'外源激素干预 · 必须面诊评估',
+      timing:'当日联系，需告知用药史'});
+  }
+  // T05 ADAM 阳性
+  if(adamPositive(A)){
+    triggers.push({t:'T05', level:'S', title:'ADAM 阳性 · 激素深度评估面诊提示',
+      timing:'当日联系'});
+  }
+  // T01 男科：M2.05命中≥3 或 M2.03≤EHS2(index 0或1)
+  const m205 = hitCount('M2.05', 6);
+  const m203 = A['M2.03'];
+  if(m205 >= 3 || m203 === 0 || m203 === 1){
+    triggers.push({t:'T01', level:'S', title:'男性更年期 / 勃起功能专项面诊提示',
+      timing:'当日联系'});
+  }
+  // T02 代谢：M3.05命中≥3 且 BMI≥28
+  if(hitCount('M3.05', 6) >= 3 && bmi !== null && bmi >= 28){
+    triggers.push({t:'T02', level:'S', title:'代谢综合征专项面诊提示',
+      timing:'当日联系'});
+  }
+  // T03 心血管：M4.01命中≥2 或 (M4.05∈①②③ 且 M4.03命中≥1)
+  const m405cv = [0,1,2].includes(A['M4.05']);
+  if(hitCount('M4.01', 5) >= 2 || (m405cv && hitCount('M4.03', 5) >= 1)){
+    triggers.push({t:'T03', level:'S', title:'心血管事件高危面诊提示',
+      timing:'当日联系'});
+  }
+  // T04 心理：M5.02=④(index 3)
+  if(A['M5.02'] === 3){
+    triggers.push({t:'T04', level:'high', title:'心理健康专项面诊提示',
+      timing:'24 小时内联系'});
+  }
+
+  if(triggers.length === 0){
+    return { level:'normal', timing:'2 个工作日内联系', triggers:[] };
+  }
+  // 取最严级别
+  const hasS = triggers.some(t => t.level === 'S');
+  return {
+    level: hasS ? 'S' : 'high',
+    timing: hasS ? '当日联系' : '24 小时内联系',
+    triggers
+  };
+}
+
+/* —— 标签触发（文档第13章 TAG01-TAG30）—— */
+function computeTags(A){
+  const tags = [];
+  const age = calcAge(A.A01 && A.A01.birth);
+  const bmi = (A.A01 && A.A01.bmi) || null;
+  const has = (code, idxArr) => Array.isArray(A[code])
+    && A[code].some(i => idxArr.includes(i));
+  const cnt = (code, exclIdx) => Array.isArray(A[code])
+    ? A[code].filter(i => i !== exclIdx).length : 0;
+  const sel = (code, idxArr) => idxArr.includes(A[code]);
+  const declineCount = ['D01','D02','D03'].filter(k => A[k] === 0).length;
+
+  // —— S 级 ——
+  if(adamPositive(A)) tags.push({n:'男性更年期高危', c:'TDS_HIGH', lv:'S'});
+  if(cnt('M2.05',6) >= 3 && A['M2.01'] === 0)
+    tags.push({n:'睾酮低下未诊断', c:'LOW_T_UNDX', lv:'S'});
+  if((A['M2.03']===0 || A['M2.03']===1) && A['M2.02']===4)
+    tags.push({n:'重度勃起功能障碍', c:'ED_SEV', lv:'S'});
+  if(has('M4.05',[0,1,2]) && cnt('M4.01',5)>=2 && cnt('M4.03',5)>=1)
+    tags.push({n:'心血管事件高危', c:'CVD_HIGH', lv:'S'});
+  if(A['M5.02']===3 && sel('M5.05',[2,3]) && sel('M5.04',[2,3]))
+    tags.push({n:'重度情绪/睡眠预警', c:'MOOD_HIGH', lv:'S'});
+  if(Array.isArray(A.F01) && A.F01.includes(3))
+    tags.push({n:'外源激素干预史', c:'EXO_HRT', lv:'S'});
+
+  // —— 高 ——
+  if(cnt('M3.05',6)>=3 && bmi!==null && bmi>=28)
+    tags.push({n:'代谢综合征前期', c:'METS_PRE', lv:'高'});
+  if(sel('B01',[4,5]) && age!==null && age>=45)
+    tags.push({n:'吸烟高暴露', c:'SMOKE_HIGH', lv:'高'});
+  if(sel('B02',[3,4])) tags.push({n:'高频饮酒', c:'ALCOHOL_HIGH', lv:'高'});
+  if(A['C01']===0 && (A['M1.06']||0)>=7)
+    tags.push({n:'高应激高负荷', c:'STRESS_HIGH', lv:'高'});
+  if(sel('M1.01',[0,1]) && A['M1.04']===0)
+    tags.push({n:'慢性睡眠不足', c:'SLEEP_HIGH', lv:'高'});
+  if(has('M4.05',[0,1,2]) && A['M4.06'] && A['M4.06'].includes(4))
+    tags.push({n:'心血管未干预', c:'CVD_UNTRT', lv:'高'});
+  if(has('F01',[1,2])) tags.push({n:'新型抗衰干预史', c:'NEW_INTV', lv:'高'});
+  const e01first = A.E01 && A.E01.length ? A.E01[0] : null;
+  if(A['G01']===1 && BRANCHES.M2.steps.some(s=>A[s.id]!==undefined && A[s.id]!==null))
+    tags.push({n:'性功能改善需求强', c:'SEX_MOT', lv:'高'});
+  if(A['G01']===0 && BRANCHES.M1.steps.filter(s=>A[s.id]!==undefined).length>=2)
+    tags.push({n:'精力改善需求强', c:'ENERGY_MOT', lv:'高'});
+  if(A['G01']===3 && cnt('M4.01',5)>=1)
+    tags.push({n:'心血管管理需求强', c:'CV_MOT', lv:'高'});
+
+  // —— 中 ——
+  if(age!==null){
+    if(age>=35 && age<=44) tags.push({n:'壮年期客户', c:'AGE_35_44', lv:'中'});
+    else if(age>=45 && age<=54) tags.push({n:'中年期客户', c:'AGE_45_54', lv:'中'});
+    else if(age>=55 && age<=65) tags.push({n:'迈入老年早期', c:'AGE_55_65', lv:'中'});
+  }
+  if(declineCount>=2) tags.push({n:'主观衰老加速', c:'SUBJ_AGE', lv:'中'});
+  if(cnt('H01',10)>=3) tags.push({n:'高家族风险', c:'FAM_HIGH', lv:'中'});
+  if(bmi!==null && bmi>=28) tags.push({n:'肥胖', c:'OBESITY', lv:'中'});
+  else if(bmi!==null && bmi>=24) tags.push({n:'超重', c:'OVERWEIGHT', lv:'中'});
+  if(sel('B03',[0,1])) tags.push({n:'运动不足', c:'SEDENTARY', lv:'中'});
+  if(sel('M3.01',[0,1]) && A['M3.02']===0)
+    tags.push({n:'腹型肥胖', c:'CENTRAL_OBES', lv:'中'});
+  if(sel('M2.07',[2,3])) tags.push({n:'亲密关系紧张', c:'RELATIONSHIP', lv:'中'});
+  if(cnt('M5.01',5)>=3) tags.push({n:'主观认知下降', c:'SUBJ_COG', lv:'中'});
+  if(sel('M4.02',[2,3])) tags.push({n:'心肺耐量下降', c:'VO2_LOW', lv:'中'});
+  if(A['M4.04']===3 && age!==null && age>=45)
+    tags.push({n:'血压管理空白', c:'BP_BLIND', lv:'中'});
+  if(A['C01']===2 && A['G01']===5) tags.push({n:'整体抗衰需求', c:'WELLNESS', lv:'中'});
+
+  return tags;
+}
+
+/* —— 反馈页维度风险分层（基于警示+主诉，给客户看的友好版）—— */
+function computeDimRisk(A, branch){
+  const dims = [];
+  const alert = computeAlert(A);
+  const lv = (cond) => cond==='focus'?'重点关注':cond==='watch'?'关注':'一般';
+  const cls = (cond) => cond==='focus'?'lv-focus':cond==='watch'?'lv-watch':'lv-normal';
+
+  const branchDimMap = {
+    M1:{name:'精力与恢复力', key:'energy'},
+    M2:{name:'生殖激素健康', key:'rh'},
+    M3:{name:'代谢与体型', key:'me'},
+    M4:{name:'心血管系统', key:'cv'},
+    M5:{name:'脑神经与情绪', key:'br'},
+    M6:{name:'多系统综合衰退', key:'multi'}
+  };
+  const primary = branchDimMap[branch] || branchDimMap.M1;
+
+  // 主维度评级：S级→重点关注；high→关注；否则关注（既然进了这个分支说明是主诉）
+  let pCond = 'watch';
+  if(alert.level==='S') pCond='focus';
+  else if(alert.level==='high') pCond='watch';
+  dims.push({name:primary.name, level:lv(pCond), cls:cls(pCond)});
+
+  // 次维度：从衰老感知 + 家族史推
+  const declineCount = ['D01','D02','D03'].filter(k=>A[k]===0).length;
+  let sCond = declineCount>=2?'watch':'normal';
+  dims.push({name:'整体衰老进程', level:lv(sCond), cls:cls(sCond)});
+
+  return dims;
+}
+
+/* ============================================================
+   App · 主控制器
+   ============================================================ */
+
+const STORAGE_KEY = 'sbj_male_survey_v1';
+
+const App = {
+  flow:[],          // 当前完整流程（主问卷 + 已确定的分支）
+  idx:0,            // 当前 step 在 flow 中的位置
+  answers:{},       // 所有作答 { code: value }
+  branch:null,      // 路由结果 M1..M6
+  branchInjected:false,
+  startTime:Date.now(),
+
+  init(){
+    this.restore();
+    this.buildInitialFlow();
+    setTimeout(()=>{ document.getElementById('loading').classList.add('hide'); }, 300);
+    this.render();
+    window.addEventListener('beforeunload', ()=>this.save());
+  },
+
+  /* —— 流程构建 —— */
+  buildInitialFlow(){
+    // 初始只含主问卷；分支在主问卷完成后注入
+    this.flow = MAIN_STEPS.slice();
+    if(this.branch && !this.branchInjected){
+      this.injectBranch();
+    }
+  },
+
+  injectBranch(){
+    const b = BRANCHES[this.branch];
+    if(!b) return;
+    const seg = [];
+    if(b.consent2){
+      seg.push({ id:this.branch+'_consent2', type:'consent2',
+        branch:this.branch, consent2:b.consent2 });
+    }
+    seg.push({ id:this.branch+'_intro', type:'branch-intro',
+      branch:this.branch, name:b.name, intro:b.intro });
+    b.steps.forEach(s => seg.push(Object.assign({}, s, {branch:this.branch})));
+    // 注入到 H01 之后
+    this.flow = MAIN_STEPS.slice().concat(seg, [{id:'submit', type:'submit'}]);
+    this.branchInjected = true;
+  },
+
+  /* —— 状态持久化 —— */
+  save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        idx:this.idx, answers:this.answers, branch:this.branch,
+        branchInjected:this.branchInjected, startTime:this.startTime
+      }));
+    }catch(e){}
+  },
+  restore(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        const d = JSON.parse(raw);
+        this.answers = d.answers || {};
+        this.branch = d.branch || null;
+        this.branchInjected = false;
+        this.startTime = d.startTime || Date.now();
+        this.idx = 0; // 从头进，但答案保留（避免恢复到分支错位）
+      }
+    }catch(e){}
+  },
+
+  cur(){ return this.flow[this.idx]; },
+
+  /* —— 渲染 —— */
+  render(){
+    const step = this.cur();
+    if(!step) return;
+    const stage = document.getElementById('stage');
+    const footer = document.getElementById('footer');
+
+    // 进度
+    this.updateProgress(step);
+
+    // 内容
+    let html = '';
+    switch(step.type){
+      case 'welcome':       html = this.tplWelcome(); break;
+      case 'consent':       html = this.tplConsent(); break;
+      case 'info':          html = this.tplInfo(step); break;
+      case 'single':        html = this.tplSingle(step); break;
+      case 'multi':         html = this.tplMulti(step); break;
+      case 'scale':         html = this.tplScale(step); break;
+      case 'rank':          html = this.tplRank(step); break;
+      case 'consent2':      html = this.tplConsent2(step); break;
+      case 'branch-intro':  html = this.tplBranchIntro(step); break;
+      case 'submit':        html = this.tplSubmit(); break;
+      case 'feedback':      html = this.tplFeedback(); break;
+    }
+    stage.innerHTML = `<div class="scene scene-anim">${html}</div>`;
+    footer.innerHTML = this.tplFooter(step);
+    document.getElementById('scroll').scrollTop = 0;
+
+    // 题型初始化
+    if(step.type==='scale') this.initScale(step);
+    if(step.type==='info') this.initInfo(step);
+  },
+
+  updateProgress(step){
+    const meta = document.getElementById('step-meta');
+    const fill = document.getElementById('progress-fill');
+    if(['welcome','consent','submit','feedback'].includes(step.type)){
+      meta.classList.remove('show');
+    }else{
+      meta.classList.add('show');
+      document.getElementById('meta-chap').textContent = step.chap || '';
+      // 计算大致进度
+      const total = this.branchInjected ? this.flow.length : MAIN_STEPS.length + 8;
+      const pct = Math.min(96, Math.round((this.idx/total)*100));
+      document.getElementById('meta-count').textContent =
+        step.code ? step.code : '';
+    }
+    // 进度填充
+    const total = this.flow.length;
+    const pct = Math.round((this.idx/(total-1))*100);
+    fill.style.width = Math.min(100, Math.max(2, pct)) + '%';
+  },
+
+  /* ===== 题型模板 ===== */
+
+  tplWelcome(){
+    return `
+    <div class="welcome stagger">
+      <div class="hero">
+        <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+          <defs>
+            <linearGradient id="kg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#002FA7"/><stop offset="1" stop-color="#1E4DC4"/>
+            </linearGradient>
+            <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#795548"/><stop offset="1" stop-color="#5D4037"/>
+            </linearGradient>
+          </defs>
+          <circle cx="140" cy="90" r="46" fill="none" stroke="url(#kg)" stroke-width="1.4" opacity=".5"/>
+          <circle cx="140" cy="90" r="64" fill="none" stroke="url(#bg2)" stroke-width="1" opacity=".25"/>
+          <g stroke="url(#kg)" stroke-width="1" opacity=".4">
+            <line x1="140" y1="44" x2="140" y2="20"/>
+            <line x1="186" y1="90" x2="210" y2="90"/>
+            <line x1="140" y1="136" x2="140" y2="160"/>
+            <line x1="94" y1="90" x2="70" y2="90"/>
+            <line x1="173" y1="57" x2="190" y2="40"/>
+            <line x1="173" y1="123" x2="190" y2="140"/>
+            <line x1="107" y1="123" x2="90" y2="140"/>
+            <line x1="107" y1="57" x2="90" y2="40"/>
+          </g>
+          <g>
+            <circle cx="140" cy="20" r="4" fill="#002FA7"/>
+            <circle cx="210" cy="90" r="4" fill="#5D4037"/>
+            <circle cx="140" cy="160" r="4" fill="#002FA7"/>
+            <circle cx="70" cy="90" r="4" fill="#5D4037"/>
+            <circle cx="190" cy="40" r="3" fill="#C9A227"/>
+            <circle cx="190" cy="140" r="3" fill="#C9A227"/>
+            <circle cx="90" cy="140" r="3" fill="#C9A227"/>
+            <circle cx="90" cy="40" r="3" fill="#C9A227"/>
+          </g>
+          <circle cx="140" cy="90" r="14" fill="url(#kg)"/>
+          <circle cx="140" cy="90" r="22" fill="none" stroke="#002FA7" stroke-width=".8" opacity=".3"/>
+        </svg>
+      </div>
+      <div class="brand-cn">松 柏 纪</div>
+      <h1>男性长寿医学<br>首诊评估</h1>
+      <div class="en">Comprehensive Longevity Assessment for Men</div>
+      <div class="meta-card">
+        <div class="meta-row"><span class="k">评估对象</span><span class="v">35-65 岁男性首次到访客户</span></div>
+        <div class="meta-row"><span class="k">问卷架构</span><span class="v">主问卷 11 题 + 自动匹配 1 个深度模块</span></div>
+        <div class="meta-row"><span class="k">预计时长</span><span class="v">5 - 8 分钟</span></div>
+        <div class="meta-row"><span class="k">评估输出</span><span class="v">六维风险分层 + 个性化面诊建议</span></div>
+      </div>
+      <div class="org">嘉兴悦程妇产医院 · 抗衰与长寿管理中心<br>
+        本评估不输出生物年龄数值或疾病诊断，结论需经医师面诊解读</div>
+    </div>`;
+  },
+
+  tplConsent(){
+    return `
+    <div class="page stagger">
+      <h2>受试者知情同意</h2>
+      <div class="lead">请仔细阅读以下条款。本问卷为长寿医学领域的健康风险筛查工具，非临床诊断。</div>
+      <div class="consent-card">
+        <div class="ctitle">⚐ 知情同意条款</div>
+        <ol>
+          <li><b>评估性质：</b>本问卷为健康风险筛查工具，非临床诊断。评估结果不能替代医师面诊与实验室检测，最终结论须由本中心持证医师综合判断后给出。</li>
+          <li><b>数据使用：</b>您填写的所有信息仅用于生成您本人的评估报告、本中心医师与您沟通、去标识化后的内部医疗质量改进。不用于任何商业广告、未经同意的第三方共享或对外发布。</li>
+          <li><b>数据存储：</b>所有数据加密存储于本中心专属医疗信息系统，存储期限 5 年（与《医疗机构病历管理规定》一致），期满后不可逆销毁。</li>
+          <li><b>自愿原则：</b>本问卷完全自愿。您可随时停止填写、跳过任何让您不适的题目、事后申请查询/修改/删除本人数据。</li>
+          <li><b>隐私模块二次同意：</b>涉及性功能、心理健康、综合衰退等敏感模块前，您将收到二次知情同意提示，可独立选择是否进入。</li>
+          <li><b>评估输出：</b>本评估不输出生物年龄数值或具体疾病诊断，仅输出维度风险分层与下一步评估建议。</li>
+        </ol>
+      </div>
+      <div class="opts" id="consent-opts">
+        <div class="opt" data-v="agree" onclick="App.pickConsent('agree')">
+          <span class="mark"></span>
+          <span class="otext">我已仔细阅读并理解上述全部条款，<b style="color:var(--klein)">同意进入评估流程</b></span>
+        </div>
+        <div class="opt" data-v="ask" onclick="App.pickConsent('ask')">
+          <span class="mark"></span>
+          <span class="otext">我尚有疑问，希望先与医师沟通后再决定</span>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  tplInfo(step){
+    const v = this.answers.A01 || {};
+    const years = [];
+    const nowY = new Date().getFullYear();
+    for(let y=nowY-18; y>=nowY-75; y--) years.push(y);
+    const months = Array.from({length:12}, (_,i)=>i+1);
+    return `
+    <div class="page stagger">
+      <div class="qnum"><span>${step.code}</span><span class="req">★</span></div>
+      <div class="qtitle">${step.title}</div>
+      <div class="qhint">${step.hint||''}</div>
+      <div class="qcard" style="padding:22px 20px">
+        <div class="field">
+          <label>姓名 <span class="req">★</span><span class="sub">请填写真实姓名</span></label>
+          <input type="text" id="f-name" value="${v.name||''}" placeholder="请输入姓名"
+            oninput="App.onInfoInput()">
+        </div>
+        <div class="field">
+          <label>出生年月 <span class="req">★</span><span class="sub">自动计算年龄</span></label>
+          <div class="date-pick">
+            <div class="seg"><select id="f-by" onchange="App.onInfoInput()">
+              <option value="">出生年</option>
+              ${years.map(y=>`<option value="${y}" ${v.birth&&v.birth.y==y?'selected':''}>${y} 年</option>`).join('')}
+            </select></div>
+            <div class="seg"><select id="f-bm" onchange="App.onInfoInput()">
+              <option value="">月份</option>
+              ${months.map(m=>`<option value="${m}" ${v.birth&&v.birth.m==m?'selected':''}>${m} 月</option>`).join('')}
+            </select></div>
+          </div>
+          <div class="calc-hint" id="age-hint"></div>
+        </div>
+        <div class="field">
+          <label>手机号码 <span class="req">★</span><span class="sub">用于报告交付与医师联系</span></label>
+          <input type="tel" id="f-phone" maxlength="11" value="${v.phone||''}"
+            placeholder="11 位手机号" oninput="App.onInfoInput()">
+          <div class="err-msg" id="phone-err">请输入有效的 11 位手机号</div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>身高 <span class="req">★</span></label>
+            <input type="number" id="f-ht" value="${v.ht||''}" placeholder="cm" oninput="App.onInfoInput()">
+          </div>
+          <div class="field">
+            <label>体重 <span class="req">★</span></label>
+            <input type="number" id="f-wt" value="${v.wt||''}" placeholder="kg" oninput="App.onInfoInput()">
+          </div>
+        </div>
+        <div class="calc-hint" id="bmi-hint" style="margin-top:-8px"></div>
+        <div class="field" style="margin-top:18px">
+          <label>所在城市 <span class="req">★</span></label>
+          <input type="text" id="f-city" value="${v.city||''}" placeholder="如：上海" oninput="App.onInfoInput()">
+        </div>
+      </div>
+      <div class="privacy-box">
+        <div class="ptag"><span class="lock">🔒</span> 隐私承诺</div>
+        ${step.privacy}
+      </div>
+      <div class="note">
+        <div class="ntag">◆ 学术注释</div>${step.note}
+      </div>
+    </div>`;
+  },
+
+  tplSingle(step){
+    const cur = this.answers[step.code];
+    return `
+    <div class="page stagger">
+      <div class="qnum"><span>${step.code}</span><span class="req">★</span></div>
+      <div class="qtitle">${step.title}</div>
+      ${step.hint?`<div class="qhint">${step.hint}</div>`:''}
+      <div class="opts">
+        ${step.opts.map((o,i)=>`
+          <div class="opt ${cur===i?'selected':''}" onclick="App.pickSingle('${step.code}',${i})">
+            <span class="idx">${this.cn(i)}</span>
+            <span class="otext">${o}</span>
+          </div>`).join('')}
+      </div>
+      ${NOTE[step.code]?`<div class="note"><div class="ntag">◆ 学术注释</div>${NOTE[step.code]}</div>`:''}
+    </div>`;
+  },
+
+  tplMulti(step){
+    const cur = this.answers[step.code] || [];
+    return `
+    <div class="page stagger">
+      <div class="qnum"><span>${step.code}</span><span class="req">★</span></div>
+      <div class="qtitle">${step.title}</div>
+      <div class="qhint multi">${step.hint||'可多选'}</div>
+      <div class="opts" id="multi-${step.code}">
+        ${step.opts.map((o,i)=>`
+          <div class="opt multi ${cur.includes(i)?'selected':''}"
+            data-i="${i}" onclick="App.pickMulti('${step.code}',${i},${step.exclusive})">
+            <span class="mark"></span>
+            <span class="otext">${o}</span>
+          </div>`).join('')}
+      </div>
+      ${NOTE[step.code]?`<div class="note"><div class="ntag">◆ 学术注释</div>${NOTE[step.code]}</div>`:''}
+    </div>`;
+  },
+
+  tplScale(step){
+    const cur = this.answers[step.code];
+    let dots = '';
+    for(let i=step.min;i<=step.max;i++){
+      dots += `<div class="scale-dot ${cur===i?'active':''}" data-v="${i}"
+        onclick="App.pickScale('${step.code}',${i})">${i}</div>`;
+    }
+    return `
+    <div class="page stagger">
+      <div class="qnum"><span>${step.code}</span><span class="req">★</span></div>
+      <div class="qtitle">${step.title}</div>
+      ${step.hint?`<div class="qhint">${step.hint}</div>`:''}
+      <div class="qcard scale-wrap">
+        <div class="scale-ends"><span><b>${step.min}</b> ${step.leftLabel}</span>
+          <span>${step.rightLabel} <b>${step.max}</b></span></div>
+        <div class="scale-track"><div class="scale-dots" id="scale-${step.code}">${dots}</div></div>
+        <div class="scale-val" id="sval-${step.code}">${cur?`已选 <b>${cur}</b> 分`:'请滑动选择'}</div>
+      </div>
+      ${NOTE[step.code]?`<div class="note"><div class="ntag">◆ 学术注释</div>${NOTE[step.code]}</div>`:''}
+    </div>`;
+  },
+
+  tplRank(step){
+    const cur = this.answers[step.code] || []; // ['A','C','D'] 顺序即排序
+    return `
+    <div class="page stagger">
+      <div class="qnum"><span>${step.code}</span><span class="req">★</span></div>
+      <div class="qtitle">${step.title}</div>
+      <div class="qhint multi">${step.hint}</div>
+      <div class="rank-list" id="rank-${step.code}">
+        ${step.opts.map(o=>{
+          const pos = cur.indexOf(o.k);
+          const picked = pos>=0;
+          const ord = picked?(pos===0?'第一困扰':pos===1?'第二困扰':'第三困扰'):'';
+          return `<div class="rank-item ${picked?'picked':''}" data-k="${o.k}"
+            onclick="App.pickRank('${step.code}','${o.k}')">
+            <span class="rk-badge">${picked?(pos+1):o.k}</span>
+            <span class="rk-text">${o.t}</span>
+            <span class="rk-order">${ord}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="rank-tip ${cur.length<3?'warn':''}" id="ranktip-${step.code}">
+        ${cur.length<3?`还需选择 ${3-cur.length} 项（按困扰程度依次点选）`:'已完成排序，可进入下一步'}
+      </div>
+      ${NOTE[step.code]?`<div class="note"><div class="ntag">◆ 学术注释</div>${NOTE[step.code]}</div>`:''}
+    </div>`;
+  },
+
+  tplConsent2(step){
+    const c = step.consent2;
+    return `
+    <div class="consent2 stagger">
+      <div class="shield">🔒</div>
+      <h2>${c.title}</h2>
+      <div class="sub">二次知情同意 · 隐私模块</div>
+      <div class="body">
+        ${c.lines.map(l=>`<p>${l}</p>`).join('')}
+      </div>
+    </div>`;
+  },
+
+  tplBranchIntro(step){
+    return `
+    <div class="page stagger">
+      <div class="qnum"><span>专属深度模块</span></div>
+      <div class="qtitle">${step.name}</div>
+      <div class="qcard" style="background:var(--klein-glow);border-color:var(--klein-glow-md)">
+        <p style="font-size:14.5px;line-height:1.8;color:var(--t2);margin:0">${step.intro}</p>
+      </div>
+      <div class="rank-tip" style="margin-top:18px">根据您的主诉，我们为您匹配了这一深度评估模块</div>
+    </div>`;
+  },
+
+  tplSubmit(){
+    const filled = Object.keys(this.answers).length;
+    return `
+    <div class="page stagger" style="text-align:center;padding-top:4vh">
+      <div class="qtitle" style="font-size:22px">即将完成评估</div>
+      <div class="lead" style="margin:14px auto 24px;max-width:340px">
+        您已完成全部题目。提交后，我们将根据您的回答生成风险分层，并由本中心医师团队与您进一步沟通。</div>
+      <div class="result-card" style="text-align:left">
+        <div class="rc-head">提交前确认</div>
+        <div class="dim-row"><span class="dim-name" style="font-size:14px;font-weight:500">已作答题目</span>
+          <span class="mono" style="color:var(--klein);font-weight:700">${filled} 项</span></div>
+        <div class="dim-row"><span class="dim-name" style="font-size:14px;font-weight:500">数据加密</span>
+          <span style="color:var(--alert-normal);font-weight:600;font-size:14px">✓ 已启用</span></div>
+      </div>
+      <div class="privacy-box" style="text-align:left">
+        <div class="ptag"><span class="lock">🔒</span> 隐私承诺</div>
+        提交后数据将加密存储于本中心专属医疗信息系统，仅供持证医师查阅。手机号将做脱敏处理，性功能与心理健康模块数据独立加密分区存储。
+      </div>
+    </div>`;
+  },
+
+  tplFeedback(){
+    const branch = this.branch;
+    const dims = computeDimRisk(this.answers, branch);
+    const alert = computeAlert(this.answers);
+    let nextText = '本中心医师将在 2 个工作日内通过手机短信或电话与您联系，为您解读评估结果并协助安排后续评估方案。';
+    if(alert.level==='S') nextText = '根据您的评估结果，我们建议尽快安排医师面诊。本中心医师将于<b>当日</b>与您联系，为您解读结果并协助安排进一步评估。';
+    else if(alert.level==='high') nextText = '本中心医师将在 <b>24 小时内</b>与您联系，为您解读评估结果并协助安排后续评估方案。';
+
+    return `
+    <div class="done stagger">
+      <div class="check">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7"
+          stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2>评估已完成</h2>
+      <div class="lead">感谢您完成本次松柏纪男性长寿医学首诊评估。以下是您当前最值得关注的维度。</div>
+      <div class="result-card">
+        <div class="rc-head">您的维度风险分层</div>
+        ${dims.map(d=>`<div class="dim-row">
+          <span class="dim-name">${d.name}</span>
+          <span class="dim-level ${d.cls}">${d.level}</span></div>`).join('')}
+      </div>
+      <div class="next-card">
+        <div class="nc-head">◆ 下一步</div>
+        <p>${nextText}</p>
+      </div>
+      <div class="result-card" style="background:var(--bg-soft)">
+        <div class="rc-head" style="color:var(--brown)">温馨提示</div>
+        <p style="font-size:13.5px;color:var(--t2);line-height:1.7;margin:0">
+          本评估为筛查工具，所有结论需在医师面诊环节得到专业解读，问卷输出不构成临床诊断。如您有紧急健康问题，请及时就医。</p>
+      </div>
+    </div>`;
+  },
+
+  tplFooter(step){
+    switch(step.type){
+      case 'welcome':
+        return `<button class="btn btn-primary" onclick="App.next()">开始评估</button>`;
+      case 'consent':
+        return `<button class="btn btn-primary" id="btn-next" disabled onclick="App.next()">同意并继续</button>`;
+      case 'info':
+        return `<button class="btn btn-ghost" onclick="App.back()">←</button>
+          <button class="btn btn-primary" id="btn-next" disabled onclick="App.next()">下一步</button>`;
+      case 'consent2':
+        return `<button class="btn btn-skip" onclick="App.skipBranch()">跳过本模块</button>
+          <button class="btn btn-primary" onclick="App.next()">我同意，继续</button>`;
+      case 'branch-intro':
+        return `<button class="btn btn-ghost" onclick="App.back()">←</button>
+          <button class="btn btn-primary" onclick="App.next()">开始</button>`;
+      case 'submit':
+        return `<button class="btn btn-ghost" onclick="App.back()">←</button>
+          <button class="btn btn-primary" id="btn-submit" onclick="App.submit()">提交评估</button>`;
+      case 'feedback':
+        return `<button class="btn btn-primary" style="background:var(--brown)" onclick="App.restart()">完成</button>`;
+      default: {
+        // 题目页：根据是否已答决定按钮可用
+        const answered = this.isAnswered(step);
+        const canSkip = step.canSkip || (step.branch && this.isSensitive(step.branch));
+        return `<button class="btn btn-ghost" onclick="App.back()">←</button>
+          ${canSkip?`<button class="btn btn-text" onclick="App.skipQuestion()">不愿回答</button>`:''}
+          <button class="btn btn-primary" id="btn-next" ${answered?'':'disabled'} onclick="App.next()">下一步</button>`;
+      }
+    }
+  },
+
+  /* ===== 交互逻辑 ===== */
+
+  cn(i){ return '①②③④⑤⑥⑦⑧⑨⑩⑪'[i] || (i+1); },
+
+  isSensitive(branch){
+    return BRANCHES[branch] && BRANCHES[branch].consent2;
+  },
+
+  isAnswered(step){
+    const v = this.answers[step.code];
+    switch(step.type){
+      case 'single': return v!==undefined && v!==null;
+      case 'multi':  return Array.isArray(v) && v.length>0;
+      case 'scale':  return v!==undefined && v!==null;
+      case 'rank':   return Array.isArray(v) && v.length===3;
+      case 'info':   return this.infoValid();
+      default:       return true;
+    }
+  },
+
+  /* —— 知情同意 —— */
+  pickConsent(v){
+    document.querySelectorAll('#consent-opts .opt').forEach(o=>{
+      o.classList.toggle('selected', o.dataset.v===v);
+    });
+    this.answers._consent = v;
+    document.getElementById('btn-next').disabled = false;
+  },
+
+  /* —— 基础信息 —— */
+  initInfo(step){ this.onInfoInput(); },
+  onInfoInput(){
+    const name = (document.getElementById('f-name')||{}).value || '';
+    const by = (document.getElementById('f-by')||{}).value || '';
+    const bm = (document.getElementById('f-bm')||{}).value || '';
+    const phone = (document.getElementById('f-phone')||{}).value || '';
+    const ht = parseFloat((document.getElementById('f-ht')||{}).value) || '';
+    const wt = parseFloat((document.getElementById('f-wt')||{}).value) || '';
+    const city = (document.getElementById('f-city')||{}).value || '';
+
+    // 年龄提示
+    if(by){
+      const age = new Date().getFullYear() - parseInt(by,10);
+      document.getElementById('age-hint').textContent = `年龄约 ${age} 岁`;
+    }else{ document.getElementById('age-hint').textContent=''; }
+
+    // BMI 提示
+    if(ht && wt){
+      const bmi = calcBMI(ht, wt);
+      let cat = bmi<18.5?'偏瘦':bmi<24?'正常':bmi<28?'超重':'肥胖';
+      document.getElementById('bmi-hint').textContent = `BMI ${bmi}（${cat}）`;
+    }else{ document.getElementById('bmi-hint').textContent=''; }
+
+    // 手机号校验
+    const phoneEl = document.getElementById('f-phone');
+    const errEl = document.getElementById('phone-err');
+    const phoneOk = /^1[3-9]\d{9}$/.test(phone);
+    if(phone.length>0 && !phoneOk){
+      phoneEl.classList.add('err'); errEl.classList.add('show');
+    }else{
+      phoneEl.classList.remove('err'); errEl.classList.remove('show');
+    }
+
+    this.answers.A01 = {
+      name:name.trim(),
+      birth:{ y:by, m:bm },
+      phone:phone.trim(),
+      ht:ht||null, wt:wt||null,
+      bmi:(ht&&wt)?calcBMI(ht,wt):null,
+      city:city.trim()
+    };
+    const btn = document.getElementById('btn-next');
+    if(btn) btn.disabled = !this.infoValid();
+  },
+  infoValid(){
+    const v = this.answers.A01;
+    if(!v) return false;
+    return v.name && v.birth.y && v.birth.m &&
+      /^1[3-9]\d{9}$/.test(v.phone) && v.ht && v.wt && v.city;
+  },
+
+  /* —— 单选（点击即选，自动进入下一题）—— */
+  pickSingle(code, i){
+    this.answers[code] = i;
+    document.querySelectorAll('.opts .opt').forEach((o,idx)=>{
+      o.classList.toggle('selected', idx===i);
+    });
+    const btn = document.getElementById('btn-next');
+    if(btn) btn.disabled = false;
+    this.save();
+    // 单选自动前进（轻微延迟看反馈）
+    setTimeout(()=>{ if(this.cur().code===code) this.next(); }, 280);
+  },
+
+  /* —— 多选（含互斥逻辑）—— */
+  pickMulti(code, i, exclusive){
+    let arr = this.answers[code] || [];
+    const container = document.getElementById('multi-'+code);
+
+    if(exclusive!==undefined && exclusive!==null){
+      if(i===exclusive){
+        // 点了「以上均无/从未」→ 只保留它
+        arr = arr.includes(exclusive) ? [] : [exclusive];
+      }else{
+        // 点了其他 → 移除互斥项
+        arr = arr.filter(x=>x!==exclusive);
+        if(arr.includes(i)) arr = arr.filter(x=>x!==i);
+        else arr.push(i);
+      }
+    }else{
+      if(arr.includes(i)) arr = arr.filter(x=>x!==i);
+      else arr.push(i);
+    }
+    this.answers[code] = arr;
+
+    // 更新 UI
+    container.querySelectorAll('.opt').forEach(o=>{
+      const idx = parseInt(o.dataset.i,10);
+      o.classList.toggle('selected', arr.includes(idx));
+      // 互斥灰化
+      if(exclusive!==undefined && exclusive!==null){
+        if(arr.includes(exclusive) && idx!==exclusive){
+          o.classList.add('disabled');
+        }else{
+          o.classList.remove('disabled');
+        }
+      }
+    });
+    const btn = document.getElementById('btn-next');
+    if(btn) btn.disabled = arr.length===0;
+    this.save();
+  },
+
+  /* —— 量表 —— */
+  initScale(step){},
+  pickScale(code, v){
+    this.answers[code] = v;
+    const scaleBox = document.getElementById('scale-'+code);
+    const dots = scaleBox ? scaleBox.querySelectorAll('.scale-dot') : [];
+    dots.forEach(d=>{
+      const dv = parseInt(d.dataset.v,10);
+      d.classList.toggle('active', dv===v);
+      d.classList.toggle('inrange', dv<v);
+    });
+    document.getElementById('sval-'+code).innerHTML = `已选 <b>${v}</b> 分`;
+    const btn = document.getElementById('btn-next');
+    if(btn) btn.disabled = false;
+    this.save();
+  },
+
+  /* —— 排序题（依次点选，再点取消）—— */
+  pickRank(code, k){
+    let arr = this.answers[code] || [];
+    if(arr.includes(k)){
+      arr = arr.filter(x=>x!==k); // 取消并重排
+    }else{
+      if(arr.length>=3) return; // 已满3项
+      arr.push(k);
+    }
+    this.answers[code] = arr;
+
+    // 重渲染排序项
+    const list = document.getElementById('rank-'+code);
+    const step = this.cur();
+    list.querySelectorAll('.rank-item').forEach(item=>{
+      const ik = item.dataset.k;
+      const pos = arr.indexOf(ik);
+      const picked = pos>=0;
+      item.classList.toggle('picked', picked);
+      const badge = item.querySelector('.rk-badge');
+      const order = item.querySelector('.rk-order');
+      badge.textContent = picked ? (pos+1) : ik;
+      order.textContent = picked ? (pos===0?'第一困扰':pos===1?'第二困扰':'第三困扰') : '';
+    });
+    const tip = document.getElementById('ranktip-'+code);
+    if(arr.length<3){
+      tip.classList.add('warn');
+      tip.textContent = `还需选择 ${3-arr.length} 项（按困扰程度依次点选）`;
+    }else{
+      tip.classList.remove('warn');
+      tip.textContent = '已完成排序，可进入下一步';
+    }
+    const btn = document.getElementById('btn-next');
+    if(btn) btn.disabled = arr.length!==3;
+    this.save();
+  },
+
+  /* —— 跳过敏感题 —— */
+  skipQuestion(){
+    const step = this.cur();
+    this.answers[step.code] = '__skip__';
+    this.save();
+    this.next();
+  },
+
+  /* —— 跳过整个敏感分支 —— */
+  skipBranch(){
+    // 标记分支跳过，直接到 submit
+    this.answers['_branch_skipped_'+this.branch] = true;
+    const submitIdx = this.flow.findIndex(s=>s.type==='submit');
+    this.idx = submitIdx>=0 ? submitIdx : this.flow.length-1;
+    this.save();
+    this.render();
+  },
+
+  /* —— 导航 —— */
+  next(){
+    const step = this.cur();
+
+    // 知情同意「希望先沟通」也可继续（不阻断），但记录
+    // 主问卷最后一题 H01 → 计算路由 → 注入分支
+    if(step.code==='H01' && !this.branchInjected){
+      this.branch = computeBranch(this.answers);
+      this.injectBranch();
+      // H01 在新 flow 中的位置不变（MAIN_STEPS 在前），idx+1 即进入分支段
+    }
+
+    if(this.idx < this.flow.length-1){
+      this.idx++;
+      this.applyDynamicRules();
+      this.render();
+    }
+  },
+
+  back(){
+    if(this.idx>0){
+      this.idx--;
+      this.render();
+    }else{
+      this.openExit();
+    }
+  },
+
+  /* —— 动态显示规则（R01-R09 中需运行时处理的）—— */
+  applyDynamicRules(){
+    // 多数互斥规则在 pickMulti 已处理；此处保留扩展位
+  },
+
+  /* —— 退出弹窗 —— */
+  openExit(){ document.getElementById('modal-mask').classList.add('show'); },
+  closeExit(){ document.getElementById('modal-mask').classList.remove('show'); },
+  confirmExit(){
+    this.save();
+    this.closeExit();
+    alert('您的进度已保存，可随时回到本链接继续。');
+  },
+
+  restart(){
+    // 完成后清空，回到欢迎页
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    location.reload();
+  },
+
+  /* ===== 提交与数据上报 ===== */
+
+  async submit(){
+    const btn = document.getElementById('btn-submit');
+    if(btn){ btn.disabled = true; btn.textContent = '正在提交…'; }
+
+    // 计算后台字段
+    const A = this.answers;
+    const age = calcAge(A.A01 && A.A01.birth);
+    const bmi = (A.A01 && A.A01.bmi) || null;
+    const branch = this.branch;
+    const branchName = (BRANCHES[branch] && BRANCHES[branch].name) || '';
+    const alert = computeAlert(A);
+    const tags = computeTags(A);
+
+    const payload = {
+      brand: 'songbaiji',              // —— 品牌区分（与女性版 fanghuapu 对应）——
+      brandLabel: '松柏纪·男性首诊',
+      contact: {
+        name: (A.A01 && A.A01.name) || '',
+        phone: (A.A01 && A.A01.phone) || '',
+        city: (A.A01 && A.A01.city) || ''
+      },
+      age: age,
+      bmi: bmi,
+      branch: branch,
+      branchName: branchName,
+      answers: A,
+      tags: tags,
+      alert: alert,
+      filledCount: Object.keys(A).length,
+      userAgent: navigator.userAgent,
+      screenWidth: window.innerWidth,
+      durationSec: Math.round((Date.now()-this.startTime)/1000),
+      timestamp: Date.now()
+    };
+
+    try{
+      const res = await this.uploadSurveyData(payload);
+      console.log('Survey: upload + notify', res);
+    }catch(e){
+      console.error('Survey upload failed', e);
+      // 失败也进反馈页，不阻断用户体验；本地保留以便重试
+      try{ localStorage.setItem('sbj_male_pending', JSON.stringify(payload)); }catch(_){}
+    }
+
+    // 进入反馈页
+    this.flow.push({id:'feedback', type:'feedback'});
+    this.idx = this.flow.length-1;
+    this.render();
+  },
+
+  async uploadSurveyData(payload){
+    // 与女性版一致：通过云函数 notify-new-survey 中转（写库 + 企微群通知）
+    const ENV_ID = 'yuecheng-survey-d4fucklsf6b68aaf';
+    const CLOUD_FUNCTION = 'notify-new-survey';
+
+    if(typeof cloudbase === 'undefined'){
+      throw new Error('CloudBase SDK 未加载');
+    }
+    const app = cloudbase.init({ env: ENV_ID });
+    await app.auth().signInAnonymously();
+    const result = await app.callFunction({
+      name: CLOUD_FUNCTION,
+      data: payload
+    });
+    return result && result.result;
+  }
+};
+
+document.addEventListener('DOMContentLoaded', ()=>App.init());
+</script>
+</body>
+</html>
