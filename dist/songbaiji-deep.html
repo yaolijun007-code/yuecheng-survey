@@ -800,7 +800,13 @@ const App={
       durationSec:Math.round((Date.now()-this.startTime)/1000),
       timestamp:Date.now()
     };
-    try{await this.uploadSurveyData(payload);}catch(e){console.error('upload failed',e);try{localStorage.setItem('sbj_deep_pending',JSON.stringify(payload));}catch(_){}}
+    try{await this.uploadSurveyData(payload);}catch(e){console.error('upload failed',e);try{localStorage.setItem('sbj_deep_pending',JSON.stringify(payload));}catch(_){}
+      // 显示可见错误（调试用）
+      const errMsg='提交失败: '+(e&&e.message?e.message:String(e));
+      const t=document.createElement('div');
+      t.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#C62828;color:#fff;padding:16px 20px;border-radius:12px;z-index:9999;font-size:13px;max-width:320px;text-align:center;line-height:1.6';
+      t.textContent=errMsg;document.body.appendChild(t);
+    }
     this.flow.push({id:'feedback',type:'feedback',showTopbar:false,showFooter:false});
     this.idx=this.flow.length-1;this.save();this.render();
   },
