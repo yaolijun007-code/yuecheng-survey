@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F8F9FC">
+<title>松柏纪 · 男性长寿医学深度评估</title>
+<style>
+:root{
+  --primary:#002FA7;--primary-d:#001E6E;--primary-l:#1E4DC4;
+  --primary-tint:rgba(0,47,167,.05);--primary-tint-md:rgba(0,47,167,.10);
+  --gold:#7B6144;--gold-soft:#A08060;--gold-tint:rgba(123,97,68,.07);
+  --t1:#0A0E27;--t2:#4A5170;--t3:#8890A8;--t4:#C0C8D8;
+  --bg:#F8F9FC;--bg-soft:#EEF1F8;--card:#FFFFFF;
+  --line:rgba(10,14,39,.07);--line-md:rgba(10,14,39,.11);
+  --r-sm:12px;--r-md:18px;--r-lg:22px;
+  --sh:0 2px 8px rgba(10,14,39,.06),0 1px 2px rgba(10,14,39,.04);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --safe-t:env(safe-area-inset-top,0);--safe-b:env(safe-area-inset-bottom,0);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.6;color:var(--t1);background:var(--bg);-webkit-font-smoothing:antialiased}
+input,textarea,select{user-select:text;-webkit-user-select:text}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+.num{font-variant-numeric:tabular-nums}
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ambient::before{content:"";position:absolute;width:70vw;height:70vw;top:-25vw;right:-20vw;background:radial-gradient(circle,rgba(0,47,167,.06),transparent 65%);border-radius:50%;filter:blur(60px)}
+.ambient::after{content:"";position:absolute;width:55vw;height:55vw;bottom:-18vw;left:-18vw;background:radial-gradient(circle,rgba(123,97,68,.05),transparent 65%);border-radius:50%;filter:blur(60px)}
+#app{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;padding-top:var(--safe-t);padding-bottom:var(--safe-b)}
+.topbar{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:10px 18px 12px;min-height:52px}
+.topbar.hide{visibility:hidden}
+.icon-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--t2);transition:background .2s,transform .15s}
+.icon-btn:active{background:var(--line);transform:scale(.9)}
+.icon-btn svg{width:18px;height:18px;stroke-width:2}
+.progress{flex:1;height:2px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),var(--primary-l));border-radius:99px;transition:width .55s cubic-bezier(.65,0,.35,1)}
+.progress-label{font-size:11px;color:var(--t3);letter-spacing:.5px;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.screen{min-height:100%;padding:8px 24px 36px;display:flex;flex-direction:column;animation:screenIn .5s var(--ease) both}
+.screen.leaving{animation:screenOut .22s ease-in both}
+@keyframes screenIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes screenOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-8px)}}
+.stagger>*{animation:fadeUp .55s var(--ease) both}
+.stagger>*:nth-child(1){animation-delay:.04s}.stagger>*:nth-child(2){animation-delay:.12s}
+.stagger>*:nth-child(3){animation-delay:.20s}.stagger>*:nth-child(4){animation-delay:.28s}
+.stagger>*:nth-child(5){animation-delay:.36s}.stagger>*:nth-child(6){animation-delay:.44s}
+.stagger>*:nth-child(7){animation-delay:.52s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sys-label{font-size:10.5px;letter-spacing:3px;color:var(--t4);text-transform:uppercase;font-weight:400;text-align:center}
+.brand-mark{width:52px;height:52px;border-radius:15px;background:var(--primary);display:flex;align-items:center;justify-content:center;margin:18px auto 14px;position:relative;overflow:hidden}
+.brand-mark::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 55%)}
+.brand-mark svg{width:26px;height:26px;color:#fff;position:relative;z-index:1}
+.brand-cn{font-size:34px;font-weight:700;letter-spacing:10px;color:var(--t1);text-align:center;padding-left:10px}
+.brand-sub{font-size:12px;letter-spacing:2px;color:var(--t3);text-align:center;margin-top:5px}
+.brand-divider{width:28px;height:1px;background:var(--t4);margin:14px auto}
+.welcome{justify-content:space-between;padding-top:20px}
+.welcome-hero{margin-top:24px}
+.hero-title{font-size:28px;line-height:1.25;font-weight:700;letter-spacing:-.4px;color:var(--t1);margin:0 0 8px}
+.hero-accent{color:var(--primary)}
+.hero-en{font-size:11px;letter-spacing:3px;color:var(--t4);text-transform:uppercase;margin-top:10px}
+.hero-sub{margin-top:16px;font-size:14px;line-height:1.72;color:var(--t2)}
+.meta-row{display:flex;margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 0;box-shadow:var(--sh)}
+.meta-item{flex:1;text-align:center;position:relative}
+.meta-item+.meta-item::before{content:"";position:absolute;left:0;top:18%;bottom:18%;width:1px;background:var(--line)}
+.meta-item .mv{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.2px}
+.meta-item .mv .unit{font-size:11px;color:var(--t3);font-weight:400;margin-left:2px}
+.meta-item .ml{font-size:11px;color:var(--t3);margin-top:3px;letter-spacing:.3px}
+.page-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;margin-top:16px;box-shadow:var(--sh)}
+.q-head{margin-bottom:20px}
+.q-meta{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--t3);letter-spacing:1px;margin-bottom:11px}
+.q-meta .seg{color:var(--primary);font-weight:600;letter-spacing:1.2px}
+.q-meta .dot{width:2.5px;height:2.5px;border-radius:50%;background:var(--t4)}
+.q-title{font-size:22px;line-height:1.35;font-weight:700;color:var(--t1);letter-spacing:-.2px}
+.q-desc{margin-top:7px;font-size:13px;line-height:1.6;color:var(--t3)}
+.q-note{margin-top:10px;margin-bottom:4px;font-size:11.5px;line-height:1.72;color:var(--t3);padding:9px 13px;background:rgba(10,14,39,.025);border-radius:8px}
+.options{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.option{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 17px;display:flex;align-items:center;gap:13px;transition:all .22s var(--ease);cursor:pointer;min-height:52px;box-shadow:var(--sh)}
+.option:active{transform:scale(.988)}
+.option.selected{background:linear-gradient(135deg,var(--primary),var(--primary-l));border-color:var(--primary);box-shadow:0 6px 18px rgba(0,47,167,.18)}
+.option.selected .option-label,.option.selected .option-idx{color:#fff}
+.option.selected .option-idx{background:rgba(255,255,255,.2);border-color:transparent}
+.option.selected .check{opacity:1;transform:scale(1)}
+.option.selected .rank-badge{background:rgba(255,255,255,.2);color:#fff}
+.option-idx{flex-shrink:0;width:25px;height:25px;border-radius:50%;border:1.5px solid var(--line-md);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3);font-weight:600;transition:all .22s}
+.option-label{flex:1;font-size:15px;color:var(--t1);line-height:1.42;transition:color .22s}
+.check{margin-left:5px;opacity:0;transform:scale(.5);transition:opacity .22s,transform .22s;color:#fff}
+.check svg{width:15px;height:15px;stroke-width:2.5}
+.multi-hint{margin-top:11px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3)}
+.multi-hint .count{color:var(--primary);font-weight:600}
+.rank-badge{flex-shrink:0;width:26px;height:26px;border-radius:8px;background:var(--bg-soft);color:var(--t3);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .22s}
+.rank-order{font-size:11px;color:rgba(255,255,255,.8);font-weight:600;min-width:40px;text-align:right}
+.scale-wrap{margin-top:18px}
+.scale-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--t3);margin-bottom:12px}
+.scale-dots{display:flex;justify-content:space-between;gap:4px}
+.scale-dot-btn{flex:1;height:40px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3);font-weight:600;cursor:pointer;transition:all .22s;box-shadow:var(--sh)}
+.scale-dot-btn:active{transform:scale(.95)}
+.scale-dot-btn.active{border-color:var(--primary);background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(0,47,167,.22)}
+.scale-dot-btn.inrange{border-color:var(--primary-l);background:var(--primary-tint)}
+.scale-val{text-align:center;margin-top:12px;font-size:14px;color:var(--t2)}
+.scale-val b{color:var(--primary);font-size:20px;font-weight:700}
+/* Yes-No List (ADAM) */
+.yn-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.yn-item{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh)}
+.yn-num{flex-shrink:0;width:21px;height:21px;border-radius:6px;background:var(--primary-tint);color:var(--primary);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.yn-text{flex:1;font-size:13.5px;color:var(--t1);line-height:1.4}
+.yn-btns{flex-shrink:0;display:flex;gap:5px}
+.yn-btn{width:38px;height:28px;border-radius:7px;border:1.5px solid var(--line);font-size:12px;font-weight:600;color:var(--t3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.yn-btn.active-yes{border-color:var(--primary);background:var(--primary);color:#fff}
+.yn-btn.active-no{border-color:var(--t4);background:var(--bg-soft);color:var(--t2)}
+/* Transition screens */
+.transition-screen{justify-content:center;align-items:center;text-align:center}
+.transition-icon{width:76px;height:76px;border-radius:50%;background:var(--primary-tint);border:1px solid rgba(0,47,167,.15);display:flex;align-items:center;justify-content:center;margin-bottom:22px;animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,47,167,.1)}50%{box-shadow:0 0 0 14px rgba(0,47,167,0)}}
+.transition-icon svg{width:30px;height:30px;color:var(--primary)}
+.transition-title{font-size:21px;font-weight:700;color:var(--t1);letter-spacing:-.2px;margin:0 0 7px}
+.transition-sub{font-size:13.5px;color:var(--t3);line-height:1.65;max-width:280px;margin:0 auto}
+.transition-tag{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:6px 14px;border-radius:99px;background:var(--primary-tint);color:var(--primary);font-size:11px;letter-spacing:1px;font-weight:600;border:1px solid rgba(0,47,167,.15)}
+.sensitive-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.sensitive-item{display:flex;gap:10px;align-items:flex-start;padding:12px 13px;background:rgba(0,47,167,.03);border-left:2.5px solid rgba(0,47,167,.2);border-radius:0 8px 8px 0}
+.sn-idx{flex-shrink:0;width:19px;height:19px;border-radius:50%;background:var(--primary-tint);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;margin-top:1px}
+.sn-content p{font-size:11.5px;color:var(--t3);margin:0;line-height:1.65}
+/* Submit / Feedback */
+.submit-screen{justify-content:center;align-items:center;text-align:center}
+.submit-orb{position:relative;width:105px;height:105px;margin-bottom:26px}
+.submit-orb .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,47,167,.2);animation:ringRot 8s linear infinite}
+.submit-orb .ring.r2{inset:-10px;border-style:dashed;opacity:.35;animation-duration:14s;animation-direction:reverse}
+.submit-orb .core{position:absolute;inset:22px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;animation:coreBreathe 3s ease-in-out infinite;box-shadow:0 8px 24px rgba(0,47,167,.3)}
+.submit-orb .core svg{width:26px;height:26px;color:#fff}
+@keyframes ringRot{to{transform:rotate(360deg)}}
+@keyframes coreBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.feedback-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;margin-top:14px;box-shadow:var(--sh)}
+.timeline{margin-top:14px}
+.timeline-item{display:flex;gap:12px;padding:10px 0;position:relative}
+.timeline-item::before{content:"";position:absolute;left:8px;top:28px;bottom:-4px;width:1px;background:var(--line-md)}
+.timeline-item:last-child::before{display:none}
+.timeline-dot{flex-shrink:0;width:17px;height:17px;border-radius:50%;background:var(--card);border:2px solid var(--primary);display:flex;align-items:center;justify-content:center;margin-top:2px;z-index:1}
+.timeline-dot.done{background:var(--primary)}
+.timeline-dot.done::after{content:"";width:5px;height:5px;border-radius:50%;background:#fff}
+.timeline-content h5{font-size:13px;font-weight:600;color:var(--t1);margin:0 0 2px}
+.timeline-content p{font-size:11.5px;color:var(--t3);margin:0;line-height:1.5}
+.adam-result{margin-top:14px;padding:16px;border-radius:var(--r-md);border:1px solid}
+.adam-result.pos{background:rgba(123,97,68,.06);border-color:rgba(123,97,68,.25)}
+.adam-result.neg{background:var(--primary-tint);border-color:rgba(0,47,167,.15)}
+.adam-tag{display:inline-block;font-size:10px;letter-spacing:1.5px;padding:3px 10px;border-radius:99px;font-weight:700;margin-bottom:8px}
+.adam-result.pos .adam-tag{background:var(--gold);color:#fff}
+.adam-result.neg .adam-tag{background:var(--primary);color:#fff}
+.adam-title{font-size:15px;font-weight:700;color:var(--t1);margin:0 0 5px}
+.adam-desc{font-size:12.5px;color:var(--t2);line-height:1.6;margin:0}
+.priority-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.priority-chip{padding:5px 13px;background:var(--primary-tint);border:1px solid rgba(0,47,167,.15);border-radius:99px;font-size:12px;color:var(--primary);font-weight:600}
+/* Footer */
+.footer{flex-shrink:0;padding:14px 24px calc(18px + var(--safe-b));background:linear-gradient(0deg,var(--bg) 70%,rgba(248,249,252,0) 100%)}
+.footer.hide{display:none}
+.btn{width:100%;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:500;letter-spacing:.3px;transition:all .2s;position:relative;overflow:hidden}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(0,47,167,.22)}
+.btn-primary:disabled{opacity:.3;box-shadow:none;cursor:not-allowed}
+.btn-primary:disabled:active{transform:none}
+.btn-ghost{background:transparent;color:var(--t2);font-size:13px;height:44px}
+.btn .arrow{display:inline-flex;transition:transform .22s}
+.btn:active .arrow{transform:translateX(3px)}
+.btn-meta{font-size:11px;color:var(--t3);text-align:center;margin-top:7px;letter-spacing:.3px}
+.modal-mask{position:fixed;inset:0;background:rgba(5,8,25,.4);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-mask.show{display:flex}
+.modal{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:22px 22px calc(22px + var(--safe-b));animation:modalUp .3s var(--ease) both}
+@keyframes modalUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h3{font-size:16px;font-weight:700;margin:0 0 6px}
+.modal p{font-size:13px;color:var(--t2);margin:0 0 16px;line-height:1.6}
+.modal-actions{display:flex;gap:9px}
+.modal-actions .btn{height:46px;font-size:14px}
+.mt-auto{margin-top:auto}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div id="app">
+  <header class="topbar" id="topbar">
+    <button class="icon-btn" id="backBtn" aria-label="返回">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label num" id="progressLabel"></div>
+  </header>
+  <main class="main" id="main"></main>
+  <footer class="footer hide" id="footer">
+    <button class="btn btn-primary" id="primaryBtn">
+      <span id="primaryBtnText">继续</span>
+      <span class="arrow"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></span>
+    </button>
+    <div class="btn-meta" id="btnMeta"></div>
+  </footer>
+</div>
+<div class="modal-mask" id="exitModal">
+  <div class="modal">
+    <h3>确定要离开？</h3>
+    <p>您已填写的内容会暂存在本机，可以随时回到此处继续。</p>
+    <div class="modal-actions">
+      <button class="btn" style="background:var(--bg-soft);color:var(--t2)" onclick="App.closeExitModal()">继续填写</button>
+      <button class="btn btn-primary" onclick="App.exitConfirm()">暂存并离开</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ============================================================
+   数据层：题库、注释、步骤定义
+   ============================================================ */
+const NOTE = {
+  'BRANCH':'选择与首诊评估中您最关注的方向一致，系统将据此为您展开对应的深度问诊模块，其余维度将进行快速扫描。',
+  'DM1.01':'精力变化的起病速度有助于判断成因。较快出现常与睡眠、甲状腺或激素水平的近期波动有关；缓慢出现更符合线粒体功能与激素随年龄自然变化的规律（Hallmarks of Aging: 线粒体功能障碍）。',
+  'DM1.02':'疲劳对功能的影响程度，是判断干预力度的依据。当疲劳已影响工作产出，通常提示多个系统协同变化，而非单一原因。',
+  'DM1.03':'恢复力反映身体的生理储备能力，比疲劳程度本身更能反映衰老进程（Lipsitz, 2002）。休息后难以恢复，提示细胞能量再生能力下降，该信号往往早于血液指标变化出现。',
+  'DM1.04':'昼夜节律的振幅反映内在生物钟状态。节律变平（全天无高峰）与代谢、情绪变化相关，可通过调整光照、进食与运动时间来重塑。',
+  'DM1.05':'既往尝试帮助医师了解您的应对方式，避免重复无效方法。多数人采用行为代偿（如咖啡因），而非针对成因的调整。',
+  'DM2.01':'变化速度有助于判断成因。较快出现常与心理状态、睡眠或近期身体变化有关；缓慢变化更符合睾酮水平随年龄自然下降（每年约1-2%）与血管功能老化的规律。',
+  'DM2.02':'当生殖相关状态与体能、情绪同步变化，通常提示睾酮水平的整体性下降，可通过总睾酮、游离睾酮、SHBG等指标进一步了解。这是激素维度与代谢、神经维度联动变化的常见路径。',
+  'DM2.03':'心理与生理之间存在双向影响，焦虑情绪会加重生理表现变化，形成循环。了解心理影响程度，有助于判断是否需要在方案中纳入心理调节。',
+  'DM2.04':'助勃类药物的使用与效果可帮助判断成因——效果好通常提示血管和神经通路基本完整；效果不佳或需较大剂量则提示需从血管或激素层面深入了解。',
+  'DM3.01':'体重变化轨迹比当前数值更有参考价值。缓慢持续增长常与基础代谢率下降、肌肉量减少有关；反复波动与代谢适应相关，每次反弹往往伴随脂肪占比升高。',
+  'DM3.02':'腹部（内脏）脂肪与代谢变化的关系比皮下脂肪更密切，其分泌因子是慢性低度炎症的来源之一（Tchkonia & Kirkland, 2018）。体重正常但腹部脂肪偏多，代谢影响常被低估。',
+  'DM3.03':'餐后困倦反映餐后血糖与胰岛素波动幅度，是代谢效率变化的早期信号，往往比空腹血糖、糖化血红蛋白更早出现，也是营养调整较易见效的环节。',
+  'DM3.04':'情绪驱动的进食与血糖驱动的饥饿涉及不同机制，前者关联压力激素与奖赏系统，后者关联血糖波动。区分二者有助于确定调整方向。',
+  'DM3.05':'既往尝试反映代谢适应程度。多次节食后效果递减，常提示静息代谢率适应性下降，此时需结合保留肌肉的训练与营养时序，而非单纯减少热量。',
+  'DM4.01':'运动耐量反映心肺储备能力（最大摄氧量 VO2max），是预测长期健康状况最有力的单一指标之一（Mandsager et al., 2018, JAMA）。耐量纵向变化比绝对数值更早提示储备下降，且可通过结构化训练改善。',
+  'DM4.02':'这些是心血管系统需要关注的信号，多项同时出现时建议尽快面诊了解。',
+  'DM4.03':'家庭血压监测对早期识别血压变化比偶尔诊室测量更敏感（ESH 2023）。很少测量的人群，血压早期变化更容易被忽略。',
+  'DM4.04':'血脂、血压与家族情况是评估心血管长期风险的核心参数。家族较早出现相关问题，参考权重相当于一项主要可控因素（ACC/AHA 2024）。',
+  'DM5.01':'不同方面的变化对应不同脑区——记忆关联海马区，专注与多任务关联前额叶。主观感觉到的认知变化往往早于客观测试改变（Salthouse, 2009），此时大脑可塑性仍有空间。',
+  'DM5.02':'情绪状态与睾酮水平、睡眠质量、慢性炎症相互关联。男性情绪变化常表现为易怒或回避，而非明显低落，容易被忽略。',
+  'DM5.03':'深睡眠期是大脑代谢废物清除最活跃的阶段（Xie et al., 2013, Science）。长期深睡不足与认知功能长期变化相关。睡眠是连接情绪、认知、代谢的关键环节。',
+  'DM5.04':'长期压力通过持续的压力激素暴露影响海马区功能和全身炎症水平（Hallmarks: 细胞间通讯变化）。',
+  'DM6.01':'多个系统同步变化，通常提示存在共同上游机制，如慢性炎症、细胞衰老、线粒体功能变化等核心衰老标志的系统性影响。',
+  'DM6.02':'主观感受到的变化速度与通过表观遗传时钟测得的生物学年龄变化有一定相关性（Horvath, 2013）。',
+  'DM6.03':'跨系统功能变化反映组织再生能力整体下降（Hallmarks: 干细胞功能减退）。',
+  'DM6.04':'既往尝试反映您对健康的关注方式和投入习惯，帮助医师在已有基础上设计方案。',
+  'ADAM':'这是国际通用的睾酮水平初步筛查问卷（Morley et al., 2000）。第1或第7题为"是"，或任意三题为"是"，提示可进一步了解睾酮水平。',
+  'RH.01':'潮热与夜间出汗是激素水平变化的常见伴随表现，通过激素水平检测可进一步确认。',
+  'RH.02':'体毛、胡须的变化与雄激素水平相关，是睾酮变化的外在信号之一。',
+  'IPSS':'基于国际前列腺症状评分（IPSS）简化版。排尿功能的年龄相关变化与激素代谢和前列腺状态相关，是男性健康管理的重要组成部分。',
+  'HX.01':'当前用药影响后续检测项目选择和指标解读标准，是制定方案的必要信息。',
+  'HX.02':'了解现有补充剂有助于避免重复或成分冲突，作为营养方案的基线。',
+  'HX.03':'通过回忆了解既往指标情况，无需查找报告即可作答。多项指标同时偏离时，提示代谢方面需重点关注。',
+  'HX.04':'既往效果有助于判断该问题的可调整空间。效果不明显，有时是方法与成因不匹配，而非无法改善。',
+  'LS.01':'每天的进食时间窗口与代谢状态相关。适当缩短进食窗口、延长空腹时间，有助于改善代谢效率（Attia, 2023 长寿医学营养框架）。',
+  'LS.02':'加工食品比例与代谢状态、炎症水平相关。原型食物占比是衡量饮食质量较简洁的指标。',
+  'LS.03':'充足且分配均衡的蛋白质摄入，是维持肌肉量的营养基础。男性40岁后蛋白质需求上升而摄入常显不足。',
+  'LS.04':'完整运动结构包含有氧（提升心肺）、力量（维持肌肉）、柔韧平衡三类。多数人只做有氧而缺少力量训练，是肌肉逐渐减少的因素之一。',
+  'LS.05':'入睡时间和夜醒频率反映睡眠效率。睡眠质量影响各个衰老维度，是优先级较高的调整环节。',
+  'LS.06':'识别压力来源是进行压力调节的前提。长期压力通过激素通路影响代谢、防御与认知等多个方面。',
+  'WL.01':'了解接受范围，有助于设计您愿意执行、也能执行的方案。',
+  'WL.02':'时间安排决定运动与生活方式调整的强度设计，如实评估有助于方案可执行性。',
+  'WL.03':'基于行为改变阶段理论（Prochaska 跨理论模型），了解准备度有助于安排方案推进节奏。',
+  'WL.04':'既往执行情况有助于设计配套的随访与阶段目标。容易中断通常需要更多支持和更小的起步步骤。',
+  'PR.01':'您自己的优先级与问卷数据相互参照，使方案既符合身体状况，也契合您最在意的目标。'
+};
+
+/* P2 深度主诉模块（六个分支各自独立）*/
+const DEEP_STEPS = {
+  M1:[
+    {id:'DM1.01',type:'single',section:'精力深度',code:'DM1.01',title:'您感觉精力不如从前，大约从什么时候开始？',opts:['最近半年内','半年到一年','一到三年','三年以上','说不清，是个缓慢的过程']},
+    {id:'DM1.02',type:'single',section:'精力深度',code:'DM1.02',title:'精力状态对日常生活的影响程度？',opts:['偶尔觉得累，不影响工作生活','下午或傍晚明显乏力，需要咖啡因提神','经常疲惫，工作效率已受影响','持续疲惫，日常事务都觉吃力']},
+    {id:'DM1.03',type:'single',section:'精力深度',code:'DM1.03',title:'一个高质量的周末休息后，精力能恢复到什么程度？',opts:['完全恢复，像充满电','大部分恢复，但不如年轻时彻底','只恢复一部分，仍感到底子里的累','怎么休息都缓不过来']},
+    {id:'DM1.04',type:'single',section:'精力深度',code:'DM1.04',title:'您一天中精力的分布更接近哪种？',opts:['晨型——上午最好，晚上自然犯困','夜型——上午发动慢，晚上清醒','全天平稳，没有明显高低峰','全天都低，没有明显高峰']},
+    {id:'DM1.05',type:'multi',section:'精力深度',code:'DM1.05',exclusive:5,title:'为改善精力，您尝试过以下哪些？',hint:'可多选',opts:['补充咖啡因/功能饮料','调整作息、早睡','运动','保健品（维生素、人参、玛卡等）','就医检查过（甲状腺、激素等）','没有特别尝试过']}
+  ],
+  M2:{
+    consent2:{title:'生殖激素与亲密关系',lines:['本模块涉及性功能与亲密关系等高度隐私内容，关乎您的激素轴功能评估，是男性长寿医学深度评估的重要组成部分。','您的回答将仅供本中心持证医师在制定方案时参考，全程加密存储，不会向任何第三方披露。','本模块完全自愿，您可以选择跳过任意题目。继续填写视为您同意上述条款。']},
+    steps:[
+      {id:'DM2.01',type:'single',section:'生殖激素深度',code:'DM2.01',title:'您感觉性欲或性功能的变化，是怎样的发展过程？',opts:['近期较快出现（半年内）','最近半年到一年逐渐出现','一到三年缓慢变化','三年以上的长期过程']},
+      {id:'DM2.02',type:'single',section:'生殖激素深度',code:'DM2.02',title:'综合性欲、勃起硬度、晨间反应、体能，您的整体感受是？',opts:['仅性欲略有变化，其他正常','性欲和硬度都有变化，但仍可维持','多方面明显变化，已影响亲密关系','显著变化，伴随体能、情绪等多方面改变']},
+      {id:'DM2.03',type:'single',section:'生殖激素深度',code:'DM2.03',hint:'您可以选择不愿作答',title:'这些变化对您的心理状态和亲密关系影响有多大？',opts:['基本没有影响','有一些困扰，但能调节','明显影响情绪和自信','较大影响关系和生活质量','不愿作答'],canSkip:true},
+      {id:'DM2.04',type:'multi',section:'生殖激素深度',code:'DM2.04',exclusive:4,hint:'可多选',title:'您是否尝试过以下方式？',opts:['助勃类药物（万艾可、希爱力等）','中药或保健品调理','运动、减重等生活方式调整','就医做过激素检测','没有处理过']}
+    ]
+  },
+  M3:[
+    {id:'DM3.01',type:'single',section:'代谢体型深度',code:'DM3.01',title:'回顾过去五年，您的体重变化更接近？',opts:['基本稳定','缓慢持续增长（每年一两公斤）','某阶段快速增长后维持','反复波动（减了又反弹）']},
+    {id:'DM3.02',type:'single',section:'代谢体型深度',code:'DM3.02',title:'您的脂肪主要堆积在哪里？',opts:['腹部为主，腰围明显','四肢和臀部为主','全身均匀','体重正常但腹部仍有脂肪堆积']},
+    {id:'DM3.03',type:'single',section:'代谢体型深度',code:'DM3.03',title:'吃完一顿正常午餐后，您通常？',opts:['精力正常，可继续工作','有点困，但能克服','明显犯困，很想睡觉','困到难以集中']},
+    {id:'DM3.04',type:'multi',section:'代谢体型深度',code:'DM3.04',exclusive:4,hint:'可多选',title:'以下哪些符合您的饮食模式？',opts:['压力大时会多吃或吃甜食','经常强烈饥饿，难以控制','吃了精制碳水后很快又饿','习惯吃夜宵或睡前进食','以上都不明显']},
+    {id:'DM3.05',type:'multi',section:'代谢体型深度',code:'DM3.05',exclusive:4,hint:'可多选',title:'为控制体重或改善代谢，您尝试过？',opts:['节食、控制热量','运动','体重管理药物（GLP-1类等）','断食/轻断食','没有系统尝试过']}
+  ],
+  M4:[
+    {id:'DM4.01',type:'single',section:'心血管深度',code:'DM4.01',title:'和三年前比，同样强度的活动（爬楼、快走），您现在？',opts:['没有变化','略感吃力，但能完成','明显比以前累，会气短','已不太敢做剧烈活动']},
+    {id:'DM4.02',type:'multi',section:'心血管深度',code:'DM4.02',exclusive:5,hint:'可多选',title:'过去一年是否出现过以下情况？',opts:['活动或激动时胸口发闷、压迫感','心跳加快或不规则','劳累后头晕','平躺时呼吸不畅、需垫高枕头','下肢水肿','都没有']},
+    {id:'DM4.03',type:'single',section:'心血管深度',code:'DM4.03',title:'您对自己血压情况的了解？',opts:['定期测量，清楚数值','偶尔测，大概知道','很少测，不太清楚','从不测']},
+    {id:'DM4.04',type:'multi',section:'心血管深度',code:'DM4.04',exclusive:4,hint:'可多选',title:'以下哪些符合您的情况？',opts:['被告知过血脂偏高','被告知过血压偏高','正在服用相关药物（降压、降脂、抗血小板）','一级亲属较早出现过心脑血管问题','以上都没有/不清楚']}
+  ],
+  M5:{
+    consent2:{title:'脑神经健康与情绪',lines:['本模块涉及情绪与心理状态等敏感内容。本评估为筛查参考工具，非诊断结论，旨在帮助医师识别需要进一步评估的方向。','您的回答将全程加密存储，仅供本中心持证医师参考，不会向任何第三方披露。','本模块完全自愿，您可以选择跳过任意题目。继续填写视为您同意上述条款。']},
+    steps:[
+      {id:'DM5.01',type:'multi',section:'脑情绪深度',code:'DM5.01',exclusive:5,hint:'可多选',title:'过去一年，以下哪些方面感觉不如从前？',opts:['短期记忆（刚说的话、刚做的事）','专注力（难以长时间集中）','反应速度和思维敏捷度','多任务处理能力','创造力和发散思维','都没有明显变化']},
+      {id:'DM5.02',type:'single',section:'脑情绪深度',code:'DM5.02',hint:'您可以选择不愿作答',title:'过去三个月，您的整体情绪状态？',opts:['稳定、积极','基本稳定，偶有低落','经常低落或易怒','持续低落，影响生活','不愿作答'],canSkip:true},
+      {id:'DM5.03',type:'single',section:'脑情绪深度',code:'DM5.03',title:'您的睡眠深度和质量如何？',opts:['深睡充足，醒来清爽','能睡着，但不够深','浅眠易醒，多梦','长期睡眠困难']},
+      {id:'DM5.04',type:'single',section:'脑情绪深度',code:'DM5.04',title:'您当前承受的脑力/心理负荷？',opts:['轻松可控','中等，能应对','较重，时常超负荷','长期高压、透支状态']}
+    ]
+  },
+  M6:[
+    {id:'DM6.01',type:'single',section:'综合衰退深度',code:'DM6.01',title:'您对自身整体状态的变化感受更接近？',opts:['只是个别方面（如精力或体型）','两三个方面同时变化','多个系统一起变化','明显感到整个人在加速变化']},
+    {id:'DM6.02',type:'single',section:'综合衰退深度',code:'DM6.02',title:'过去三年，您觉得自己变化的速度？',opts:['和同龄人差不多','比同龄人略快','明显比同龄人快','像突然老了好几岁']},
+    {id:'DM6.03',type:'multi',section:'综合衰退深度',code:'DM6.03',exclusive:5,hint:'可多选',title:'以下哪些功能感到明显变化？',opts:['肌肉力量和耐力','关节灵活度','平衡感','皮肤、头发状态','恢复力、抵抗力','都还好']},
+    {id:'DM6.04',type:'multi',section:'综合衰退深度',code:'DM6.04',exclusive:5,hint:'可多选',title:'您尝试过哪些延缓衰老的方式？',opts:['保健品、抗氧化剂','运动健身','调整饮食','医美或抗衰项目','检测过生物年龄/衰老指标','没有系统尝试']}
+  ]
+};
+
+/* P3 六维快速扫描（每维2题，按分支跳过对应维度）*/
+const SCAN_STEPS = {
+  CV:[
+    {id:'SC-CV.01',type:'single',section:'心血管扫描',code:'SC-CV.01',title:'活动后是否有胸闷、心悸、气短？',opts:['无','偶尔','经常']},
+    {id:'SC-CV.02',type:'single',section:'心血管扫描',code:'SC-CV.02',title:'是否了解自己的血压、血脂情况？',opts:['清楚','大概知道','不清楚']}
+  ],
+  ME:[
+    {id:'SC-ME.01',type:'single',section:'代谢扫描',code:'SC-ME.01',title:'餐后是否容易困倦？',opts:['不会','偶尔','经常']},
+    {id:'SC-ME.02',type:'single',section:'代谢扫描',code:'SC-ME.02',title:'腰围或腹部脂肪是否在增加？',opts:['没有','略增','明显']}
+  ],
+  IM:[
+    {id:'SC-IM.01',type:'single',section:'免疫扫描',code:'SC-IM.01',title:'是否容易感冒、感染后恢复较慢？',opts:['不会','一般','明显'],note:'身体的防御与修复能力随年龄变化，伴随轻度慢性炎症水平上升（衰老核心标志之一）。'},
+    {id:'SC-IM.02',type:'single',section:'免疫扫描',code:'SC-IM.02',title:'是否有反复的炎症困扰（牙龈、肠胃、皮肤等）？',opts:['无','偶尔','经常']}
+  ],
+  BR:[
+    {id:'SC-BR.01',type:'single',section:'脑神经扫描',code:'SC-BR.01',title:'记忆力或专注力是否下降？',opts:['没有','略有','明显']},
+    {id:'SC-BR.02',type:'single',section:'脑神经扫描',code:'SC-BR.02',title:'整体睡眠质量如何？',opts:['好','一般','差']}
+  ],
+  RH:[
+    {id:'SC-RH.01',type:'single',section:'激素扫描',code:'SC-RH.01',title:'性欲和晨间反应是否较前减少？',opts:['没有','略减','明显']},
+    {id:'SC-RH.02',type:'single',section:'激素扫描',code:'SC-RH.02',title:'体毛、肌肉是否减少？',opts:['没有','略有','明显']}
+  ],
+  MS:[
+    {id:'SC-MS.01',type:'single',section:'肌骨扫描',code:'SC-MS.01',title:'肌肉力量是否下降，是否容易腰酸背痛？',opts:['没有','略有','明显'],note:'肌肉量30岁后逐渐减少，是体能与日常功能变化的重要因素，力量训练和蛋白质摄入是直接改善手段。'},
+    {id:'SC-MS.02',type:'single',section:'肌骨扫描',code:'SC-MS.02',title:'是否有关节僵硬或活动度下降？',opts:['没有','略有','明显']}
+  ]
+};
+
+const BRANCH_TO_DIM = {M1:'BR',M2:'RH',M3:'ME',M4:'CV',M5:'BR',M6:null};
+
+/* P4 生活方式结构化 */
+const LIFESTYLE_STEPS = [
+  {id:'LS.01',type:'single',section:'生活方式',code:'LS.01',title:'您一天中第一餐到最后一餐，大概跨越多长时间？',opts:['8小时以内','8-12小时','12-15小时','15小时以上（含夜宵）']},
+  {id:'LS.02',type:'single',section:'生活方式',code:'LS.02',title:'日常饮食中，加工食品（外卖、零食、含糖饮料、预制食品）占比？',opts:['很少，以原型食物为主','约三分之一','约一半','大部分是加工食品']},
+  {id:'LS.03',type:'single',section:'生活方式',code:'LS.03',title:'您每餐是否有足量优质蛋白（肉、蛋、鱼、豆制品）？',opts:['每餐都有，量充足','大部分餐有','不太规律','经常以主食为主，蛋白质偏少']},
+  {id:'LS.04',type:'multi',section:'生活方式',code:'LS.04',exclusive:3,hint:'可多选',title:'您日常的运动包含以下哪些？',opts:['有氧（跑步、快走、游泳、骑行）','力量训练','柔韧拉伸','几乎不运动']},
+  {id:'LS.05',type:'single',section:'生活方式',code:'LS.05',title:'您的入睡和夜醒情况？',opts:['很快入睡，整夜不醒','入睡尚可，偶尔夜醒','入睡慢（超过30分钟）或经常夜醒','入睡困难且多次夜醒']},
+  {id:'LS.06',type:'multi',section:'生活方式',code:'LS.06',exclusive:4,hint:'可多选',title:'您当前主要的压力来自？',opts:['事业/工作','经济','家庭/关系','健康担忧','基本没有明显压力']}
+];
+
+/* P5 男性专属深度 */
+const ADAM_CONSENT2 = {
+  id:'adam-consent2',type:'consent2',section:'男性专项',showTopbar:true,showFooter:true,btnText:'我同意，继续',canSkip:false,
+  consent2:{title:'男性激素专项评估',lines:[
+    '本模块基于国际通用 ADAM 量表，对睾酮水平变化进行初步筛查，是男性长寿医学深度评估的必要组成部分。',
+    '本模块还包含排尿功能相关问题（基于国际通用IPSS量表），是男性年龄相关健康管理的常规评估内容。',
+    '您的回答将全程加密存储，仅供本中心持证医师参考。继续填写视为您同意上述条款。'
+  ]}
+};
+const ADAM_STEP = {
+  id:'ADAM',type:'yesno-list',section:'男性专项',code:'ADAM',showFooter:true,
+  title:'ADAM 量表（国际通用，10 项）',
+  hint:'请如实选择"是"或"否"，全部完成后点继续',
+  questions:[
+    '您的性欲（性兴趣）是否下降？',
+    '您是否感到精力不足？',
+    '您是否感到体力或耐力下降？',
+    '您的身高是否变矮？',
+    '您是否感到生活乐趣减少？',
+    '您是否感到情绪低落或脾气变差？',
+    '您的勃起硬度是否不如以前？',
+    '您是否感到运动能力下降？',
+    '您是否在晚饭后容易打瞌睡？',
+    '您的工作状态是否不如从前？'
+  ]
+};
+const HORMONE_STEPS = [
+  {id:'RH.01',type:'single',section:'激素症状',code:'RH.01',title:'是否出现潮热、夜间出汗？',opts:['无','偶尔','经常']},
+  {id:'RH.02',type:'single',section:'激素症状',code:'RH.02',title:'体毛、胡须生长是否变慢、变稀？',opts:['没有','略有','明显']}
+];
+const IPSS_STEPS = [
+  {id:'IPSS.1',type:'single',section:'排尿功能',code:'IPSS.1',title:'是否经常有尿不尽感？',opts:['无','有时','经常']},
+  {id:'IPSS.2',type:'single',section:'排尿功能',code:'IPSS.2',title:'夜间起夜是否增多（每晚≥2次）？',opts:['无','有时','经常']},
+  {id:'IPSS.3',type:'single',section:'排尿功能',code:'IPSS.3',title:'排尿是否费力、尿线变细？',opts:['无','有时','经常']},
+  {id:'IPSS.4',type:'single',section:'排尿功能',code:'IPSS.4',title:'是否有尿急、难以憋尿？',opts:['无','有时','经常']},
+  {id:'IPSS.5',type:'single',section:'排尿功能',code:'IPSS.5',title:'这些情况对日常生活的困扰程度？',opts:['无','轻度','中度','重度']}
+];
+
+/* P6 既往应对与指标回忆 */
+const HISTORY_STEPS = [
+  {id:'HX.01',type:'multi',section:'既往情况',code:'HX.01',exclusive:6,hint:'可多选，凭印象即可',title:'您目前是否长期服用以下类型的药物？',opts:['降压药','降糖药','降脂药','心血管相关药物','助眠或情绪相关药物','其他长期处方药','没有长期用药']},
+  {id:'HX.02',type:'multi',section:'既往情况',code:'HX.02',exclusive:6,hint:'可多选，凭印象即可',title:'您目前在服用哪些保健品/补充剂？',opts:['维生素/矿物质','鱼油/Omega-3','蛋白粉','NMN/NAD+类','中药调理','其他','没有']},
+  {id:'HX.03',type:'multi',section:'既往情况',code:'HX.03',exclusive:5,hint:'可多选，凭印象即可',title:'是否被告知过以下指标偏离正常？',opts:['血脂偏高','血糖/糖化偏高','血压偏高','尿酸偏高','肝脏指标异常（脂肪肝等）','都正常/记不清']},
+  {id:'HX.04',type:'single',section:'既往情况',code:'HX.04',title:'针对您最关注的那个方面，过去的应对效果如何？',opts:['明显改善','有一些效果','效果不明显','越来越差','没有专门处理过']}
+];
+
+/* P7 干预意愿与依从性 */
+const WILL_STEPS = [
+  {id:'WL.01',type:'multi',section:'干预意愿',code:'WL.01',hint:'可多选',title:'为改善健康、延缓衰老，您愿意接受哪些方式？',opts:['调整饮食结构','规律运动计划','个性化营养补充','必要时的医学干预','深度检测（激素、代谢、生物年龄等）','定期随访和方案调整']},
+  {id:'WL.02',type:'single',section:'干预意愿',code:'WL.02',title:'您每周大概愿意为健康管理投入多少时间？',opts:['每周1小时以内','每周2-3小时','每周3-5小时','每周5小时以上']},
+  {id:'WL.03',type:'single',section:'干预意愿',code:'WL.03',title:'对于改善当前状态，您目前的态度更接近？',opts:['想先了解情况，还没准备好改变','有意愿，还在考虑','已准备好，希望尽快开始','比较迫切，愿意投入精力']},
+  {id:'WL.04',type:'single',section:'干预意愿',code:'WL.04',title:'回顾过去，您制定健康计划后的执行情况？',opts:['通常能坚持','开始能坚持，后面容易放弃','经常半途而废','很难开始']}
+];
+
+/* P8 优先级排序 */
+const PRIORITY_STEP = {
+  id:'PR.01',type:'rank',section:'方案优先级',code:'PR.01',showFooter:true,btnText:'确认并提交',
+  title:'请选出您最希望优先改善的方面',
+  hint:'按重要性依次选出前三项',
+  opts:[
+    {k:'A',t:'提升精力、改善疲劳'},{k:'B',t:'改善性功能与激素状态'},
+    {k:'C',t:'控制体重、改善代谢'},{k:'D',t:'维护心脑血管'},
+    {k:'E',t:'改善睡眠与情绪'},{k:'F',t:'维持肌肉力量与体能'},
+    {k:'G',t:'整体延缓衰老、延长健康寿命'}
+  ]
+};
+
+/* ============================================================
+   计算引擎
+   ============================================================ */
+function calcAge(b){if(!b||!b.y)return null;return new Date().getFullYear()-parseInt(b.y,10);}
+function calcBMI(h,w){if(!h||!w)return null;const m=h/100;return +(w/(m*m)).toFixed(1);}
+
+function buildScanSteps(skipDim){
+  const all=['CV','ME','IM','BR','RH','MS'];
+  const steps=[];
+  all.forEach(d=>{if(d!==skipDim)steps.push(...SCAN_STEPS[d]);});
+  return steps;
+}
+
+function adamPositive(A){
+  const d=A['ADAM']||{};
+  const yes=k=>d[k]===0;
+  if(!yes(1)&&!yes(7))return false;
+  const cnt=[1,2,3,4,5,6,7,8,9,10].filter(yes).length;
+  return cnt>=3;
+}
+
+function computeDeepTags(A,branch){
+  const tags=[];
+  // ADAM
+  if(adamPositive(A))tags.push({n:'ADAM量表提示',c:'ADAM_POS',lv:'S'});
+  // IPSS
+  const ipss=[1,2,3,4].reduce((s,k)=>s+(A['IPSS.'+k]||0),0);
+  if(ipss>=4)tags.push({n:'排尿功能需关注',c:'IPSS_MOD',lv:'高'});
+  // Branch-specific
+  if(branch==='M1'&&A['DM1.03']>=2)tags.push({n:'恢复力明显下降',c:'RECOVERY_LOW',lv:'高'});
+  if(branch==='M2'&&A['DM2.02']>=2)tags.push({n:'多维激素症状',c:'HORMONE_MULTI',lv:'S'});
+  if(branch==='M3'&&A['DM3.01']===3)tags.push({n:'体重反复波动',c:'WEIGHT_CYCLE',lv:'高'});
+  if(branch==='M4'){const m402=Array.isArray(A['DM4.02'])?A['DM4.02'].filter(x=>x!==5).length:0;if(m402>=3)tags.push({n:'心血管信号多项',c:'CV_MULTI',lv:'S'});}
+  if(branch==='M5'&&A['DM5.02']===3)tags.push({n:'持续情绪低落',c:'MOOD_PERSIST',lv:'S'});
+  // Lifestyle
+  if(A['LS.01']>=2)tags.push({n:'进食窗口偏长',c:'WINDOW_LONG',lv:'中'});
+  if(A['LS.03']>=2)tags.push({n:'蛋白质摄入不足',c:'PROTEIN_LOW',lv:'中'});
+  if(Array.isArray(A['LS.04'])&&!A['LS.04'].includes(1)&&!A['LS.04'].includes(3))tags.push({n:'缺乏力量训练',c:'NO_STRENGTH',lv:'中'});
+  if(A['LS.05']>=2)tags.push({n:'睡眠效率下降',c:'SLEEP_LOW',lv:'中'});
+  // Willingness
+  if(A['WL.03']===0)tags.push({n:'改变准备度待提升',c:'READY_LOW',lv:'中'});
+  if(A['WL.03']>=2)tags.push({n:'高改变意愿',c:'READY_HIGH',lv:'中'});
+  if(A['WL.04']>=2)tags.push({n:'依从性需支持',c:'ADHERENCE_LOW',lv:'中'});
+  // History
+  const hx03=Array.isArray(A['HX.03'])?A['HX.03'].filter(x=>x!==5).length:0;
+  if(hx03>=2)tags.push({n:'多指标回忆偏离',c:'MULTI_LAB',lv:'高'});
+  return tags;
+}
+
+function computeDeepAlert(A,branch){
+  const tags=computeDeepTags(A,branch);
+  const hasS=tags.some(t=>t.lv==='S');
+  const hasH=tags.some(t=>t.lv==='高');
+  if(hasS)return{level:'S',timing:'当日',triggers:tags.filter(t=>t.lv==='S')};
+  if(hasH)return{level:'high',timing:'24小时内',triggers:tags.filter(t=>t.lv==='高')};
+  return{level:'normal',timing:'2个工作日内',triggers:[]};
+}
+
+/* ============================================================
+   App 主控制器
+   ============================================================ */
+const STORAGE_KEY='sbj_deep_survey_v1';
+const App={
+  flow:[],idx:0,answers:{},branch:null,branchSet:false,startTime:Date.now(),
+  init(){this.restore();this.buildInitialFlow();this.bindEvents();this.render();},
+
+  buildInitialFlow(){
+    this.flow=[
+      {id:'welcome',type:'welcome',showTopbar:false,showFooter:false},
+      {id:'BRANCH',type:'single',section:'方向确认',code:'BRANCH',showTopbar:true,showFooter:false,
+        title:'请选择您上次评估中最主要的关注方向',
+        hint:'将据此为您展开对应的深度评估模块',
+        opts:['精力与恢复力','生殖激素与亲密关系','代谢与体型','心血管','脑神经与情绪','多系统综合衰退']}
+    ];
+    if(this.branch&&this.branchSet)this.buildFullFlow();
+  },
+
+  buildFullFlow(){
+    const b=this.branch;
+    const skipDim=BRANCH_TO_DIM[b];
+    const deepInfo=DEEP_STEPS[b];
+    const deepSteps=Array.isArray(deepInfo)?deepInfo:(deepInfo&&deepInfo.steps?deepInfo.steps:[]);
+    const scanSteps=buildScanSteps(skipDim);
+    const rest=[];
+    // consent2 for M2/M5
+    if(deepInfo&&deepInfo.consent2){
+      rest.push({id:b+'_consent2',type:'consent2',section:'隐私确认',showTopbar:true,showFooter:true,
+        btnText:'我同意，继续',canSkip:true,branch:b,consent2:deepInfo.consent2});
+    }
+    // deep steps
+    deepSteps.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:s.type!=='single'})));
+    // scan
+    scanSteps.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:false})));
+    // lifestyle
+    LIFESTYLE_STEPS.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:s.type!=='single'})));
+    // P5
+    rest.push(ADAM_CONSENT2);
+    rest.push(Object.assign({},ADAM_STEP,{showTopbar:true}));
+    HORMONE_STEPS.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:false})));
+    IPSS_STEPS.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:false})));
+    // P6
+    HISTORY_STEPS.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:s.type!=='single'})));
+    // P7
+    WILL_STEPS.forEach(s=>rest.push(Object.assign({},s,{showTopbar:true,showFooter:s.type!=='single'})));
+    // P8
+    rest.push(Object.assign({},PRIORITY_STEP,{showTopbar:true}));
+    // submit
+    rest.push({id:'submit',type:'submit',showTopbar:true,showFooter:true,btnText:'提交深度评估'});
+    this.flow=this.flow.slice(0,2).concat(rest);
+    this.branchSet=true;
+  },
+
+  save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({idx:this.idx,answers:this.answers,branch:this.branch,branchSet:this.branchSet,startTime:this.startTime}));}catch(e){}},
+  restore(){try{const r=localStorage.getItem(STORAGE_KEY);if(r){const d=JSON.parse(r);this.answers=d.answers||{};this.branch=d.branch||null;this.branchSet=d.branchSet||false;this.startTime=d.startTime||Date.now();this.idx=0;}}catch(e){}},
+  cur(){return this.flow[this.idx];},
+
+  bindEvents(){
+    document.getElementById('backBtn').addEventListener('click',()=>this.back());
+    document.getElementById('primaryBtn').addEventListener('click',()=>this.onPrimary());
+  },
+
+  onPrimary(){
+    const step=this.cur();
+    if(['welcome','consent2','submit'].includes(step.type)){this.next();return;}
+    if(['multi','rank','yesno-list'].includes(step.type)){if(!this.isAnswered(step)){this.shake();return;}this.next();return;}
+    this.next();
+  },
+
+  shake(){const btn=document.getElementById('primaryBtn');btn.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],{duration:280,easing:'ease-in-out'});},
+
+  next(){
+    const step=this.cur();
+    // Branch routing
+    if(step.code==='BRANCH'&&!this.branchSet&&this.answers['BRANCH']!==undefined){
+      this.branch=['M1','M2','M3','M4','M5','M6'][this.answers['BRANCH']];
+      this.buildFullFlow();
+    }
+    if(this.idx<this.flow.length-1){this.idx++;this.save();this.render();}
+  },
+
+  back(){
+    if(this.idx>0){this.idx--;this.save();this.render();}
+    else this.openExitModal();
+  },
+
+  skipQuestion(){const step=this.cur();this.answers[step.code]='__skip__';this.save();this.next();},
+
+  render(){
+    const step=this.cur();if(!step)return;
+    this.renderTopbar(step);this.renderMain(step);this.renderFooter(step);this.updateProgress();
+  },
+
+  renderTopbar(step){const bar=document.getElementById('topbar');if(step.showTopbar===false)bar.classList.add('hide');else bar.classList.remove('hide');},
+
+  renderFooter(step){
+    const ft=document.getElementById('footer');
+    // single type hides footer (auto-advance); special types show it
+    if(step.showFooter===false||step.type==='single'){ft.classList.add('hide');return;}
+    if(!step.showFooter&&step.type!=='multi'&&step.type!=='rank'&&step.type!=='yesno-list'){ft.classList.add('hide');return;}
+    ft.classList.remove('hide');
+    const txt=document.getElementById('primaryBtnText'),meta=document.getElementById('btnMeta'),btn=document.getElementById('primaryBtn');
+    txt.textContent=step.btnText||'继续';meta.textContent=step.btnMeta||'';
+    btn.disabled=!this.isAnswered(step);
+    // skip button
+    const ex=ft.querySelector('.btn-skip');if(ex)ex.remove();
+    if(step.canSkip){const sk=document.createElement('button');sk.className='btn btn-ghost';sk.style.cssText='margin-top:6px;height:40px;font-size:13px';sk.textContent='跳过本题';sk.onclick=()=>this.skipQuestion();ft.appendChild(sk);}
+  },
+
+  updateProgress(){
+    const step=this.cur(),fill=document.getElementById('progressFill'),label=document.getElementById('progressLabel');
+    const total=this.flow.length;const pct=Math.round((this.idx/(total-1))*100);
+    fill.style.width=Math.min(100,Math.max(2,pct))+'%';
+    if(['welcome','submit','feedback'].includes(step.type))label.textContent='';
+    else label.textContent=step.code||'';
+  },
+
+  renderMain(step){
+    const main=document.getElementById('main');main.innerHTML='';
+    const screen=document.createElement('section');screen.className='screen '+step.type;
+    if(step.type==='welcome')screen.innerHTML=this.tplWelcome();
+    else if(step.type==='consent2')screen.innerHTML=this.tplConsent2(step);
+    else if(step.type==='single')screen.innerHTML=this.tplSingle(step);
+    else if(step.type==='multi')screen.innerHTML=this.tplMulti(step);
+    else if(step.type==='scale')screen.innerHTML=this.tplScale(step);
+    else if(step.type==='rank')screen.innerHTML=this.tplRank(step);
+    else if(step.type==='yesno-list')screen.innerHTML=this.tplYesList(step);
+    else if(step.type==='submit')screen.innerHTML=this.tplSubmit();
+    else if(step.type==='feedback')screen.innerHTML=this.tplFeedback();
+    main.appendChild(screen);
+    if(step.type==='single')this.initSingle(step);
+    if(step.type==='multi')this.initMulti(step);
+    if(step.type==='scale')this.initScale(step);
+    if(step.type==='rank')this.initRank(step);
+    if(step.type==='yesno-list')this.initYesList(step);
+    if(step.type==='submit')setTimeout(()=>this.doSubmit(),350);
+    document.getElementById('main').scrollTop=0;
+  },
+
+  /* === Templates === */
+  tplWelcome(){
+    return `<div class="welcome stagger"><div style="text-align:center;padding-top:12px">
+      <div class="sys-label">深度评估 · 首诊深化版</div>
+      <div class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+      <div class="brand-cn">松柏纪</div><div class="brand-sub">男性长寿医学深度评估</div>
+      <div class="brand-divider"></div></div>
+      <div class="welcome-hero">
+        <h1 class="hero-title">欢迎回来<br><span class="hero-accent">深化您的评估</span></h1>
+        <div class="hero-en">Comprehensive Deep Assessment</div>
+        <p class="hero-sub">基于您此前完成的初步评估，本次将从更细致的维度了解您的健康状态。长寿医学关注的是身体各系统随时间变化的速度，以及如何让这个过程更平缓。</p>
+      </div>
+      <div class="meta-row">
+        <div class="meta-item"><div class="mv num">12–18<span class="unit">分钟</span></div><div class="ml">预计时长</div></div>
+        <div class="meta-item"><div class="mv num">~45<span class="unit">题</span></div><div class="ml">深度问卷</div></div>
+        <div class="meta-item"><div class="mv num">8<span class="unit">模块</span></div><div class="ml">全面覆盖</div></div>
+      </div>
+      <div class="mt-auto" style="padding-top:24px">
+        <button class="btn btn-primary" onclick="App.next()"><span>开始深度评估</span><span class="arrow"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></span></button>
+        <div style="text-align:center;margin-top:11px;font-size:11.5px;color:var(--t3)">您的所有信息将被严格保密 · 仅供专业医师制定方案时查阅</div>
+      </div></div>`;
+  },
+
+  tplConsent2(step){
+    const c=step.consent2;
+    return `<div class="transition-screen stagger"><div class="transition-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m0 0v.5M9 11V7a3 3 0 116 0v4m-9 0h12a1 1 0 011 1v8a1 1 0 01-1 1H6a1 1 0 01-1-1v-8a1 1 0 011-1z"/></svg></div><div class="sys-label" style="margin-bottom:12px">二次知情同意 · 隐私模块</div><h2 class="transition-title">${c.title}</h2><div class="sensitive-list" style="text-align:left;margin-top:20px">${c.lines.map((l,i)=>`<div class="sensitive-item"><div class="sn-idx">${i+1}</div><div class="sn-content"><p>${l}</p></div></div>`).join('')}</div></div>`;
+  },
+
+  tplSingle(step){
+    const cur=this.answers[step.code];const note=NOTE[step.code]||step.note||'';
+    return `<div class="q-head stagger"><div class="q-meta"><span class="seg">${step.section||''}</span><span class="dot"></span><span class="num">${step.code}</span></div><h2 class="q-title">${step.title}</h2>${step.hint?`<p class="q-desc">${step.hint}</p>`:''}${note?`<p class="q-note">${note}</p>`:''}</div><div class="options">${step.opts.map((o,i)=>`<div class="option ${cur===i?'selected':''}" data-idx="${i}"><div class="option-idx">${'①②③④⑤⑥⑦⑧⑨⑩'[i]||i+1}</div><div class="option-label">${o}</div><div class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div></div>`).join('')}</div>`;
+  },
+
+  initSingle(step){
+    document.querySelectorAll('.option').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const i=parseInt(el.dataset.idx,10);this.answers[step.code]=i;
+        document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+        el.classList.add('selected');this.save();
+        setTimeout(()=>{if(this.cur().code===step.code)this.next();},310);
+      });
+    });
+  },
+
+  tplMulti(step){
+    const cur=this.answers[step.code]||[];const note=NOTE[step.code]||step.note||'';
+    return `<div class="q-head stagger"><div class="q-meta"><span class="seg">${step.section||''}</span><span class="dot"></span><span class="num">${step.code}</span></div><h2 class="q-title">${step.title}</h2>${step.hint?`<p class="q-desc">${step.hint}</p>`:''}${note?`<p class="q-note">${note}</p>`:''}</div><div class="options" id="multi-opts">${step.opts.map((o,i)=>`<div class="option ${cur.includes(i)?'selected':''}" data-idx="${i}"><div class="option-idx">${'①②③④⑤⑥⑦⑧⑨⑩'[i]||i+1}</div><div class="option-label">${o}</div><div class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div></div>`).join('')}</div><div class="multi-hint">已选 <span class="count">${cur.length}</span> 项</div>`;
+  },
+
+  initMulti(step){
+    const ex=step.exclusive;
+    document.querySelectorAll('.option').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const i=parseInt(el.dataset.idx,10);let arr=this.answers[step.code]?[...this.answers[step.code]]:[];
+        if(ex!==undefined&&ex!==null){
+          if(i===ex){const was=arr.includes(ex);arr=was?[]:[ex];this.answers[step.code]=arr;this.save();this.rerenderMulti(arr);
+            if(!was&&this.isAnswered(step)){setTimeout(()=>{if(this.cur().code===step.code)this.next();},310);}return;}
+          else arr=arr.filter(x=>x!==ex);
+        }
+        if(arr.includes(i))arr=arr.filter(x=>x!==i);else arr.push(i);
+        this.answers[step.code]=arr;this.save();this.rerenderMulti(arr);
+        const btn=document.getElementById('primaryBtn');if(btn)btn.disabled=arr.length===0;
+      });
+    });
+  },
+
+  rerenderMulti(arr){
+    document.querySelectorAll('.option').forEach(el=>{const i=parseInt(el.dataset.idx,10);el.classList.toggle('selected',arr.includes(i));});
+    const h=document.querySelector('.multi-hint .count');if(h)h.textContent=arr.length;
+  },
+
+  tplScale(step){
+    const cur=this.answers[step.code];const note=NOTE[step.code]||'';
+    let dots='';for(let i=step.min;i<=step.max;i++)dots+=`<div class="scale-dot-btn ${cur===i?'active':cur&&i<cur?'inrange':''}" data-v="${i}">${i}</div>`;
+    return `<div class="q-head stagger"><div class="q-meta"><span class="seg">${step.section||''}</span><span class="dot"></span><span class="num">${step.code}</span></div><h2 class="q-title">${step.title}</h2>${step.hint?`<p class="q-desc">${step.hint}</p>`:''}${note?`<p class="q-note">${note}</p>`:''}</div><div class="scale-wrap"><div class="scale-ends"><span>${step.min} ${step.leftLabel}</span><span>${step.rightLabel} ${step.max}</span></div><div class="scale-dots">${dots}</div><div class="scale-val" id="sval">${cur?`已选 <b>${cur}</b> 分`:'请选择'}</div></div>`;
+  },
+
+  initScale(step){
+    document.querySelectorAll('.scale-dot-btn').forEach(el=>{
+      el.addEventListener('click',()=>{const v=parseInt(el.dataset.v,10);this.answers[step.code]=v;
+        document.querySelectorAll('.scale-dot-btn').forEach(d=>{const dv=parseInt(d.dataset.v,10);d.classList.toggle('active',dv===v);d.classList.toggle('inrange',dv<v);});
+        document.getElementById('sval').innerHTML=`已选 <b>${v}</b> 分`;this.save();
+        const btn=document.getElementById('primaryBtn');if(btn)btn.disabled=false;
+      });
+    });
+  },
+
+  tplRank(step){
+    const cur=this.answers[step.code]||[];const note=NOTE[step.code]||'';
+    return `<div class="q-head stagger"><div class="q-meta"><span class="seg">${step.section||''}</span><span class="dot"></span><span class="num">${step.code}</span></div><h2 class="q-title">${step.title}</h2>${step.hint?`<p class="q-desc">${step.hint}</p>`:''}${note?`<p class="q-note">${note}</p>`:''}</div><div class="options" id="rank-opts">${step.opts.map(o=>{const pos=cur.indexOf(o.k);const picked=pos>=0;const ord=picked?(['优先一','优先二','优先三'][pos]||''):'';return`<div class="option ${picked?'selected':''}" data-k="${o.k}"><div class="rank-badge">${picked?(pos+1):o.k}</div><div class="option-label">${o.t}</div><div class="rank-order">${ord}</div></div>`;}).join('')}</div><div class="multi-hint">${cur.length<3?`还需选择 <span class="count">${3-cur.length}</span> 项（按优先级依次点选）`:'已完成排序，点击继续'}</div>`;
+  },
+
+  initRank(step){
+    document.querySelectorAll('#rank-opts .option').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const k=el.dataset.k;let arr=this.answers[step.code]||[];
+        if(arr.includes(k))arr=arr.filter(x=>x!==k);else{if(arr.length>=3)return;arr.push(k);}
+        this.answers[step.code]=arr;this.save();
+        document.querySelectorAll('#rank-opts .option').forEach(item=>{const ik=item.dataset.k;const pos=arr.indexOf(ik);const picked=pos>=0;item.classList.toggle('selected',picked);item.querySelector('.rank-badge').textContent=picked?(pos+1):ik;item.querySelector('.rank-order').textContent=picked?(['优先一','优先二','优先三'][pos]||''):'';});
+        const h=document.querySelector('.multi-hint');if(h)h.innerHTML=arr.length<3?`还需选择 <span class="count">${3-arr.length}</span> 项（按优先级依次点选）`:'已完成排序，点击继续';
+        const btn=document.getElementById('primaryBtn');if(btn)btn.disabled=arr.length!==3;
+      });
+    });
+  },
+
+  tplYesList(step){
+    const cur=this.answers[step.code]||{};const note=NOTE[step.code]||'';
+    const allDone=step.questions.every((_,i)=>cur[i+1]!==undefined);
+    return `<div class="q-head stagger"><div class="q-meta"><span class="seg">${step.section||''}</span></div><h2 class="q-title">${step.title}</h2>${step.hint?`<p class="q-desc">${step.hint}</p>`:''}${note?`<p class="q-note">${note}</p>`:''}</div><div class="yn-list" id="yn-list">${step.questions.map((q,i)=>`<div class="yn-item" data-qi="${i+1}"><div class="yn-num">${i+1}</div><div class="yn-text">${q}</div><div class="yn-btns"><div class="yn-btn ${cur[i+1]===0?'active-yes':''}" data-v="0">是</div><div class="yn-btn ${cur[i+1]===1?'active-no':''}" data-v="1">否</div></div></div>`).join('')}</div>`;
+  },
+
+  initYesList(step){
+    document.querySelectorAll('.yn-item').forEach(item=>{
+      const qi=parseInt(item.dataset.qi,10);
+      item.querySelectorAll('.yn-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const v=parseInt(btn.dataset.v,10);let cur=this.answers[step.code]||{};cur[qi]=v;this.answers[step.code]=cur;this.save();
+          item.querySelectorAll('.yn-btn').forEach(b=>{b.classList.remove('active-yes','active-no');});
+          btn.classList.add(v===0?'active-yes':'active-no');
+          const done=step.questions.every((_,i)=>cur[i+1]!==undefined);
+          const pb=document.getElementById('primaryBtn');if(pb)pb.disabled=!done;
+        });
+      });
+    });
+  },
+
+  tplSubmit(){return`<div class="submit-screen stagger"><div class="submit-orb"><div class="ring"></div><div class="ring r2"></div><div class="core"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div></div><h2 class="transition-title">正在提交深度评估</h2><p class="transition-sub">您的数据正在进入专属健康档案<br>请稍候</p></div>`;},
+
+  tplFeedback(){
+    const A=this.answers,branch=this.branch||'M1';
+    const alertInfo=computeDeepAlert(A,branch),tags=computeDeepTags(A,branch);
+    const adamPos=adamPositive(A);
+    const priorities=A['PR.01']||[];
+    const prMap={A:'提升精力',B:'改善激素',C:'代谢体型',D:'心血管',E:'睡眠情绪',F:'肌肉体能',G:'整体抗衰'};
+    const readiness=['了解为主','考虑中','准备开始','迫切行动'][A['WL.03']||0]||'';
+    const timing=alertInfo.level==='S'?'当日':alertInfo.level==='high'?'24小时内':'2个工作日内';
+    const filledCount=Object.keys(A).filter(k=>k!=='_consent').length;
+    return`<div style="padding:32px 24px" class="stagger">
+      <div class="sys-label" style="text-align:left;margin-bottom:10px">深度评估完成</div>
+      <h1 style="font-size:26px;font-weight:700;letter-spacing:-.4px;margin:0 0 10px">感谢您的认真作答</h1>
+      <p style="font-size:14px;color:var(--t2);line-height:1.7;margin:0">您的深度评估数据已加密提交。医师将综合您的两次问卷结果为您制定个性化方案，预计<strong style="color:var(--primary)">${timing}</strong>由咨询师与您联系。</p>
+      <div class="adam-result ${adamPos?'pos':'neg'}">
+        <span class="adam-tag">${adamPos?'ADAM 量表提示':'ADAM 量表'}</span>
+        <h3 class="adam-title">${adamPos?'睾酮相关指标建议进一步检测':'暂无明显睾酮缺乏提示'}</h3>
+        <p class="adam-desc">${adamPos?'第1题或第7题为"是"且≥3题阳性，建议检测总睾酮、游离睾酮、SHBG等指标，由医师综合判断。':'ADAM量表未达到阳性标准，但不排除其他维度的干预需求，医师将综合所有模块数据判读。'}</p>
+      </div>
+      <div class="feedback-card">
+        <div class="sys-label" style="text-align:left;color:var(--gold);margin-bottom:8px">您的优先级排序</div>
+        <h3 style="margin:0 0 10px;font-size:15px;font-weight:700">您最希望改善的三个方面</h3>
+        <div class="priority-chips">${priorities.map(k=>`<span class="priority-chip">${prMap[k]||k}</span>`).join('')}</div>
+        ${readiness?`<p style="font-size:12px;color:var(--t3);margin-top:12px;margin-bottom:0">改变准备度：<strong style="color:var(--primary)">${readiness}</strong></p>`:''}
+      </div>
+      <div class="feedback-card">
+        <div class="sys-label" style="text-align:left;color:var(--gold);margin-bottom:8px">NEXT STEPS</div>
+        <h3 style="margin:0;font-size:16px;font-weight:700">接下来</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="timeline-dot done"></div><div class="timeline-content"><h5>深度评估数据已提交</h5><p>${filledCount}项结构化数据 · 已进入您的专属档案</p></div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>医师综合分析两次问卷结果</h5><p>首诊 + 深度评估 · 六维框架交叉判读</p></div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>咨询师将与您联系</h5><p>${timing} · 面诊预约或深度检测方案</p></div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><h5>长寿医学专业医师面诊</h5><p>出具个性化长寿干预方案</p></div></div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--t4);text-align:center;margin-top:20px">本评估为初筛参考工具 · 不出具诊断结论 · 不替代临床问诊</p>
+    </div>`;
+  },
+
+  isAnswered(step){
+    if(step.type==='consent2')return true;
+    const v=this.answers[step.code];
+    if(step.type==='single')return v!==undefined&&v!==null;
+    if(step.type==='multi')return Array.isArray(v)&&v.length>0;
+    if(step.type==='scale')return v!==undefined&&v!==null;
+    if(step.type==='rank')return Array.isArray(v)&&v.length===3;
+    if(step.type==='yesno-list'){const cur=v||{};return step.questions.every((_,i)=>cur[i+1]!==undefined);}
+    return true;
+  },
+
+  async doSubmit(){
+    const A=this.answers,branch=this.branch;
+    const alertInfo=computeDeepAlert(A,branch),tags=computeDeepTags(A,branch);
+    const adamPos=adamPositive(A);
+    const payload={
+      brand:'songbaiji_deep',brandLabel:'松柏纪·深度评估',
+      branch:branch,
+      contact:{name:(A.A01&&A.A01.name)||'深度评估客户',phone:(A.A01&&A.A01.phone)||'',city:(A.A01&&A.A01.city)||''},
+      answers:A,tags,alert:alertInfo,adamPositive:adamPos,
+      priorities:A['PR.01']||[],readiness:A['WL.03'],
+      filledCount:Object.keys(A).length,
+      durationSec:Math.round((Date.now()-this.startTime)/1000),
+      timestamp:Date.now()
+    };
+    try{await this.uploadSurveyData(payload);}catch(e){console.error('upload failed',e);try{localStorage.setItem('sbj_deep_pending',JSON.stringify(payload));}catch(_){}}
+    this.flow.push({id:'feedback',type:'feedback',showTopbar:false,showFooter:false});
+    this.idx=this.flow.length-1;this.save();this.render();
+  },
+
+  async uploadSurveyData(payload){
+    const ENV_ID='yuecheng-survey-d4fucklsf6b68aaf',CF='notify-deep-survey';
+    if(typeof cloudbase==='undefined')throw new Error('CloudBase SDK 未加载');
+    const app=cloudbase.init({env:ENV_ID});await app.auth().signInAnonymously();
+    const result=await app.callFunction({name:CF,data:payload});return result&&result.result;
+  },
+
+  openExitModal(){document.getElementById('exitModal').classList.add('show');},
+  closeExitModal(){document.getElementById('exitModal').classList.remove('show');},
+  exitConfirm(){this.save();this.closeExitModal();alert('您的进度已保存，可随时回到本链接继续。');},
+};
+
+document.addEventListener('DOMContentLoaded',()=>App.init());
+</script>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
+</body>
+</html>
