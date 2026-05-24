@@ -244,6 +244,21 @@
   .modal-actions{display:flex;gap:10px}
   .modal-actions .btn{height:48px;font-size:15px}
   .mt-auto{margin-top:auto}
+
+.info-field{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.field-row2{display:flex;gap:10px}
+.field-row2 .info-input{flex:1}
+.info-input{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-md);padding:13px 16px;transition:border-color .22s;box-shadow:var(--sh)}
+.info-input:focus-within{border-color:var(--primary)}
+.info-input.err{border-color:#d94e4e}
+.info-input label{display:block;font-size:12px;color:var(--t3);margin-bottom:4px;font-weight:500}
+.info-input input,.info-input select{width:100%;border:none;outline:none;background:transparent;font-size:16px;color:var(--t1);padding:0;-webkit-appearance:none}
+.info-input input::placeholder{color:var(--t4)}
+.date-row{display:flex;gap:10px}
+.date-seg{flex:1;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-md);padding:13px 16px;box-shadow:var(--sh);transition:border-color .22s}
+.date-seg:focus-within{border-color:var(--primary)}
+.date-seg label{display:block;font-size:12px;color:var(--t3);margin-bottom:4px;font-weight:500}
+.date-seg select{width:100%;border:none;outline:none;background:transparent;font-size:16px;color:var(--t1);-webkit-appearance:none;padding-right:16px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A9BAE' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0 center}
 </style>
 </head>
 <body>
@@ -279,10 +294,10 @@
 const STEPS=[
   {id:'welcome',type:'welcome',showTopbar:false,showFooter:false},
   {id:'intro',type:'intro',showTopbar:false,showFooter:true,btnText:'我已知晓并开始评估',btnMeta:'22–23 题 · 约 7–9 分钟 · 信息加密存储'},
-  {id:'profile',type:'question',showTopbar:true,showFooter:true,section:'基本信息',question:{field:'PROFILE',type:'profile-input',title:'请留下您的联系方式',desc:'用于评估完成后专业医师与您联系',mechanism:'所有信息端到端加密存储，仅授权专业医师调阅，可随时申请删除。',fields:[{key:'NAME',label:'姓名',type:'text',placeholder:'请输入您的姓名',autocomplete:'name'},{key:'PHONE',label:'手机号',type:'tel',placeholder:'11 位手机号',autocomplete:'tel'},{key:'CITY',label:'所在城市',type:'text',placeholder:'例如 上海',autocomplete:'address-level2'}]}},
-  {id:'A1',type:'question',section:'A 段·基础信息',question:{field:'BIRTH',type:'date',title:'您的出生年月',mechanism:'时序年龄是衰老评估的核心基线变量，与生理年龄、表型年龄交叉比对可识别加速衰老或健康老化的轨迹差异（López-Otín 等，Cell, 2023 衰老标志综述）。'}},
+  {id:'profile',type:'combined-info',showTopbar:true,showFooter:true,section:'基本信息',note:'完整的基础信息是后续多维度评估解读的前提。年龄与 BMI 是国际多组学衰老评估算法的核心输入变量，影响所有维度的参考阈值与风险分层。',privacy:'您填写的所有信息仅用于本次评估报告交付与本中心医师沟通，加密存储，不向任何第三方披露。'},
+  {id:'A1',type:'question',showIf:()=>false,section:'A 段·基础信息',question:{field:'BIRTH',type:'date',title:'您的出生年月',mechanism:'时序年龄是衰老评估的核心基线变量，与生理年龄、表型年龄交叉比对可识别加速衰老或健康老化的轨迹差异（López-Otín 等，Cell, 2023 衰老标志综述）。'}},
   {id:'A2',type:'question',section:'A 段·基础信息',question:{field:'MENO',type:'single',title:'您目前的月经与生育状态',desc:'如同时符合多项，请优先选择特殊状态',options:[{v:'④',label:'怀孕中'},{v:'⑤',label:'产后 2 年内'},{v:'⑥',label:'备孕中'},{v:'⑦',label:'哺乳期暂时停经'},{v:'①',label:'月经规律'},{v:'②',label:'月经不规律但未停经'},{v:'③',label:'已停经 ≥ 1 年'}],mechanism:'女性的生理状态对应不同的激素环境与衰老轨迹，育龄期、围产期、围绝经期、绝经后期的衰老机制差异显著，需匹配差异化评估路径（参考 STRAW+10 生殖衰老分期标准）。'}},
-  {id:'A3',type:'question',section:'A 段·基础信息',question:{field:'HW',type:'number-dual',title:'您的身高与体重',fields:[{key:'HT',label:'身高',unit:'cm',min:130,max:200,placeholder:'162'},{key:'WT',label:'体重',unit:'kg',min:30,max:150,placeholder:'52'}],mechanism:'BMI 与体脂率是代谢健康与全因死亡风险的独立预测因子，需与体检报告中的腰围、内脏脂肪、HbA1c 等指标共同构成代谢衰老评估。'}},
+  {id:'A3',type:'question',showIf:()=>false,section:'A 段·基础信息',question:{field:'HW',type:'number-dual',title:'您的身高与体重',fields:[{key:'HT',label:'身高',unit:'cm',min:130,max:200,placeholder:'162'},{key:'WT',label:'体重',unit:'kg',min:30,max:150,placeholder:'52'}],mechanism:'BMI 与体脂率是代谢健康与全因死亡风险的独立预测因子，需与体检报告中的腰围、内脏脂肪、HbA1c 等指标共同构成代谢衰老评估。'}},
   {id:'A4',type:'question',section:'A 段·基础信息',question:{field:'WT3Y',type:'single',title:'与 3 年前相比，您的体重变化',options:[{v:'①',label:'减轻 3kg 以上'},{v:'②',label:'基本不变'},{v:'③',label:'增加 3–5kg'},{v:'④',label:'增加 5–10kg'},{v:'⑤',label:'增加 10kg 以上'}],mechanism:'中年期体重增加 ≥ 5kg 与心血管事件风险上升约 30% 显著相关（Framingham 队列研究），中央型脂肪堆积更与胰岛素抵抗、慢性炎症（Inflammaging）密切相关。'}},
   {id:'A5',type:'question',section:'A 段·基础信息',question:{field:'EXISTING_DATA',type:'multi',title:'您已有以下哪些检测或评估数据？',desc:'不需要上传，仅用于了解您的评估基础',mechanism:'已有的多组学数据可显著提升评估精度。表观遗传时钟、端粒长度、线粒体功能、肠道菌群等指标与传统体检报告交叉分析后，能更精准识别您的衰老速度与轨迹（多组学整合是长寿医学的核心方法）。',maxSelect:11,exclusiveValue:'⑪',options:[{v:'①',label:'近 1 年内常规体检报告'},{v:'②',label:'性激素六项'},{v:'③',label:'AMH 或窦卵泡数 AFC'},{v:'④',label:'肠道菌群检测（16S 或宏基因组）'},{v:'⑤',label:'端粒长度检测'},{v:'⑥',label:'线粒体功能检测'},{v:'⑦',label:'表观遗传时钟（PhenoAge / GrimAge 等）'},{v:'⑧',label:'骨密度（DXA）'},{v:'⑨',label:'基因检测（健康 / 疾病风险）'},{v:'⑩',label:'其他多组学（蛋白质组 / 代谢组等）'},{v:'⑪',label:'都没有'}]}},
   {id:'B1',type:'question',section:'B 段·主观觉察',question:{field:'LOOK',type:'scale',title:'您觉得自己目前看起来比实际年龄……',options:[{v:'①',label:'年轻 5 岁以上'},{v:'②',label:'年轻 3–5 岁'},{v:'③',label:'年轻 1–3 岁'},{v:'④',label:'相符'},{v:'⑤',label:'老 1–3 岁'},{v:'⑥',label:'老 3–5 岁'},{v:'⑦',label:'老 5 岁以上'}],mechanism:'主观衰老感（Subjective Age）是国际衰老研究公认的健康寿命与全因死亡率独立预测因子，往往早于客观指标变化（Stephan 等，Psychosomatic Medicine, 2018）。'}},
@@ -671,6 +686,7 @@ const App = {
     else if(step.type === 'branch-transition') screen.innerHTML = this.tplBranchTransition();
     else if(step.type === 'submit')            screen.innerHTML = this.tplSubmit();
     else if(step.type === 'feedback')          screen.innerHTML = this.tplFeedback();
+    else if(step.type === 'combined-info')    screen.innerHTML = this.tplCombinedInfo(step);
     else if(step.type === 'question')          screen.innerHTML = this.tplQuestion(step);
     main.appendChild(screen);
     if(step.type === 'welcome'){
@@ -679,9 +695,116 @@ const App = {
         if(el) animateCount(el, getSocialProofCount(), 1200);
       }, 300);
     }
+    if(step.type === 'combined-info') this.initCombinedInfo(step, screen);
     if(step.type === 'question') this.bindQuestion(step, screen);
     if(step.type === 'submit')   setTimeout(()=>{ if(STEPS[this.state.currentIdx].id==='submit') this.next(); }, 1800);
     if(step.type === 'feedback')  setTimeout(()=>{ this.uploadToCloud(); }, 800);
+  },
+
+
+  isCombinedInfoValid(){
+    const a=this.state.answers;
+    if(!a.NAME||a.NAME.trim().length<2)return false;
+    if(!a.PHONE||!/^1[3-9]\d{9}$/.test(a.PHONE.trim()))return false;
+    if(!a.CITY||a.CITY.trim().length<1)return false;
+    if(!a.BIRTH||!a.BIRTH.y||!a.BIRTH.m)return false;
+    if(!a.HW||!a.HW.HT||!a.HW.WT)return false;
+    return true;
+  },
+
+  tplCombinedInfo(step){
+    const v=this.state.answers,b=v.BIRTH||{},hw=v.HW||{};
+    const years=[],ny=new Date().getFullYear();
+    for(let y=ny-70;y<=ny-15;y++)years.push(y);
+    const months=Array.from({length:12},(_,i)=>i+1);
+    return`<div class="stagger">
+      <div style="margin-top:8px;margin-bottom:4px"><div class="sys-label" style="text-align:left;letter-spacing:2px">${step.section||'基本信息'}</div></div>
+      <h2 style="font-size:22px;font-weight:700;margin:12px 0 6px;letter-spacing:-.2px">请填写您的基础信息</h2>
+      <p class="q-note">${step.note||''}</p>
+      <div class="info-field">
+        <div class="info-input">
+          <label>姓名</label>
+          <input type="text" id="ci-name" value="${v.NAME||''}" placeholder="请输入您的姓名" oninput="App.onCombinedInput()">
+        </div>
+        <div class="date-row">
+          <div class="date-seg">
+            <label>出生年</label>
+            <select id="ci-by" onchange="App.onCombinedInput()">
+              <option value="">请选择</option>
+              ${years.map(y=>`<option value="${y}" ${b.y==y?'selected':''}>${y} 年</option>`).join('')}
+            </select>
+          </div>
+          <div class="date-seg">
+            <label>月份</label>
+            <select id="ci-bm" onchange="App.onCombinedInput()">
+              <option value="">请选择</option>
+              ${months.map(m=>`<option value="${m}" ${b.m==m?'selected':''}>${m} 月</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div id="ci-age-hint" style="font-size:12px;color:var(--primary);min-height:16px"></div>
+        <div class="info-input" id="ci-phone-wrap">
+          <label>手机号码</label>
+          <input type="tel" id="ci-phone" maxlength="11" value="${v.PHONE||''}" placeholder="11 位手机号" oninput="App.onCombinedInput()">
+          <div id="ci-phone-err" style="font-size:11px;color:#d94e4e;display:none;margin-top:3px">请输入有效的 11 位手机号</div>
+        </div>
+        <div class="field-row2">
+          <div class="info-input">
+            <label>身高（cm）</label>
+            <input type="number" id="ci-ht" value="${hw.HT||''}" placeholder="162" oninput="App.onCombinedInput()">
+          </div>
+          <div class="info-input">
+            <label>体重（kg）</label>
+            <input type="number" id="ci-wt" value="${hw.WT||''}" placeholder="52" oninput="App.onCombinedInput()">
+          </div>
+        </div>
+        <div id="ci-bmi-hint" style="font-size:12px;color:var(--primary);min-height:16px"></div>
+        <div class="info-input">
+          <label>所在城市</label>
+          <input type="text" id="ci-city" value="${v.CITY||''}" placeholder="如：上海" oninput="App.onCombinedInput()">
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px 14px;background:var(--gold-tint);border:1px solid rgba(196,168,130,.18);border-radius:10px;font-size:12px;line-height:1.7;color:var(--t2)">
+        隐私承诺 · ${step.privacy||''}
+      </div>
+    </div>`;
+  },
+
+  initCombinedInfo(step, root){
+    this.onCombinedInput();
+  },
+
+  onCombinedInput(){
+    const g=id=>document.getElementById(id);
+    const nm=(g('ci-name')||{}).value||'';
+    const by=(g('ci-by')||{}).value||'';
+    const bm=(g('ci-bm')||{}).value||'';
+    const ph=(g('ci-phone')||{}).value||'';
+    const ht=parseFloat((g('ci-ht')||{}).value)||'';
+    const wt=parseFloat((g('ci-wt')||{}).value)||'';
+    const ct=(g('ci-city')||{}).value||'';
+    // 年龄提示
+    const ah=g('ci-age-hint');if(ah&&by){const age=new Date().getFullYear()-parseInt(by,10);ah.textContent='年龄约 '+age+' 岁';}else if(ah)ah.textContent='';
+    // BMI提示
+    const bh=g('ci-bmi-hint');
+    if(bh&&ht&&wt){const bmi=+(wt/((ht/100)**2)).toFixed(1);const cat=bmi<18.5?'偏瘦':bmi<24?'正常':bmi<28?'超重':'肥胖';bh.textContent='BMI '+bmi+'（'+cat+'）';}
+    else if(bh)bh.textContent='';
+    // 手机校验
+    const phOk=/^1[3-9]\d{9}$/.test(ph);
+    const pe=g('ci-phone-err'),pw=g('ci-phone-wrap');
+    if(ph.length>0&&!phOk){if(pe)pe.style.display='';if(pw)pw.classList.add('err');}
+    else{if(pe)pe.style.display='none';if(pw)pw.classList.remove('err');}
+    // 存答案
+    this.state.answers.NAME=nm.trim();
+    this.state.answers.PHONE=ph.trim();
+    this.state.answers.CITY=ct.trim();
+    this.state.answers.BIRTH={y:by?parseInt(by,10):'',m:bm?parseInt(bm,10):''};
+    this.state.answers.HW={HT:ht||'',WT:wt||''};
+    this.state.answers.PROFILE={NAME:nm.trim(),PHONE:ph.trim(),CITY:ct.trim()};
+    this.saveState();
+    // 更新按钮状态
+    const btn=document.getElementById('primaryBtn');
+    if(btn)btn.disabled=!this.isCombinedInfoValid();
   },
 
   tplWelcome(){
@@ -1628,6 +1751,7 @@ const App={
   onPrimary(){
     const cur=STEPS[this.state.currentIdx];
     if(['welcome','intro','sensitive-intro','branch-transition','submit'].includes(cur.type)){this.next();return;}
+    if(cur.type==='combined-info'){if(!this.isCombinedInfoValid()){this.shake();return;}this.next();return;}
     if(cur.type==='question'){if(!this.isAnswered(cur.question,cur)){this.shake();return;}this.next();}
   },
   shake(){
@@ -1642,6 +1766,13 @@ const App={
   renderFooter(step){
     const ft=document.getElementById('footer');
     if(step.showFooter===false){ft.classList.add('hide');return;}
+    if(step.type==='combined-info'){
+      ft.classList.remove('hide');
+      document.getElementById('primaryBtnText').textContent='继续';
+      document.getElementById('btnMeta').textContent='22–23 题 · 约 7–9 分钟 · 信息加密存储';
+      document.getElementById('primaryBtn').disabled=!this.isCombinedInfoValid();
+      return;
+    }
     if(step.type==='question'){const q=step.question;if(q.type==='single'||q.type==='scale'){ft.classList.add('hide');return;}ft.classList.remove('hide');document.getElementById('primaryBtnText').textContent='继续';document.getElementById('btnMeta').textContent='';document.getElementById('primaryBtn').disabled=!this.isAnswered(q,step);return;}
     ft.classList.remove('hide');document.getElementById('primaryBtnText').textContent=step.btnText||'继续';document.getElementById('btnMeta').textContent=step.btnMeta||'';document.getElementById('primaryBtn').disabled=false;
   },
