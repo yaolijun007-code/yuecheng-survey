@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>问卷详情 · 芳华谱产后评估</title>
+<style>
+  :root{
+    --teal:#0E8B86;--deep:#0A5F5C;--teal2:#22C3B6;--gold:#B8893C;
+    --ink:#1B2A29;--t2:#465B59;--t3:#879694;--line:rgba(27,42,41,.08);
+    --bg:#F1EFEA;--card:#FFFFFF;--soft:#F6F8F7;
+    --ok:#0E9F6E;--warn:#D97706;--amber:#C2410C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:0 0 60px}
+  .topbar{background:linear-gradient(135deg,var(--deep),var(--teal) 60%,var(--teal2));color:#fff;padding:18px 20px;display:flex;align-items:center;gap:10px}
+  .topbar .logo{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .topbar .logo svg{width:20px;height:20px;color:#fff}
+  .topbar .tt{font-size:16px;font-weight:700;letter-spacing:.5px}
+  .topbar .ts{font-size:11.5px;opacity:.85;margin-top:1px}
+  .pad{padding:16px}
+  .state{text-align:center;padding:80px 24px;color:var(--t3)}
+  .spin{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--teal);border-radius:50%;margin:0 auto 16px;animation:sp 1s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+  .head .nm{font-size:24px;font-weight:800;letter-spacing:-.3px}
+  .head .ph{font-size:18px;font-weight:700;color:var(--teal);margin-top:6px;font-variant-numeric:tabular-nums}
+  .head .ph a{color:inherit;text-decoration:none}
+  .head .bits{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+  .bit{font-size:12.5px;color:var(--t2);background:var(--soft);border:1px solid var(--line);border-radius:20px;padding:4px 11px}
+  .intent{display:flex;gap:12px;align-items:center;border-radius:14px;padding:14px 16px;margin-bottom:14px;color:#fff}
+  .intent.hot{background:linear-gradient(135deg,var(--deep),var(--teal2))}
+  .intent.mid{background:linear-gradient(135deg,#B8893C,#D4B483)}
+  .intent.low{background:#94A3B8}
+  .intent .ico{font-size:22px}
+  .intent h3{font-size:16px;font-weight:800}
+  .intent p{font-size:12.5px;opacity:.9;margin-top:2px}
+  .blk-h{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.5px;color:var(--teal);font-weight:800;text-transform:uppercase;margin-bottom:12px}
+  .blk-h::before{content:"";width:14px;height:2px;background:var(--teal);border-radius:2px}
+  .dims{display:flex;flex-wrap:wrap;gap:8px}
+  .dim{font-size:13px;font-weight:700;color:var(--deep);background:rgba(14,139,134,.1);border:1px solid rgba(14,139,134,.2);border-radius:20px;padding:6px 13px}
+  .imp{font-size:13px;font-weight:700;color:#9A6300;background:rgba(184,137,60,.12);border:1px solid rgba(184,137,60,.25);border-radius:20px;padding:6px 13px}
+  .sec{margin-bottom:14px}
+  .sec-title{font-size:14px;font-weight:800;color:var(--ink);padding:0 2px 10px;border-bottom:2px solid var(--line);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .sec-title .sdot{width:8px;height:8px;border-radius:50%;background:var(--teal)}
+  .sec.priv .sec-title .sdot{background:#9B3D6B}
+  .qa{display:flex;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line)}
+  .qa:last-child{border-bottom:none}
+  .qa .q{flex:1;font-size:13.5px;color:var(--t2);line-height:1.5}
+  .qa .a{flex-shrink:0;max-width:52%;text-align:right;font-size:14px;font-weight:700;color:var(--ink);line-height:1.5}
+  .qa .a.empty{color:var(--t3);font-weight:400}
+  .qa .a.flag{color:var(--amber)}
+  .qa .a.priv{color:#9B3D6B}
+  .meta{text-align:center;color:var(--t3);font-size:12px;margin-top:18px;line-height:1.7}
+  .err-box{background:#FEF2F2;border:1px solid #FCA5A5;color:#B91C1C;border-radius:14px;padding:18px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+    <div><div class="tt">产后健康与肠道微生态评估</div><div class="ts">芳华谱 · 完整问卷档案（仅供专业团队查阅）</div></div>
+  </div>
+  <div id="root"><div class="state"><div class="spin"></div>正在读取问卷…</div></div>
+</div>
+<script>
+const STEPS = [
+  {id:'welcome',type:'welcome',theme:'teal'},
+  {id:'intro',type:'intro',theme:'teal',btnText:'我已知晓，开始评估',btnMeta:'36 题 · 约 6–8 分钟 · 信息加密存储'},
+  {id:'profile',type:'question',theme:'teal',section:'基本信息',q:{field:'A01',type:'combined-info',title:'请先填写您的基础信息',note:'年龄、身高体重是健康评估的基础输入；联系方式用于专业顾问为您解读评估结果。'}},
+
+  {id:'Q1',type:'question',theme:'teal',section:'基本信息',q:{field:'PARITY',type:'single',title:'本次为第几次生产',options:[{v:'①',label:'第一胎'},{v:'②',label:'第二胎'},{v:'③',label:'第三胎及以上'}]}},
+  {id:'Q2',type:'question',theme:'teal',section:'基本信息',q:{field:'DELIV',type:'single',title:'本次分娩方式',options:[{v:'①',label:'顺产'},{v:'②',label:'剖宫产'},{v:'③',label:'顺转剖'},{v:'④',label:'产钳 / 吸引助产'}],mech:'分娩方式影响母体与产道菌群向新生儿的传递；剖宫产产妇的产后肠道菌群重建通常更需关注。'}},
+  {id:'Q3',type:'question',theme:'teal',section:'基本信息',q:{field:'DAYS',type:'single',title:'目前距分娩约',options:[{v:'①',label:'3 天内'},{v:'②',label:'4–7 天'},{v:'③',label:'8–14 天'},{v:'④',label:'15–30 天'},{v:'⑤',label:'30 天以上'}]}},
+  {id:'Q4',type:'question',theme:'teal',section:'基本信息',q:{field:'FEED',type:'single',title:'目前喂养方式',options:[{v:'①',label:'纯母乳'},{v:'②',label:'混合喂养'},{v:'③',label:'配方奶为主'},{v:'④',label:'尚未确定'}]}},
+
+  {id:'Q5',type:'question',theme:'teal',section:'孕产与用药',q:{field:'ABX',type:'single',title:'分娩前后是否使用过抗生素',desc:'如剖宫产预防性用药、产褥感染治疗',options:[{v:'①',label:'未使用'},{v:'②',label:'预防性单次'},{v:'③',label:'多日疗程'},{v:'④',label:'不确定'}],mech:'抗生素会显著影响肠道菌群的组成与多样性，产褥期用药后的菌群重建值得评估。'}},
+  {id:'Q6',type:'question',theme:'teal',section:'孕产与用药',q:{field:'PREG_GUT',type:'multi',title:'怀孕期间您的肠道出现过哪些变化',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'便秘加重'},{v:'②',label:'腹胀 / 嗳气增多'},{v:'③',label:'痔疮出现或加重'},{v:'④',label:'食欲口味明显改变'},{v:'⑤',label:'无明显变化'}]}},
+  {id:'Q7',type:'question',theme:'teal',section:'孕产与用药',q:{field:'GDM',type:'single',title:'孕期是否出现过妊娠糖尿病或血糖偏高',options:[{v:'①',label:'是'},{v:'②',label:'否'},{v:'③',label:'不确定'}],mech:'血糖代谢与肠道菌群相互影响，孕期糖代谢异常者产后更需关注代谢与菌群恢复。'}},
+
+  {id:'Q8',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'FREQ',type:'single',title:'产后至今的排便频率',options:[{v:'①',label:'每天 ≥ 1 次'},{v:'②',label:'1–2 天 1 次'},{v:'③',label:'2–3 天 1 次'},{v:'④',label:'3 天以上未排便'}],mech:'排便频率是肠道动力与菌群平衡最直观的反映。'}},
+  {id:'Q9',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'BRISTOL',type:'single',title:'最近一次排便的性状',desc:'选择最接近的一项',options:[{v:'①',label:'硬球状，似坚果'},{v:'②',label:'块状香肠形'},{v:'③',label:'表面有裂纹的香肠状'},{v:'④',label:'光滑柔软香肠状'},{v:'⑤',label:'柔软块状，边缘清晰'},{v:'⑥',label:'糊状，边缘蓬松'},{v:'⑦',label:'水样，无固形'}],mech:'Bristol 粪便量表是国际通用的肠道功能评估工具；性状偏硬或偏稀都提示菌群与动力的失衡。'}},
+  {id:'Q10',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'BOWEL_SX',type:'multi',title:'目前您有以下哪些排便相关困扰',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'排便费力或疼痛'},{v:'②',label:'痔疮（新发或加重）'},{v:'③',label:'排便带黏液'},{v:'④',label:'排便不尽感'},{v:'⑤',label:'以上都没有'}]}},
+  {id:'Q11',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'GUT_SX',type:'multi',title:'近期您的肠胃有以下哪些不适',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'经常腹胀'},{v:'②',label:'嗳气或排气异常'},{v:'③',label:'腹痛或肠绞痛'},{v:'④',label:'恶心或食欲不振'},{v:'⑤',label:'以上都没有'}],mech:'腹胀与产气，常与产气菌群比例失衡、食物在肠道异常发酵相关。'}},
+
+  {id:'Q12',type:'question',theme:'amber',section:'体重与代谢',q:{field:'WT',type:'single',title:'目前体重与孕前相比',options:[{v:'①',label:'已恢复'},{v:'②',label:'还差 2–5kg'},{v:'③',label:'还差 5kg 以上'},{v:'④',label:'比孕前更重'}],mech:'肠道菌群参与能量吸收与脂肪储存调节，与产后体重恢复速度相关。'}},
+  {id:'Q13',type:'question',theme:'amber',section:'体重与代谢',q:{field:'METAB',type:'multi',title:'产后您是否有以下感受',desc:'最多 3 项',max:3,exclusiveValue:'⑤',options:[{v:'①',label:'即使注意饮食，体重也不易下降'},{v:'②',label:'餐后容易困倦'},{v:'③',label:'日常容易疲劳乏力'},{v:'④',label:'腹部脂肪堆积、腰围难恢复'},{v:'⑤',label:'以上都没有'}],mech:'这些常是代谢效率下降的信号，菌群失衡会加重能量代谢与血糖波动。'}},
+  {id:'Q14',type:'question',theme:'amber',section:'体重与代谢',q:{field:'WT_WORRY',type:'scale',title:'您对产后体重与身材恢复的担心程度',options:[{v:'①',label:'不担心'},{v:'②',label:'有些担心'},{v:'③',label:'比较担心'},{v:'④',label:'非常担心'}]}},
+
+  {id:'Q15',type:'question',theme:'rose',section:'皮肤与外貌',q:{field:'SKIN',type:'multi',title:'产后您的皮肤出现以下哪些变化',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'长痘或出油'},{v:'②',label:'干燥、暗沉'},{v:'③',label:'敏感、泛红'},{v:'④',label:'色斑加重'},{v:'⑤',label:'无明显变化'}],mech:'肠道与皮肤通过「肠-皮轴」相互影响，菌群与炎症状态常反映在皮肤上。'}},
+  {id:'Q16',type:'question',theme:'rose',section:'皮肤与外貌',q:{field:'HAIR',type:'single',title:'产后是否出现脱发',options:[{v:'①',label:'无'},{v:'②',label:'轻度'},{v:'③',label:'明显'}]}},
+  {id:'Q17',type:'question',theme:'rose',section:'皮肤与外貌',q:{field:'SKIN_SAT',type:'scale',title:'您对目前皮肤与外貌状态的满意度',options:[{v:'①',label:'满意'},{v:'②',label:'一般'},{v:'③',label:'不太满意'},{v:'④',label:'很不满意'}]}},
+
+  {id:'Q18',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'SLEEP',type:'single',title:'目前您的睡眠状况',desc:'排除哺乳夜醒因素后的整体感受',options:[{v:'①',label:'较好'},{v:'②',label:'一般'},{v:'③',label:'较差（入睡难 / 睡后难安）'}],mech:'肠道与大脑通过「肠脑轴」双向影响，菌群平衡与睡眠质量相关。'}},
+  {id:'Q19',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'ENERGY',type:'multi',title:'近期您是否有以下状态',max:4,exclusiveValue:'⑤',options:[{v:'①',label:'精力不足、经常疲惫'},{v:'②',label:'注意力不集中或「脑雾」'},{v:'③',label:'记性变差'},{v:'④',label:'情绪容易烦躁'},{v:'⑤',label:'以上都没有'}],mech:'肠道菌群产生的代谢物可经神经通路影响精力与情绪状态。'}},
+  {id:'Q20',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'MOOD',type:'single',title:'最近两周，您感到情绪低落、沮丧，或对事情提不起兴趣的频率',options:[{v:'①',label:'完全没有'},{v:'②',label:'有几天'},{v:'③',label:'一半以上时间'},{v:'④',label:'几乎每天'}],mech:'本题参考 PHQ-2 情绪筛查；产后情绪状态值得被认真对待。'}},
+  {id:'Q21',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'STRESS',type:'scale',title:'近期您的整体压力感受',options:[{v:'①',label:'较轻松'},{v:'②',label:'一般'},{v:'③',label:'压力较大'},{v:'④',label:'压力很大'}]}},
+
+  {id:'sensitive',type:'sensitive-intro',theme:'plum',btnText:'我已理解，继续',btnMeta:'选填 · 端到端加密 · 可选「不便回答」'},
+  {id:'Q22',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'SEX_RESUME',type:'single',title:'您目前是否已恢复性生活',options:[{v:'①',label:'已恢复'},{v:'②',label:'尚未'},{v:'③',label:'不便回答'}]}},
+  {id:'Q23',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'SEX_SX',type:'multi',title:'性生活中您是否有以下情况',desc:'本题选填，可选「不便回答」· 最多 3 项',max:3,exclusiveValue:'⑤',options:[{v:'①',label:'干涩或疼痛'},{v:'②',label:'性欲明显下降'},{v:'③',label:'亲密意愿降低'},{v:'④',label:'暂无明显困扰'},{v:'⑤',label:'不便回答'}],mech:'产后性功能恢复与激素水平、私密部位微生态平衡相关。'}},
+  {id:'Q24',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'VAG',type:'multi',title:'近期您是否有以下私密健康困扰',desc:'选填，可选「不便回答」· 最多 3 项',max:3,exclusiveValue:'⑥',options:[{v:'①',label:'阴道干涩'},{v:'②',label:'反复瘙痒'},{v:'③',label:'异常分泌物'},{v:'④',label:'反复阴道炎或尿路感染'},{v:'⑤',label:'以上都没有'},{v:'⑥',label:'不便回答'}],mech:'女性私密部位的微生态与肠道菌群、雌激素代谢密切相关。'}},
+  {id:'Q25',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'SEX_CARE',type:'scale',title:'您对产后私密健康与亲密关系恢复的关注程度',options:[{v:'①',label:'不太关注'},{v:'②',label:'有些关注'},{v:'③',label:'比较关注'},{v:'④',label:'很关注'}]}},
+
+  {id:'Q26',type:'question',theme:'teal',section:'既往与家族史',q:{field:'PRE_BOWEL',type:'single',title:'孕前您的排便习惯通常是',options:[{v:'①',label:'每天 1 次以上，顺畅'},{v:'②',label:'1–2 天 1 次，基本正常'},{v:'③',label:'2–3 天 1 次，偏少'},{v:'④',label:'3 天以上，或长期便秘'}]}},
+  {id:'Q27',type:'question',theme:'teal',section:'既往与家族史',q:{field:'GUT_HIST',type:'multi',title:'您是否有以下既往肠道问题史',max:6,exclusiveValue:'⑥',options:[{v:'①',label:'慢性便秘'},{v:'②',label:'肠易激综合征(IBS)'},{v:'③',label:'痔疮'},{v:'④',label:'慢性腹泻'},{v:'⑤',label:'反复腹胀'},{v:'⑥',label:'以上都没有'}]}},
+  {id:'Q28',type:'question',theme:'teal',section:'既往与家族史',q:{field:'ALLERGY',type:'multi',title:'您是否有食物过敏 / 不耐受或过敏性疾病',desc:'本人或直系亲属',max:4,exclusiveValue:'④',options:[{v:'①',label:'食物过敏或不耐受（乳糖、麸质、海鲜等）'},{v:'②',label:'本人有过敏性疾病（湿疹 / 鼻炎 / 哮喘）'},{v:'③',label:'直系亲属有过敏史'},{v:'④',label:'以上都没有'}],mech:'过敏与肠道菌群所参与的免疫屏障功能相关。'}},
+  {id:'Q29',type:'question',theme:'teal',section:'既往与家族史',q:{field:'FAM_GUT',type:'single',title:'直系亲属是否有肠道疾病史',desc:'肠癌、炎症性肠病、慢性肠病',options:[{v:'①',label:'有'},{v:'②',label:'无'},{v:'③',label:'不确定'}]}},
+
+  {id:'Q30',type:'question',theme:'emerald',section:'饮食与生活',q:{field:'DIET',type:'multi',title:'您的日常饮食特点',desc:'可多选',max:5,options:[{v:'①',label:'偏清淡'},{v:'②',label:'偏重口 / 油腻'},{v:'③',label:'偏嗜甜'},{v:'④',label:'蔬果摄入偏少'},{v:'⑤',label:'饮水偏少'}]}},
+  {id:'Q31',type:'question',theme:'emerald',section:'饮食与生活',q:{field:'PROBIO',type:'single',title:'您平时是否常吃益生菌或发酵食品',desc:'酸奶、纳豆、泡菜等',options:[{v:'①',label:'经常'},{v:'②',label:'偶尔'},{v:'③',label:'几乎不吃'}]}},
+  {id:'Q32',type:'question',theme:'emerald',section:'饮食与生活',q:{field:'MEAL',type:'single',title:'目前月子餐的适应情况',options:[{v:'①',label:'适应良好'},{v:'②',label:'偶有腹胀 / 不适'},{v:'③',label:'明显消化负担'}]}},
+
+  {id:'Q33',type:'question',theme:'gold',section:'健康关注与目标',q:{field:'AGING',type:'scale',title:'与孕前相比，您是否感觉身体整体状态有所下降',desc:'综合精力、代谢、外貌等',options:[{v:'①',label:'没有'},{v:'②',label:'有一些'},{v:'③',label:'比较明显'},{v:'④',label:'非常明显'}],mech:'产后是身体快速变化的时期，及时评估有助于把握恢复与延缓衰老的窗口。'}},
+  {id:'Q34',type:'question',theme:'gold',section:'健康关注与目标',q:{field:'IMPROVE',type:'multi',title:'产后您最希望改善的方面',desc:'最多 3 项',max:3,options:[{v:'①',label:'消化 / 便秘'},{v:'②',label:'体重 / 代谢'},{v:'③',label:'皮肤 / 外貌'},{v:'④',label:'精力 / 疲劳'},{v:'⑤',label:'情绪 / 睡眠'},{v:'⑥',label:'母乳'},{v:'⑦',label:'私密 / 亲密关系'},{v:'⑧',label:'整体延缓衰老'}]}},
+  {id:'Q35',type:'question',theme:'gold',section:'健康关注与目标',q:{field:'INTENT',type:'single',title:'您是否希望进一步了解自己的肠道微生态状况',desc:'了解菌群状况有助于制定个性化的饮食、益生菌与干预建议',options:[{v:'①',label:'很想了解'},{v:'②',label:'可以考虑'},{v:'③',label:'暂不需要'}],mech:'肠道菌群检测可客观评估菌群结构与多样性，为个性化方案提供依据。'}},
+
+  {id:'submit',type:'submit',theme:'gold'},
+  {id:'feedback',type:'feedback',theme:'teal'}
+];
+
+/* —— 题库字典：field -> 题目/选项/所属维度 —— */
+const QDICT = {}; const SECTIONS = [];
+STEPS.forEach(s=>{
+  if(s.type==='question' && s.q.type!=='combined-info'){
+    const q=s.q, opt={}; (q.options||[]).forEach(o=>opt[o.v]=o.label);
+    QDICT[q.field]={title:q.title,type:q.type,opt,section:s.section,priv:(s.section||'').includes('私密')};
+    if(!SECTIONS.includes(s.section)) SECTIONS.push(s.section);
+  }
+});
+function transAnswer(field,val){
+  const d=QDICT[field]; if(!d) return '';
+  if(val==null||(Array.isArray(val)&&val.length===0)) return '';
+  if(Array.isArray(val)) return val.map(v=>d.opt[v]||v).join('、');
+  return d.opt[val]||val;
+}
+function computeFocusDims(a){
+  const dims=[];
+  const has=(f,vals)=>{const v=a[f];return Array.isArray(v)?v.some(x=>vals.includes(x)):vals.includes(v);};
+  const multiHit=(f,excl)=>{const v=a[f];return Array.isArray(v)&&v.filter(x=>x!==excl&&x!=='不便回答').length>0;};
+  if(has('FREQ',['③','④'])||has('BRISTOL',['①','②','⑥','⑦'])||multiHit('BOWEL_SX','⑤')||multiHit('GUT_SX','⑤')) dims.push('肠道功能');
+  if(has('WT',['③','④'])||multiHit('METAB','⑤')) dims.push('体重代谢');
+  if(multiHit('SKIN','⑤')||has('SKIN_SAT',['③','④'])||has('HAIR',['③'])) dims.push('皮肤状态');
+  if(multiHit('ENERGY','⑤')||has('MOOD',['③','④'])||has('SLEEP',['③'])) dims.push('精力情绪');
+  const sx=a.SEX_SX,vg=a.VAG;
+  if((Array.isArray(sx)&&sx.some(x=>['①','②','③'].includes(x)))||(Array.isArray(vg)&&vg.some(x=>['①','②','③','④'].includes(x)))) dims.push('私密健康');
+  const mp={'①':'肠道功能','②':'体重代谢','③':'皮肤状态','④':'精力情绪','⑤':'精力情绪','⑥':'母乳支持','⑦':'私密健康','⑧':'整体抗衰'};
+  if(Array.isArray(a.IMPROVE)) a.IMPROVE.forEach(v=>{ if(mp[v]) dims.push(mp[v]); });
+  return [...new Set(dims)].slice(0,6);
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtTime(ms){ if(!ms) return ''; const d=new Date(ms+8*3600*1000); const p=n=>String(n).padStart(2,'0');
+  return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`; }
+
+function render(rec){
+  const a=rec.answers||{}, c=rec.contact||{};
+  const age=rec.age || (a.BIRTH&&a.BIRTH.y ? (new Date().getFullYear()-a.BIRTH.y) : null);
+  let bmi=null; if(a.HW&&a.HW.HT&&a.HW.WT){ bmi=+(a.HW.WT/((a.HW.HT/100)**2)).toFixed(1); }
+  const dims=computeFocusDims(a);
+
+  // 客户信息
+  const bits=[]; if(age!=null)bits.push(`${age} 岁`); if(bmi)bits.push(`BMI ${bmi}`);
+  if(a.HW&&a.HW.HT)bits.push(`${a.HW.HT}cm / ${a.HW.WT}kg`); if(c.city)bits.push(esc(c.city));
+  let html = `<div class="pad">`;
+  html += `<div class="card head">
+    <div class="nm">${esc(c.name)||'（未填姓名）'}</div>
+    ${c.phone?`<div class="ph"><a href="tel:${esc(c.phone)}">📞 ${esc(c.phone)}</a></div>`:''}
+    <div class="bits">${bits.map(b=>`<span class="bit">${b}</span>`).join('')}</div>
+  </div>`;
+
+  // 检测意愿
+  const it=a.INTENT;
+  const itMap={'①':['hot','🎯','很想了解肠道微生态','客户主动表达检测意愿，建议优先跟进、安排检测'],
+               '②':['mid','💡','可以考虑检测','有一定意愿，沟通时可介绍检测价值与方案'],
+               '③':['low','🌱','暂不需要检测','暂无检测意愿，以日常调理建议为主，后续再触达']};
+  if(itMap[it]){ const [cls,ico,h,p]=itMap[it];
+    html += `<div class="intent ${cls}"><div class="ico">${ico}</div><div><h3>${h}</h3><p>${p}</p></div></div>`; }
+
+  // 关注维度 + 最希望改善
+  if(dims.length){ html += `<div class="card"><div class="blk-h">关注维度</div><div class="dims">${dims.map(d=>`<span class="dim">${d}</span>`).join('')}</div>`;
+    if(Array.isArray(a.IMPROVE)&&a.IMPROVE.length){ const imp=transAnswer('IMPROVE',a.IMPROVE);
+      html += `<div class="blk-h" style="margin-top:16px">客户最想改善</div><div class="dims">${imp.split('、').map(x=>`<span class="imp">${esc(x)}</span>`).join('')}</div>`; }
+    html += `</div>`; }
+
+  // 逐维度逐题
+  SECTIONS.forEach(sec=>{
+    const fields=Object.keys(QDICT).filter(f=>QDICT[f].section===sec);
+    const priv=(sec||'').includes('私密');
+    let rows='';
+    fields.forEach(f=>{
+      const ans=transAnswer(f,a[f]);
+      let cls='a'; if(!ans)cls+=' empty'; else if(priv)cls+=' priv'; else if(/不便回答/.test(ans))cls+=' priv';
+      rows += `<div class="qa"><div class="q">${esc(QDICT[f].title)}</div><div class="${cls}">${ans?esc(ans):'未作答'}</div></div>`;
+    });
+    if(rows) html += `<div class="card sec ${priv?'priv':''}"><div class="sec-title"><span class="sdot"></span>${esc(sec)}</div>${rows}</div>`;
+  });
+
+  const t = rec.timestamp || rec._createTimeMs;
+  html += `<div class="meta">共采集 ${rec.filledCount||Object.keys(a).length} 项 · 提交于 ${fmtTime(t)}<br>档案编号 ${esc(String(rec._id||rec.docId||'').slice(-8))||'—'}</div>`;
+  html += `</div>`;
+  document.getElementById('root').innerHTML=html;
+}
+function showErr(msg){ document.getElementById('root').innerHTML=`<div class="pad"><div class="err-box">${esc(msg)}</div></div>`; }
+</script>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
+<script>
+(async function(){
+  const id = new URLSearchParams(location.search).get('id');
+  if(!id){ showErr('缺少问卷编号（链接参数 id）。请从企业微信群通知里的「查看完整问卷」链接打开。'); return; }
+  try{
+    if(typeof cloudbase==='undefined'){ showErr('网络加载失败，请刷新重试。'); return; }
+    const app=cloudbase.init({env:'yuecheng-survey-d4fucklsf6b68aaf'});
+    await app.auth().signInAnonymously();
+    const res=await app.callFunction({name:'get-survey-detail',data:{id}});
+    const r=(res&&res.result)||{};
+    if(!r.ok||!r.data){ showErr(r.msg||'未找到该问卷记录，可能编号有误或记录已删除。'); return; }
+    render(r.data);
+  }catch(e){ console.error(e); showErr('读取失败：'+((e&&e.message)||e)); }
+})();
+</script>
+</body>
+</html>
