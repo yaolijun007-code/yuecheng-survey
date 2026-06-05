@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F5F3EF">
+<meta name="format-detection" content="telephone=no">
+<title>产后健康与肠道微生态评估 · 芳华谱</title>
+<style>
+  :root{
+    /* 中性·背景 */
+    --bg:#F4F2EE;--bg-soft:#EAE7E1;--card:rgba(255,254,251,.86);--card-solid:#FFFEFB;
+    --t1:#1B2A29;--t2:#465B59;--t3:#879694;--t4:#C0CCCA;
+    --line:rgba(27,42,41,.07);--line-md:rgba(27,42,41,.12);--line-strong:rgba(14,139,134,.16);
+    /* 金·永恒点缀 */
+    --gold:#B8893C;--gold-soft:#D4B483;--gold-glow:rgba(184,137,60,.10);
+    /* 当前维度主色（由 JS 按 section 切换，默认孔雀绿） */
+    --accent:#0E8B86;--accent-2:#22C3B6;--accent-deep:#0A5F5C;
+    --accent-glow:rgba(14,139,134,.09);--accent-glow-md:rgba(14,139,134,.14);
+    /* 圆角·阴影·缓动 */
+    --r-sm:14px;--r-md:20px;--r-lg:24px;--r-xl:28px;
+    --sh:0 8px 28px rgba(14,139,134,.14),0 2px 8px rgba(14,139,134,.07);
+    --sh-accent:0 10px 30px var(--accent-glow-md),0 2px 8px var(--accent-glow);
+    --ease:cubic-bezier(.22,.61,.36,1);--ease-in:cubic-bezier(.4,0,1,1);
+    --safe-t:env(safe-area-inset-top,0);--safe-b:env(safe-area-inset-bottom,0);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;font-size:17px;line-height:1.65;color:var(--t1);background:var(--bg);text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern","liga","calt"}
+  input,textarea,select{user-select:text;-webkit-user-select:text}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+  /* 多色氛围光晕 */
+  .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;transition:opacity .8s var(--ease)}
+  .ambient::before,.ambient::after{content:"";position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;transition:background 1s var(--ease)}
+  .ambient::before{width:64vw;height:64vw;top:-22vw;right:-20vw;background:radial-gradient(circle,var(--accent-glow-md),transparent 66%)}
+  .ambient::after{width:54vw;height:54vw;bottom:-16vw;left:-18vw;background:radial-gradient(circle,var(--gold-glow),transparent 66%)}
+  .ambient .blob3{position:absolute;width:40vw;height:40vw;border-radius:50%;filter:blur(100px);opacity:.32;top:30%;left:40%;background:radial-gradient(circle,var(--accent-glow),transparent 70%);transition:background 1s var(--ease)}
+
+  #app{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;padding-top:var(--safe-t);padding-bottom:var(--safe-b)}
+  .topbar{flex-shrink:0;display:flex;align-items:center;gap:14px;padding:10px 18px 14px;min-height:48px}
+  .topbar.hide{visibility:hidden}
+  .icon-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--t2);transition:background .25s var(--ease),transform .15s var(--ease)}
+  .icon-btn:active{background:var(--line);transform:scale(.92)}
+  .icon-btn svg{width:18px;height:18px;stroke-width:2}
+  .progress{flex:1;height:3px;background:var(--line);border-radius:99px;overflow:hidden;position:relative}
+  .progress-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent) 55%,var(--accent-2));border-radius:99px;width:0%;transition:width .6s cubic-bezier(.65,0,.35,1),background 1s var(--ease)}
+  .progress-fill::after{content:"";position:absolute;right:0;top:0;bottom:0;width:22px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65));border-radius:99px}
+  .progress-label{font-size:11px;color:var(--t3);letter-spacing:.5px;font-variant-numeric:tabular-nums;min-width:38px;text-align:right}
+
+  .main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
+  .screen{min-height:100%;padding:8px 24px 32px;display:flex;flex-direction:column;animation:screenIn .55s var(--ease) both}
+  .screen.leaving{animation:screenOut .25s var(--ease-in) both}
+  @keyframes screenIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+  @keyframes screenOut{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-6px)}}
+  .stagger>*{animation:fadeUp .6s var(--ease) both}
+  .stagger>*:nth-child(1){animation-delay:.05s}.stagger>*:nth-child(2){animation-delay:.13s}
+  .stagger>*:nth-child(3){animation-delay:.21s}.stagger>*:nth-child(4){animation-delay:.29s}
+  .stagger>*:nth-child(5){animation-delay:.37s}.stagger>*:nth-child(6){animation-delay:.45s}
+  .stagger>*:nth-child(7){animation-delay:.53s}.stagger>*:nth-child(8){animation-delay:.61s}
+  @keyframes fadeUp{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1.6px;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .eyebrow::before{content:"";width:18px;height:1px;background:var(--gold);opacity:.6}
+  .h-large{font-size:27px;line-height:1.26;font-weight:700;letter-spacing:-.4px;color:var(--t1)}
+  .body-md{font-size:15px;line-height:1.64;color:var(--t2)}
+  .body-sm{font-size:13px;line-height:1.6;color:var(--t3)}
+  .accent{color:var(--accent)}
+
+  /* 欢迎页 */
+  .welcome{justify-content:flex-start;padding-top:18px}
+  .sys-label{font-size:11px;letter-spacing:2px;color:var(--t3);margin-bottom:22px;text-transform:uppercase}
+  .brand-mark{width:66px;height:66px;border-radius:20px;background:linear-gradient(135deg,var(--accent-deep),var(--accent) 50%,var(--accent-2));display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--sh-accent);margin-bottom:20px;position:relative}
+  .brand-mark::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.28),transparent 52%)}
+  .brand-mark svg{width:34px;height:34px;color:#fff;position:relative;z-index:1}
+  .brand-cn{font-size:25px;font-weight:700;letter-spacing:4px;color:var(--t1)}
+  .brand-sub{font-size:13px;color:var(--t2);letter-spacing:1.5px;margin-top:6px}
+  .brand-divider{width:40px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold-soft));margin:18px auto 0}
+  .social-proof{margin:22px auto 0;display:inline-flex;align-items:center;gap:10px;padding:7px 15px 7px 12px;background:linear-gradient(135deg,var(--gold-glow),rgba(184,137,60,.03));border:1px solid rgba(184,137,60,.24);border-radius:24px;font-size:13px;color:var(--t2)}
+  .social-proof .sp-pulse{position:relative;width:7px;height:7px;border-radius:50%;background:var(--gold);animation:sp-pulse 2s ease-in-out infinite}
+  .social-proof .sp-num{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;margin:0 2px;display:inline-block;min-width:42px;text-align:center}
+  @keyframes sp-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(184,137,60,.5)}50%{transform:scale(1.25);box-shadow:0 0 0 5px rgba(184,137,60,0)}}
+  .welcome-hero{margin-top:34px}
+  .welcome-hero .title-cn{font-size:33px;line-height:1.2;font-weight:700;letter-spacing:-.6px;color:var(--t1);margin-bottom:8px}
+  .welcome-hero .title-cn .accent{background:linear-gradient(120deg,var(--accent-deep),var(--accent) 60%,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .welcome-hero .title-en{font-size:12px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;font-weight:400;margin-top:12px}
+  .welcome-hero .subtitle{margin-top:22px;font-size:15.5px;line-height:1.7;color:var(--t2);max-width:310px}
+  .meta-row{display:flex;margin-top:30px;background:var(--card);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 4px}
+  .meta-item{flex:1;text-align:center;position:relative}
+  .meta-item+.meta-item::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:1px;background:var(--line)}
+  .meta-item .num-val{font-size:21px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
+  .meta-item .num-val .unit{font-size:12px;color:var(--t3);font-weight:400;margin-left:2px}
+  .meta-item .lbl{font-size:11px;color:var(--t3);margin-top:4px;letter-spacing:.5px}
+
+  /* 介绍/隐私 */
+  .intro-list{margin-top:28px;display:flex;flex-direction:column;gap:14px}
+  .intro-step{display:flex;gap:15px;align-items:flex-start;padding:16px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-md)}
+  .intro-step .step-num{flex-shrink:0;width:34px;height:34px;border-radius:11px;background:var(--accent-glow);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;border:1px solid var(--line-strong)}
+  .intro-step .step-content h4{font-size:15px;font-weight:600;color:var(--t1);margin:5px 0 4px}
+  .intro-step .step-content p{font-size:13px;color:var(--t3);margin:0;line-height:1.5}
+  .privacy-card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;margin-top:22px}
+  .privacy-list{display:flex;flex-direction:column;gap:16px;margin-top:4px}
+  .privacy-item{display:flex;gap:13px;align-items:flex-start}
+  .privacy-icon{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--accent-glow),rgba(14,139,134,.03));display:flex;align-items:center;justify-content:center;color:var(--accent)}
+  .privacy-icon svg{width:16px;height:16px}
+  .privacy-item h4{font-size:14px;font-weight:600;color:var(--t1);margin:5px 0 2px}
+  .privacy-item p{font-size:12.5px;color:var(--t3);margin:0;line-height:1.55}
+  .intro-tip{margin-top:22px;display:flex;gap:12px;padding:16px;background:linear-gradient(135deg,var(--accent-glow),rgba(14,139,134,.02));border:1px solid var(--line-strong);border-radius:var(--r-md)}
+  .intro-tip svg{width:20px;height:20px;color:var(--accent);flex-shrink:0;margin-top:2px}
+  .intro-tip strong{font-size:14px;color:var(--t1);display:block;margin-bottom:3px}
+  .intro-tip p{font-size:12.5px;color:var(--t3);margin:0;line-height:1.55}
+
+  /* 问题区 */
+  .q-head{margin-bottom:22px}
+  .q-meta{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.6px}
+  .q-meta .seg{color:var(--accent);font-weight:600;text-transform:uppercase}
+  .q-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--t4)}
+  .q-meta .qn{color:var(--t3);font-variant-numeric:tabular-nums}
+  .q-title{font-size:22px;line-height:1.36;font-weight:700;color:var(--t1);letter-spacing:-.2px;margin-top:13px}
+  .q-desc{margin-top:9px;font-size:13.5px;line-height:1.55;color:var(--t3)}
+  .q-mech{margin-top:14px;padding:12px 14px;background:linear-gradient(135deg,var(--accent-glow),rgba(255,255,255,0));border-left:2.5px solid var(--accent);border-radius:10px;display:flex;gap:9px;align-items:flex-start}
+  .q-mech svg{width:14px;height:14px;color:var(--accent);flex-shrink:0;margin-top:2px;opacity:.9}
+  .q-mech p{font-size:12.5px;line-height:1.6;color:var(--t2);margin:0;letter-spacing:.1px}
+
+  .options{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .option{position:relative;background:var(--card);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1.5px solid var(--line);border-radius:var(--r-md);padding:15px 17px;display:flex;align-items:center;gap:13px;transition:all .25s var(--ease);cursor:pointer;min-height:56px}
+  .option:active{transform:scale(.985)}
+  .option.selected{background:linear-gradient(135deg,var(--accent-deep),var(--accent) 60%,var(--accent-2));border-color:transparent;box-shadow:var(--sh-accent)}
+  .option.selected .option-label,.option.selected .option-idx{color:#fff}
+  .option.selected .option-idx{background:rgba(255,255,255,.2);border-color:transparent}
+  .option.selected .check{opacity:1;transform:scale(1)}
+  .option-idx{flex-shrink:0;width:27px;height:27px;border-radius:50%;border:1.5px solid var(--line-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);font-weight:600;transition:all .25s var(--ease)}
+  .option-label{flex:1;font-size:15.5px;color:var(--t1);font-weight:500;line-height:1.4;transition:color .25s var(--ease)}
+  .check{margin-left:6px;opacity:0;transform:scale(.6);transition:all .25s var(--ease);color:#fff}
+  .check svg{width:18px;height:18px;stroke-width:2.5}
+  .multi-hint{margin-top:13px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3)}
+  .multi-hint .count{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+
+  /* 量表 */
+  .scale-options{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+  .scale-row{position:relative;overflow:hidden;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 16px;display:flex;align-items:center;gap:13px;transition:all .25s var(--ease);cursor:pointer;min-height:54px}
+  .scale-row:active{transform:scale(.985)}
+  .scale-row.selected{border-color:transparent;box-shadow:var(--sh-accent)}
+  .scale-row.selected .scale-text{color:#fff;font-weight:600}
+  .scale-row.selected .scale-dot{background:rgba(255,255,255,.2);color:#fff;border-color:transparent}
+  .scale-bar{position:absolute;left:0;top:0;bottom:0;z-index:0;opacity:.16;transition:width .3s var(--ease)}
+  .scale-row.selected .scale-bar{background:linear-gradient(90deg,var(--accent-deep),var(--accent-2));opacity:1}
+  .scale-dot{position:relative;z-index:1;flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);font-weight:600}
+  .scale-text{position:relative;z-index:1;flex:1;font-size:15px;color:var(--t1);font-weight:500}
+
+  /* 信息采集 */
+  .ci-field{display:flex;flex-direction:column;gap:13px;margin-top:4px}
+  .ci-input{position:relative;display:flex;flex-direction:column;gap:6px}
+  .ci-input label{font-size:12.5px;color:var(--t2);font-weight:600;letter-spacing:.3px}
+  .ci-input input,.ci-select-wrap select{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-sm);padding:13px 15px;font-size:16px;color:var(--t1);outline:none;transition:border-color .25s var(--ease);appearance:none;-webkit-appearance:none}
+  .ci-input input:focus,.ci-select-wrap select:focus{border-color:var(--accent)}
+  .ci-input input::placeholder{color:var(--t4)}
+  .ci-row{display:flex;gap:11px}.ci-row .ci-input{flex:1}
+  .ci-select-wrap{position:relative}
+  .ci-select-wrap::after{content:"";position:absolute;right:14px;top:50%;transform:translateY(-40%);width:9px;height:6px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' stroke='%23879694' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;pointer-events:none}
+  .ci-hint{font-size:12px;color:var(--accent);font-weight:600;min-height:8px;letter-spacing:.2px}
+  .ci-err{display:none;font-size:11.5px;color:#D94E4E;margin-top:2px}
+  .ci-input.err input{border-color:#D94E4E}
+  .ci-privacy{margin-top:8px;font-size:11.5px;line-height:1.55;color:var(--t3);padding:11px 13px;background:var(--accent-glow);border-radius:10px}
+
+  /* 过渡/敏感页 */
+  .transition-screen{justify-content:center;align-items:center;text-align:center;flex:1}
+  .transition-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,var(--accent-deep),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-accent);margin-bottom:22px}
+  .transition-icon svg{width:30px;height:30px;color:#fff}
+  .transition-title{font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
+  .transition-sub{margin-top:12px;font-size:14.5px;line-height:1.65;color:var(--t2);max-width:300px}
+  .sensitive-list{margin-top:26px;display:flex;flex-direction:column;gap:14px;width:100%}
+  .sensitive-item{display:flex;gap:13px;padding:15px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-md)}
+  .sn-idx{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--accent-glow);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+  .sn-content h4{font-size:14px;font-weight:600;color:var(--t1);margin:3px 0 4px}
+  .sn-content p{font-size:12.5px;color:var(--t3);margin:0;line-height:1.55}
+
+  /* 提交动画 */
+  .submit-screen{justify-content:center;align-items:center;text-align:center;flex:1}
+  .submit-orb{position:relative;width:118px;height:118px;margin-bottom:30px}
+  .submit-orb .ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--line-strong);animation:ringRotate 8s linear infinite}
+  .submit-orb .ring.r2{inset:-12px;border-style:dashed;opacity:.5;animation-duration:14s;animation-direction:reverse}
+  .submit-orb .core{position:absolute;inset:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent-deep),var(--accent-2));box-shadow:var(--sh-accent);display:flex;align-items:center;justify-content:center;animation:coreBreathe 3s var(--ease) infinite}
+  .submit-orb .core svg{width:32px;height:32px;color:#fff}
+  @keyframes ringRotate{to{transform:rotate(360deg)}}
+  @keyframes coreBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .submit-title{font-size:21px;font-weight:700;color:var(--t1)}
+  .submit-sub{margin-top:10px;font-size:14px;color:var(--t3)}
+
+  /* 结果页 */
+  .fb-orb{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent-deep),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-accent);margin:8px auto 0}
+  .fb-orb svg{width:36px;height:36px;color:#fff;stroke-width:2.5}
+  .fb-title{font-size:25px;font-weight:700;color:var(--t1);text-align:center;margin-top:20px;letter-spacing:-.3px}
+  .fb-sub{font-size:14px;color:var(--t2);text-align:center;margin-top:10px;line-height:1.6;max-width:300px;margin-left:auto;margin-right:auto}
+  .fb-card{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px}
+  .fb-card-h{display:flex;align-items:center;gap:9px;font-size:12px;letter-spacing:1px;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:14px}
+  .fb-dims{display:flex;flex-wrap:wrap;gap:8px}
+  .fb-dim{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:22px;font-size:13px;font-weight:600;background:var(--accent-glow);color:var(--accent-deep);border:1px solid var(--line-strong)}
+  .fb-dim .d-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .fb-next{margin-top:16px;display:flex;gap:13px;padding:18px;background:linear-gradient(135deg,var(--accent-deep),var(--accent) 70%,var(--accent-2));border-radius:var(--r-lg);box-shadow:var(--sh-accent)}
+  .fb-next svg{width:24px;height:24px;color:#fff;flex-shrink:0;margin-top:2px}
+  .fb-next h4{font-size:16px;font-weight:700;color:#fff;margin:0 0 5px}
+  .fb-next p{font-size:13px;color:rgba(255,255,255,.88);margin:0;line-height:1.55}
+  .fb-disc{margin-top:18px;font-size:11.5px;color:var(--t3);text-align:center;line-height:1.6}
+
+  /* 底部按钮 */
+  .footer{flex-shrink:0;padding:14px 24px calc(18px + var(--safe-b));background:linear-gradient(0deg,var(--bg) 60%,transparent)}
+  .footer.hide{display:none}
+  .btn{width:100%;height:54px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;font-weight:600;transition:all .25s var(--ease)}
+  .btn-primary{background:linear-gradient(135deg,var(--accent-deep),var(--accent) 60%,var(--accent-2));color:#fff;box-shadow:var(--sh-accent)}
+  .btn-primary:active{transform:scale(.98)}
+  .btn-primary:disabled{opacity:.4;box-shadow:none}
+  .btn .arrow svg{width:16px;height:16px}
+  .btn-meta{margin-top:11px;font-size:11.5px;color:var(--t3);text-align:center;letter-spacing:.2px}
+  .mt-auto{margin-top:auto}
+</style>
+</head>
+<body>
+<div class="ambient"><div class="blob3"></div></div>
+<div id="app">
+  <div class="topbar hide" id="topbar">
+    <button class="icon-btn" id="backBtn" aria-label="返回"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label num" id="progressLabel">0%</div>
+  </div>
+  <div class="main" id="main"></div>
+  <div class="footer hide" id="footer">
+    <button class="btn btn-primary" id="primaryBtn"><span id="btnText">继续</span><span class="arrow"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></span></button>
+    <div class="btn-meta" id="btnMeta"></div>
+  </div>
+</div>
+<script>
+/* ===== 维度主题色（宝石多色系统） ===== */
+const THEME = {
+  teal:   {a:'#0E8B86',a2:'#22C3B6',deep:'#0A5F5C',glow:'rgba(14,139,134,.09)',glowMd:'rgba(14,139,134,.15)'},
+  emerald:{a:'#0E9F6E',a2:'#34D399',deep:'#0A7350',glow:'rgba(14,159,110,.09)',glowMd:'rgba(14,159,110,.15)'},
+  amber:  {a:'#C2410C',a2:'#F59E0B',deep:'#9A3412',glow:'rgba(217,119,6,.10)', glowMd:'rgba(217,119,6,.16)'},
+  rose:   {a:'#D23B73',a2:'#F472A6',deep:'#A02858',glow:'rgba(210,59,115,.09)',glowMd:'rgba(210,59,115,.15)'},
+  violet: {a:'#6D4FD0',a2:'#A78BFA',deep:'#4F37A0',glow:'rgba(109,79,208,.10)',glowMd:'rgba(109,79,208,.16)'},
+  plum:   {a:'#9B3D6B',a2:'#C76B96',deep:'#732C4F',glow:'rgba(155,61,107,.09)',glowMd:'rgba(155,61,107,.15)'},
+  gold:   {a:'#B8893C',a2:'#D4B483',deep:'#8A6428',glow:'rgba(184,137,60,.11)',glowMd:'rgba(184,137,60,.17)'},
+};
+function applyTheme(t){
+  const c = THEME[t] || THEME.teal;
+  const r = document.documentElement.style;
+  r.setProperty('--accent',c.a); r.setProperty('--accent-2',c.a2); r.setProperty('--accent-deep',c.deep);
+  r.setProperty('--accent-glow',c.glow); r.setProperty('--accent-glow-md',c.glowMd);
+}
+
+/* ===== 问卷数据 ===== */
+const STEPS = [
+  {id:'welcome',type:'welcome',theme:'teal'},
+  {id:'intro',type:'intro',theme:'teal',btnText:'我已知晓，开始评估',btnMeta:'36 题 · 约 6–8 分钟 · 信息加密存储'},
+  {id:'profile',type:'question',theme:'teal',section:'基本信息',q:{field:'A01',type:'combined-info',title:'请先填写您的基础信息',note:'年龄、身高体重是健康评估的基础输入；联系方式用于专业顾问为您解读评估结果。'}},
+
+  {id:'Q1',type:'question',theme:'teal',section:'基本信息',q:{field:'PARITY',type:'single',title:'本次为第几次生产',options:[{v:'①',label:'第一胎'},{v:'②',label:'第二胎'},{v:'③',label:'第三胎及以上'}]}},
+  {id:'Q2',type:'question',theme:'teal',section:'基本信息',q:{field:'DELIV',type:'single',title:'本次分娩方式',options:[{v:'①',label:'顺产'},{v:'②',label:'剖宫产'},{v:'③',label:'顺转剖'},{v:'④',label:'产钳 / 吸引助产'}],mech:'分娩方式影响母体与产道菌群向新生儿的传递；剖宫产产妇的产后肠道菌群重建通常更需关注。'}},
+  {id:'Q3',type:'question',theme:'teal',section:'基本信息',q:{field:'DAYS',type:'single',title:'目前距分娩约',options:[{v:'①',label:'3 天内'},{v:'②',label:'4–7 天'},{v:'③',label:'8–14 天'},{v:'④',label:'15–30 天'},{v:'⑤',label:'30 天以上'}]}},
+  {id:'Q4',type:'question',theme:'teal',section:'基本信息',q:{field:'FEED',type:'single',title:'目前喂养方式',options:[{v:'①',label:'纯母乳'},{v:'②',label:'混合喂养'},{v:'③',label:'配方奶为主'},{v:'④',label:'尚未确定'}]}},
+
+  {id:'Q5',type:'question',theme:'teal',section:'孕产与用药',q:{field:'ABX',type:'single',title:'分娩前后是否使用过抗生素',desc:'如剖宫产预防性用药、产褥感染治疗',options:[{v:'①',label:'未使用'},{v:'②',label:'预防性单次'},{v:'③',label:'多日疗程'},{v:'④',label:'不确定'}],mech:'抗生素会显著影响肠道菌群的组成与多样性，产褥期用药后的菌群重建值得评估。'}},
+  {id:'Q6',type:'question',theme:'teal',section:'孕产与用药',q:{field:'PREG_GUT',type:'multi',title:'怀孕期间您的肠道出现过哪些变化',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'便秘加重'},{v:'②',label:'腹胀 / 嗳气增多'},{v:'③',label:'痔疮出现或加重'},{v:'④',label:'食欲口味明显改变'},{v:'⑤',label:'无明显变化'}]}},
+  {id:'Q7',type:'question',theme:'teal',section:'孕产与用药',q:{field:'GDM',type:'single',title:'孕期是否出现过妊娠糖尿病或血糖偏高',options:[{v:'①',label:'是'},{v:'②',label:'否'},{v:'③',label:'不确定'}],mech:'血糖代谢与肠道菌群相互影响，孕期糖代谢异常者产后更需关注代谢与菌群恢复。'}},
+
+  {id:'Q8',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'FREQ',type:'single',title:'产后至今的排便频率',options:[{v:'①',label:'每天 ≥ 1 次'},{v:'②',label:'1–2 天 1 次'},{v:'③',label:'2–3 天 1 次'},{v:'④',label:'3 天以上未排便'}],mech:'排便频率是肠道动力与菌群平衡最直观的反映。'}},
+  {id:'Q9',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'BRISTOL',type:'single',title:'最近一次排便的性状',desc:'选择最接近的一项',options:[{v:'①',label:'硬球状，似坚果'},{v:'②',label:'块状香肠形'},{v:'③',label:'表面有裂纹的香肠状'},{v:'④',label:'光滑柔软香肠状'},{v:'⑤',label:'柔软块状，边缘清晰'},{v:'⑥',label:'糊状，边缘蓬松'},{v:'⑦',label:'水样，无固形'}],mech:'Bristol 粪便量表是国际通用的肠道功能评估工具；性状偏硬或偏稀都提示菌群与动力的失衡。'}},
+  {id:'Q10',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'BOWEL_SX',type:'multi',title:'目前您有以下哪些排便相关困扰',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'排便费力或疼痛'},{v:'②',label:'痔疮（新发或加重）'},{v:'③',label:'排便带黏液'},{v:'④',label:'排便不尽感'},{v:'⑤',label:'以上都没有'}]}},
+  {id:'Q11',type:'question',theme:'emerald',section:'肠道与排便',q:{field:'GUT_SX',type:'multi',title:'近期您的肠胃有以下哪些不适',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'经常腹胀'},{v:'②',label:'嗳气或排气异常'},{v:'③',label:'腹痛或肠绞痛'},{v:'④',label:'恶心或食欲不振'},{v:'⑤',label:'以上都没有'}],mech:'腹胀与产气，常与产气菌群比例失衡、食物在肠道异常发酵相关。'}},
+
+  {id:'Q12',type:'question',theme:'amber',section:'体重与代谢',q:{field:'WT',type:'single',title:'目前体重与孕前相比',options:[{v:'①',label:'已恢复'},{v:'②',label:'还差 2–5kg'},{v:'③',label:'还差 5kg 以上'},{v:'④',label:'比孕前更重'}],mech:'肠道菌群参与能量吸收与脂肪储存调节，与产后体重恢复速度相关。'}},
+  {id:'Q13',type:'question',theme:'amber',section:'体重与代谢',q:{field:'METAB',type:'multi',title:'产后您是否有以下感受',desc:'最多 3 项',max:3,exclusiveValue:'⑤',options:[{v:'①',label:'即使注意饮食，体重也不易下降'},{v:'②',label:'餐后容易困倦'},{v:'③',label:'日常容易疲劳乏力'},{v:'④',label:'腹部脂肪堆积、腰围难恢复'},{v:'⑤',label:'以上都没有'}],mech:'这些常是代谢效率下降的信号，菌群失衡会加重能量代谢与血糖波动。'}},
+  {id:'Q14',type:'question',theme:'amber',section:'体重与代谢',q:{field:'WT_WORRY',type:'scale',title:'您对产后体重与身材恢复的担心程度',options:[{v:'①',label:'不担心'},{v:'②',label:'有些担心'},{v:'③',label:'比较担心'},{v:'④',label:'非常担心'}]}},
+
+  {id:'Q15',type:'question',theme:'rose',section:'皮肤与外貌',q:{field:'SKIN',type:'multi',title:'产后您的皮肤出现以下哪些变化',max:5,exclusiveValue:'⑤',options:[{v:'①',label:'长痘或出油'},{v:'②',label:'干燥、暗沉'},{v:'③',label:'敏感、泛红'},{v:'④',label:'色斑加重'},{v:'⑤',label:'无明显变化'}],mech:'肠道与皮肤通过「肠-皮轴」相互影响，菌群与炎症状态常反映在皮肤上。'}},
+  {id:'Q16',type:'question',theme:'rose',section:'皮肤与外貌',q:{field:'HAIR',type:'single',title:'产后是否出现脱发',options:[{v:'①',label:'无'},{v:'②',label:'轻度'},{v:'③',label:'明显'}]}},
+  {id:'Q17',type:'question',theme:'rose',section:'皮肤与外貌',q:{field:'SKIN_SAT',type:'scale',title:'您对目前皮肤与外貌状态的满意度',options:[{v:'①',label:'满意'},{v:'②',label:'一般'},{v:'③',label:'不太满意'},{v:'④',label:'很不满意'}]}},
+
+  {id:'Q18',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'SLEEP',type:'single',title:'目前您的睡眠状况',desc:'排除哺乳夜醒因素后的整体感受',options:[{v:'①',label:'较好'},{v:'②',label:'一般'},{v:'③',label:'较差（入睡难 / 睡后难安）'}],mech:'肠道与大脑通过「肠脑轴」双向影响，菌群平衡与睡眠质量相关。'}},
+  {id:'Q19',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'ENERGY',type:'multi',title:'近期您是否有以下状态',max:4,exclusiveValue:'⑤',options:[{v:'①',label:'精力不足、经常疲惫'},{v:'②',label:'注意力不集中或「脑雾」'},{v:'③',label:'记性变差'},{v:'④',label:'情绪容易烦躁'},{v:'⑤',label:'以上都没有'}],mech:'肠道菌群产生的代谢物可经神经通路影响精力与情绪状态。'}},
+  {id:'Q20',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'MOOD',type:'single',title:'最近两周，您感到情绪低落、沮丧，或对事情提不起兴趣的频率',options:[{v:'①',label:'完全没有'},{v:'②',label:'有几天'},{v:'③',label:'一半以上时间'},{v:'④',label:'几乎每天'}],mech:'本题参考 PHQ-2 情绪筛查；产后情绪状态值得被认真对待。'}},
+  {id:'Q21',type:'question',theme:'violet',section:'精力·情绪·睡眠',q:{field:'STRESS',type:'scale',title:'近期您的整体压力感受',options:[{v:'①',label:'较轻松'},{v:'②',label:'一般'},{v:'③',label:'压力较大'},{v:'④',label:'压力很大'}]}},
+
+  {id:'sensitive',type:'sensitive-intro',theme:'plum',btnText:'我已理解，继续',btnMeta:'选填 · 端到端加密 · 可选「不便回答」'},
+  {id:'Q22',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'SEX_RESUME',type:'single',title:'您目前是否已恢复性生活',options:[{v:'①',label:'已恢复'},{v:'②',label:'尚未'},{v:'③',label:'不便回答'}]}},
+  {id:'Q23',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'SEX_SX',type:'multi',title:'性生活中您是否有以下情况',desc:'本题选填，可选「不便回答」· 最多 3 项',max:3,exclusiveValue:'⑤',options:[{v:'①',label:'干涩或疼痛'},{v:'②',label:'性欲明显下降'},{v:'③',label:'亲密意愿降低'},{v:'④',label:'暂无明显困扰'},{v:'⑤',label:'不便回答'}],mech:'产后性功能恢复与激素水平、私密部位微生态平衡相关。'}},
+  {id:'Q24',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'VAG',type:'multi',title:'近期您是否有以下私密健康困扰',desc:'选填，可选「不便回答」· 最多 3 项',max:3,exclusiveValue:'⑥',options:[{v:'①',label:'阴道干涩'},{v:'②',label:'反复瘙痒'},{v:'③',label:'异常分泌物'},{v:'④',label:'反复阴道炎或尿路感染'},{v:'⑤',label:'以上都没有'},{v:'⑥',label:'不便回答'}],mech:'女性私密部位的微生态与肠道菌群、雌激素代谢密切相关。'}},
+  {id:'Q25',type:'question',theme:'plum',section:'私密健康（选填）',q:{field:'SEX_CARE',type:'scale',title:'您对产后私密健康与亲密关系恢复的关注程度',options:[{v:'①',label:'不太关注'},{v:'②',label:'有些关注'},{v:'③',label:'比较关注'},{v:'④',label:'很关注'}]}},
+
+  {id:'Q26',type:'question',theme:'teal',section:'既往与家族史',q:{field:'PRE_BOWEL',type:'single',title:'孕前您的排便习惯通常是',options:[{v:'①',label:'每天 1 次以上，顺畅'},{v:'②',label:'1–2 天 1 次，基本正常'},{v:'③',label:'2–3 天 1 次，偏少'},{v:'④',label:'3 天以上，或长期便秘'}]}},
+  {id:'Q27',type:'question',theme:'teal',section:'既往与家族史',q:{field:'GUT_HIST',type:'multi',title:'您是否有以下既往肠道问题史',max:6,exclusiveValue:'⑥',options:[{v:'①',label:'慢性便秘'},{v:'②',label:'肠易激综合征(IBS)'},{v:'③',label:'痔疮'},{v:'④',label:'慢性腹泻'},{v:'⑤',label:'反复腹胀'},{v:'⑥',label:'以上都没有'}]}},
+  {id:'Q28',type:'question',theme:'teal',section:'既往与家族史',q:{field:'ALLERGY',type:'multi',title:'您是否有食物过敏 / 不耐受或过敏性疾病',desc:'本人或直系亲属',max:4,exclusiveValue:'④',options:[{v:'①',label:'食物过敏或不耐受（乳糖、麸质、海鲜等）'},{v:'②',label:'本人有过敏性疾病（湿疹 / 鼻炎 / 哮喘）'},{v:'③',label:'直系亲属有过敏史'},{v:'④',label:'以上都没有'}],mech:'过敏与肠道菌群所参与的免疫屏障功能相关。'}},
+  {id:'Q29',type:'question',theme:'teal',section:'既往与家族史',q:{field:'FAM_GUT',type:'single',title:'直系亲属是否有肠道疾病史',desc:'肠癌、炎症性肠病、慢性肠病',options:[{v:'①',label:'有'},{v:'②',label:'无'},{v:'③',label:'不确定'}]}},
+
+  {id:'Q30',type:'question',theme:'emerald',section:'饮食与生活',q:{field:'DIET',type:'multi',title:'您的日常饮食特点',desc:'可多选',max:5,options:[{v:'①',label:'偏清淡'},{v:'②',label:'偏重口 / 油腻'},{v:'③',label:'偏嗜甜'},{v:'④',label:'蔬果摄入偏少'},{v:'⑤',label:'饮水偏少'}]}},
+  {id:'Q31',type:'question',theme:'emerald',section:'饮食与生活',q:{field:'PROBIO',type:'single',title:'您平时是否常吃益生菌或发酵食品',desc:'酸奶、纳豆、泡菜等',options:[{v:'①',label:'经常'},{v:'②',label:'偶尔'},{v:'③',label:'几乎不吃'}]}},
+  {id:'Q32',type:'question',theme:'emerald',section:'饮食与生活',q:{field:'MEAL',type:'single',title:'目前月子餐的适应情况',options:[{v:'①',label:'适应良好'},{v:'②',label:'偶有腹胀 / 不适'},{v:'③',label:'明显消化负担'}]}},
+
+  {id:'Q33',type:'question',theme:'gold',section:'健康关注与目标',q:{field:'AGING',type:'scale',title:'与孕前相比，您是否感觉身体整体状态有所下降',desc:'综合精力、代谢、外貌等',options:[{v:'①',label:'没有'},{v:'②',label:'有一些'},{v:'③',label:'比较明显'},{v:'④',label:'非常明显'}],mech:'产后是身体快速变化的时期，及时评估有助于把握恢复与延缓衰老的窗口。'}},
+  {id:'Q34',type:'question',theme:'gold',section:'健康关注与目标',q:{field:'IMPROVE',type:'multi',title:'产后您最希望改善的方面',desc:'最多 3 项',max:3,options:[{v:'①',label:'消化 / 便秘'},{v:'②',label:'体重 / 代谢'},{v:'③',label:'皮肤 / 外貌'},{v:'④',label:'精力 / 疲劳'},{v:'⑤',label:'情绪 / 睡眠'},{v:'⑥',label:'母乳'},{v:'⑦',label:'私密 / 亲密关系'},{v:'⑧',label:'整体延缓衰老'}]}},
+  {id:'Q35',type:'question',theme:'gold',section:'健康关注与目标',q:{field:'INTENT',type:'single',title:'您是否希望进一步了解自己的肠道微生态状况',desc:'了解菌群状况有助于制定个性化的饮食、益生菌与干预建议',options:[{v:'①',label:'很想了解'},{v:'②',label:'可以考虑'},{v:'③',label:'暂不需要'}],mech:'肠道菌群检测可客观评估菌群结构与多样性，为个性化方案提供依据。'}},
+
+  {id:'submit',type:'submit',theme:'gold'},
+  {id:'feedback',type:'feedback',theme:'teal'}
+];
+const STEP_IDX = {}; STEPS.forEach((s,i)=>STEP_IDX[s.id]=i);
+const STORAGE_KEY = 'ycgut_intake_v1';
+
+/* ===== 社会证明计数 ===== */
+function getSocialProofCount(){
+  const START=new Date('2026-01-01T00:00:00').getTime(), BASE=2186, now=Date.now();
+  if(now<START) return BASE;
+  const seedRand=s=>{const x=Math.sin(s*9301+49297)*233280;return x-Math.floor(x);};
+  const days=Math.floor((now-START)/86400000); let total=BASE;
+  for(let d=0;d<days;d++) total+=5+Math.floor(seedRand(d+1)*6);
+  const ts=new Date();ts.setHours(0,0,0,0);
+  const hrs=(now-ts.getTime())/3600000, plan=5+Math.floor(seedRand(days+1)*6);
+  total+=Math.floor(plan*hrs/24);
+  try{const inc=parseInt(localStorage.getItem('ycgut_submitted')||'0',10);if(!isNaN(inc))total+=inc;}catch(e){}
+  return total;
+}
+function animateCount(el,target,dur){
+  const start=0,t0=performance.now();
+  function up(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(start+(target-start)*e).toLocaleString();
+    if(p<1)requestAnimationFrame(up);else el.textContent=target.toLocaleString();}
+  requestAnimationFrame(up);
+}
+
+/* ===== App 引擎 ===== */
+const App = {
+  state:{currentIdx:0,answers:{},history:[0]},
+  init(){ this.loadState(); this.bindEvents(); this.render(); },
+  loadState(){ try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const d=JSON.parse(raw);if(d.answers)this.state.answers=d.answers;}}catch(e){} },
+  saveState(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify({answers:this.state.answers}));}catch(e){} },
+  bindEvents(){
+    document.getElementById('backBtn').addEventListener('click',()=>this.prev());
+    document.getElementById('primaryBtn').addEventListener('click',()=>this.next());
+  },
+  startEval(){ this.next(); },
+  next(){
+    const cur=STEPS[this.state.currentIdx];
+    if(cur.type==='question' && !this.isValid(cur)){ return; }
+    let ni=this.state.currentIdx+1;
+    if(ni>=STEPS.length) return;
+    this.go(ni);
+  },
+  prev(){
+    if(this.state.history.length>1){ this.state.history.pop(); this.state.currentIdx=this.state.history[this.state.history.length-1]; this.render(); }
+  },
+  go(idx){
+    const old=document.querySelector('.screen');
+    this.state.currentIdx=idx; this.state.history.push(idx);
+    if(old){ old.classList.add('leaving'); setTimeout(()=>this.render(),200); } else this.render();
+    document.getElementById('main').scrollTop=0;
+  },
+  isValid(step){
+    const q=step.q; if(!q) return true;
+    if(q.type==='combined-info') return this.isCIValid();
+    return true; // 其余题允许直接继续（含"都没有/不便回答"选项）
+  },
+  isCIValid(){
+    const a=this.state.answers.A01||{};
+    const phoneOk=/^1[3-9]\d{9}$/.test((a.phone||'').trim());
+    return !!(a.name && a.name.trim() && a.birth && a.birth.y && phoneOk);
+  },
+
+  render(){
+    const step=STEPS[this.state.currentIdx];
+    applyTheme(step.theme||'teal');
+    const main=document.getElementById('main');
+    main.innerHTML='';
+    const topbar=document.getElementById('topbar'), footer=document.getElementById('footer');
+    const showTop = !['welcome','submit','feedback'].includes(step.type);
+    topbar.classList.toggle('hide',!showTop);
+
+    // footer 规则
+    let showFooter=false, btnText='继续', btnMeta='';
+    if(step.type==='intro'){ showFooter=true; btnText=step.btnText; btnMeta=step.btnMeta; }
+    else if(step.type==='sensitive-intro'){ showFooter=true; btnText=step.btnText; btnMeta=step.btnMeta; }
+    else if(step.type==='question'){
+      const t=step.q.type;
+      if(t==='combined-info'){ showFooter=true; btnText='继续'; btnMeta='🔒 信息加密 · 仅授权医师查阅'; }
+      else if(t==='multi'){ showFooter=true; btnText='继续'; }
+      else { showFooter=false; } // single / scale 自动前进
+    }
+    footer.classList.toggle('hide',!showFooter);
+    if(showFooter){ document.getElementById('btnText').textContent=btnText; document.getElementById('btnMeta').textContent=btnMeta; }
+
+    this.updateProgress(step);
+
+    const screen=document.createElement('section');
+    screen.className='screen '+step.type;
+    if(step.type==='welcome') screen.innerHTML=this.tplWelcome();
+    else if(step.type==='intro') screen.innerHTML=this.tplIntro();
+    else if(step.type==='sensitive-intro') screen.innerHTML=this.tplSensitive();
+    else if(step.type==='submit') screen.innerHTML=this.tplSubmit();
+    else if(step.type==='feedback') screen.innerHTML=this.tplFeedback();
+    else if(step.type==='question') screen.innerHTML=this.tplQuestion(step);
+    main.appendChild(screen);
+
+    if(step.type==='welcome'){ setTimeout(()=>{const el=document.getElementById('spNum');if(el)animateCount(el,getSocialProofCount(),1300);},300); }
+    if(step.type==='question') this.bindQuestion(step,screen);
+    if(step.type==='submit') setTimeout(()=>{ if(STEPS[this.state.currentIdx].id==='submit') this.next(); },1900);
+    if(step.type==='feedback') setTimeout(()=>this.uploadToCloud(),700);
+    // combined-info 校验按钮态
+    if(step.type==='question' && step.q.type==='combined-info'){ const b=document.getElementById('primaryBtn'); if(b) b.disabled=!this.isCIValid(); }
+  },
+  updateProgress(step){
+    const qs=STEPS.filter(s=>s.type==='question'); const total=qs.length;
+    let pct=0,label='';
+    if(step.type==='welcome'||step.type==='intro'){ pct=2; label=''; }
+    else if(step.type==='sensitive-intro'){ const done=qs.filter((s,i)=>STEP_IDX[s.id]<this.state.currentIdx).length; pct=Math.round(done/total*100); label=pct+'%'; }
+    else if(step.type==='submit'||step.type==='feedback'){ pct=100; label='100%'; }
+    else if(step.type==='question'){ const done=qs.filter(s=>STEP_IDX[s.id]<=this.state.currentIdx).length; pct=Math.round(done/total*100); label=pct+'%'; }
+    document.getElementById('progressFill').style.width=pct+'%';
+    document.getElementById('progressLabel').textContent=label;
+  },
+
+  /* ---------- 页面模板 ---------- */
+  tplWelcome(){
+    return `
+    <div class="welcome stagger">
+      <div style="text-align:center;padding-top:6px">
+        <div class="sys-label">长寿医学 · 产后健康评估</div>
+        <div class="brand-mark"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 3c-3.5 0-6 2.6-6 6 0 4.5 6 11 6 11s6-6.5 6-11c0-3.4-2.5-6-6-6z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 7c-1.6 1.2-2 3-1 4.6M12 7c1.6 1.2 2 3 1 4.6"/></svg></div>
+        <div class="brand-cn">芳华谱</div>
+        <div class="brand-sub">产后健康与肠道微生态评估</div>
+        <div class="brand-divider"></div>
+      </div>
+      <div class="social-proof"><span class="sp-pulse"></span><span>已有 <span class="sp-num num" id="spNum">2,186</span> 位产后妈妈完成评估</span></div>
+      <div class="welcome-hero">
+        <div class="eyebrow">POSTPARTUM ASSESSMENT</div>
+        <h1 class="title-cn">读懂产后身体的<br><span class="accent">肠道微生态</span></h1>
+        <div class="title-en">Gut Microbiome &amp; Recovery</div>
+        <p class="subtitle">从消化、代谢、皮肤、精力到私密健康，全面了解您的产后身体状态，由专业团队为您出具个性化评估与调理建议。</p>
+      </div>
+      <div class="meta-row">
+        <div class="meta-item"><div class="num-val num">6–8<span class="unit">分钟</span></div><div class="lbl">预计时长</div></div>
+        <div class="meta-item"><div class="num-val num">6<span class="unit">维度</span></div><div class="lbl">综合评估</div></div>
+        <div class="meta-item"><div class="num-val num">36<span class="unit">题</span></div><div class="lbl">深度问卷</div></div>
+      </div>
+      <div class="mt-auto" style="padding-top:28px">
+        <button class="btn btn-primary" onclick="App.startEval()"><span>开始评估</span><span class="arrow"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></span></button>
+        <div class="btn-meta" style="margin-top:12px">您的所有信息将被严格保密 · 仅供专业团队查阅</div>
+      </div>
+    </div>`;
+  },
+  tplIntro(){
+    return `
+    <div class="stagger">
+      <div style="margin-top:6px"><div class="eyebrow">EVALUATION FLOW</div></div>
+      <h2 class="h-large" style="margin:13px 0 8px">接下来您将完成<br>四个评估部分</h2>
+      <p class="body-md">每一题都将进入您的专属健康档案，作为专业团队解读的依据。</p>
+      <div class="intro-list">
+        <div class="intro-step"><div class="step-num num">1</div><div class="step-content"><h4>基础信息与产后状态</h4><p>建立评估基线，了解您的分娩与喂养情况</p></div></div>
+        <div class="intro-step"><div class="step-num num">2</div><div class="step-content"><h4>肠道 · 消化 · 排便</h4><p>评估的核心，肠道是产后恢复的重要基础</p></div></div>
+        <div class="intro-step"><div class="step-num num">3</div><div class="step-content"><h4>代谢 · 皮肤 · 精力 · 情绪 · 私密</h4><p>这些维度都与肠道微生态相互关联</p></div></div>
+        <div class="intro-step"><div class="step-num num">4</div><div class="step-content"><h4>健康关注与目标</h4><p>匹配最适合您的恢复与调理方向</p></div></div>
+      </div>
+      <div class="intro-tip">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div><strong>关于私密健康问题</strong><p>评估涉及体重、皮肤、情绪与私密健康等女性专业话题——这些都是产后恢复的科学维度。所有回答均加密存储，私密部分均为选填，可选择「不便回答」。</p></div>
+      </div>
+      <div class="privacy-card">
+        <div class="privacy-list">
+          <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div><div><h4>加密存储</h4><p>传输与存储全程加密</p></div></div>
+          <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div><h4>仅专业团队查阅</h4><p>由具备资质的专业人员调阅</p></div></div>
+          <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div><h4>不替代临床诊断</h4><p>用于健康管理建议，非疾病诊断</p></div></div>
+          <div class="privacy-item"><div class="privacy-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div><div><h4>可随时删除</h4><p>可随时申请删除全部档案</p></div></div>
+        </div>
+      </div>
+      <p class="body-sm" style="margin-top:16px;text-align:center">点击下方按钮即表示您已阅读并同意以上条款</p>
+    </div>`;
+  },
+  tplSensitive(){
+    return `
+    <div class="transition-screen stagger">
+      <div class="transition-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 11V7a3 3 0 116 0v4m-9 0h12a1 1 0 011 1v8a1 1 0 01-1 1H6a1 1 0 01-1-1v-8a1 1 0 011-1z"/></svg></div>
+      <div class="eyebrow" style="justify-content:center">PRIVATE HEALTH</div>
+      <h2 class="transition-title" style="margin-top:13px">接下来涉及您的私密健康</h2>
+      <p class="transition-sub">产后私密健康是恢复评估的重要维度，以下说明为什么了解这些情况。</p>
+      <div class="sensitive-list">
+        <div class="sensitive-item"><div class="sn-idx">1</div><div class="sn-content"><h4>私密微生态与肠道相关</h4><p>女性私密部位的菌群平衡与肠道菌群、雌激素水平相互关联，产后激素波动期尤为明显。</p></div></div>
+        <div class="sensitive-item"><div class="sn-idx">2</div><div class="sn-content"><h4>产后恢复的常见困扰</h4><p>干涩、性功能变化等情况在产后很常见，多数可通过科学方式改善，如实了解有助于针对性建议。</p></div></div>
+        <div class="sensitive-item"><div class="sn-idx">3</div><div class="sn-content"><h4>完全自愿 · 加密保护</h4><p>本部分所有问题均为选填，每题都设有「不便回答」选项；回答加密存储，仅授权专业人员查阅。</p></div></div>
+      </div>
+    </div>`;
+  },
+  tplQuestion(step){
+    const q=step.q; let body='';
+    if(q.type==='combined-info') body=this.tplCombinedInfo(q);
+    else if(q.type==='single') body=this.tplSingle(q);
+    else if(q.type==='multi') body=this.tplMulti(q);
+    else if(q.type==='scale') body=this.tplScale(q);
+    return `
+    <div class="q-head stagger">
+      <div class="q-meta"><span class="seg">${step.section||''}</span><span class="dot"></span><span class="qn num">${(step.id||'').replace('Q','')}</span></div>
+      <h2 class="q-title">${q.title}</h2>
+      ${q.desc?`<p class="q-desc">${q.desc}</p>`:''}
+      ${q.mech?`<div class="q-mech"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><p>${q.mech}</p></div>`:''}
+    </div>
+    <div class="q-body">${body}</div>`;
+  },
+  tplSingle(q){
+    const cur=this.state.answers[q.field];
+    return `<div class="options">${q.options.map(o=>`
+      <div class="option ${cur===o.v?'selected':''}" data-v="${o.v}">
+        <div class="option-idx">${o.v}</div><div class="option-label">${o.label}</div>
+        <div class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+      </div>`).join('')}</div>`;
+  },
+  tplMulti(q){
+    const cur=this.state.answers[q.field]||[]; const max=q.max||99;
+    return `<div class="options">${q.options.map(o=>`
+      <div class="option ${cur.includes(o.v)?'selected':''}" data-v="${o.v}">
+        <div class="option-idx">${o.v}</div><div class="option-label">${o.label}</div>
+        <div class="check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+      </div>`).join('')}</div>
+      <div class="multi-hint">已选 <span class="count">${cur.length}</span> 项${max<20?` · 最多 ${max} 项`:''}</div>`;
+  },
+  tplScale(q){
+    const cur=this.state.answers[q.field]; const total=q.options.length;
+    return `<div class="scale-options">${q.options.map((o,i)=>{
+      const w=((i+1)/total)*100;
+      return `<div class="scale-row ${cur===o.v?'selected':''}" data-v="${o.v}">
+        <div class="scale-bar" style="width:${cur===o.v?w:0}%"></div>
+        <div class="scale-dot">${o.v}</div><div class="scale-text">${o.label}</div></div>`;}).join('')}</div>`;
+  },
+  tplCombinedInfo(q){
+    const v=this.state.answers.A01||{},b=v.birth||{},ht=v.ht||'',wt=v.wt||'';
+    const years=[],ny=new Date().getFullYear(); for(let y=ny-50;y<=ny-16;y++) years.push(y);
+    const months=Array.from({length:12},(_,i)=>i+1);
+    return `
+    <div class="ci-field">
+      <div class="ci-input"><label>姓名</label><input type="text" id="ci-name" value="${v.name||''}" placeholder="请输入您的姓名" oninput="App.onCI()"></div>
+      <div class="ci-row">
+        <div class="ci-input" style="flex:1.4"><label>出生年</label><div class="ci-select-wrap"><select id="ci-by" onchange="App.onCI()"><option value="">请选择</option>${years.map(y=>`<option value="${y}" ${b.y==y?'selected':''}>${y} 年</option>`).join('')}</select></div></div>
+        <div class="ci-input" style="flex:1"><label>月份</label><div class="ci-select-wrap"><select id="ci-bm" onchange="App.onCI()"><option value="">请选择</option>${months.map(m=>`<option value="${m}" ${b.m==m?'selected':''}>${String(m).padStart(2,'0')} 月</option>`).join('')}</select></div></div>
+      </div>
+      <div class="ci-hint" id="ci-age"></div>
+      <div class="ci-input" id="ci-phone-wrap"><label>手机号码</label><input type="tel" id="ci-phone" maxlength="11" value="${v.phone||''}" placeholder="11 位手机号" oninput="App.onCI()"><div class="ci-err" id="ci-phone-err">请输入有效的 11 位手机号</div></div>
+      <div class="ci-row">
+        <div class="ci-input"><label>身高（cm）</label><input type="number" id="ci-ht" value="${ht}" placeholder="162" oninput="App.onCI()"></div>
+        <div class="ci-input"><label>体重（kg）</label><input type="number" id="ci-wt" value="${wt}" placeholder="55" oninput="App.onCI()"></div>
+      </div>
+      <div class="ci-hint" id="ci-bmi"></div>
+      <div class="ci-input"><label>所在城市</label><input type="text" id="ci-city" value="${v.city||''}" placeholder="如：嘉兴" oninput="App.onCI()"></div>
+      <div class="ci-privacy">🔒 隐私承诺 · 所有信息加密存储，仅授权专业团队调阅，可随时申请删除。手机号用于专业顾问为您解读评估结果。</div>
+    </div>`;
+  },
+
+  /* ---------- 交互 ---------- */
+  bindQuestion(step,screen){
+    const q=step.q;
+    if(q.type==='combined-info'){ this.onCI(); return; }
+    if(q.type==='single'){
+      screen.querySelectorAll('.option').forEach(el=>el.addEventListener('click',()=>{
+        screen.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected'); this.state.answers[q.field]=el.dataset.v; this.saveState();
+        setTimeout(()=>this.next(),300);
+      }));
+    } else if(q.type==='scale'){
+      screen.querySelectorAll('.scale-row').forEach((el,i,arr)=>el.addEventListener('click',()=>{
+        arr.forEach(x=>{x.classList.remove('selected');x.querySelector('.scale-bar').style.width='0%';});
+        el.classList.add('selected'); el.querySelector('.scale-bar').style.width=((i+1)/arr.length*100)+'%';
+        this.state.answers[q.field]=el.dataset.v; this.saveState();
+        setTimeout(()=>this.next(),320);
+      }));
+    } else if(q.type==='multi'){
+      const max=q.max||99, excl=q.exclusiveValue;
+      screen.querySelectorAll('.option').forEach(el=>el.addEventListener('click',()=>{
+        let cur=this.state.answers[q.field]||[]; const v=el.dataset.v;
+        if(cur.includes(v)){ cur=cur.filter(x=>x!==v); }
+        else {
+          if(excl && v===excl){ cur=[v]; }
+          else { cur=cur.filter(x=>x!==excl); if(cur.length>=max){ this.toast(screen,`最多选择 ${max} 项`); return; } cur.push(v); }
+        }
+        this.state.answers[q.field]=cur; this.saveState();
+        screen.querySelectorAll('.option').forEach(x=>x.classList.toggle('selected',cur.includes(x.dataset.v)));
+        const c=screen.querySelector('.multi-hint .count'); if(c)c.textContent=cur.length;
+      }));
+    }
+  },
+  toast(screen,msg){
+    let t=screen.querySelector('.q-toast');
+    if(!t){ t=document.createElement('div'); t.className='q-toast'; t.style.cssText='position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(27,42,41,.92);color:#fff;font-size:13px;padding:9px 16px;border-radius:20px;z-index:99;transition:opacity .3s'; screen.appendChild(t); }
+    t.textContent=msg; t.style.opacity='1'; clearTimeout(this._tt); this._tt=setTimeout(()=>{t.style.opacity='0';},1400);
+  },
+  onCI(){
+    const g=id=>document.getElementById(id);
+    const nm=(g('ci-name')||{}).value||'', by=(g('ci-by')||{}).value||'', bm=(g('ci-bm')||{}).value||'';
+    const ph=(g('ci-phone')||{}).value||'', ht=parseFloat((g('ci-ht')||{}).value)||'', wt=parseFloat((g('ci-wt')||{}).value)||'', ct=(g('ci-city')||{}).value||'';
+    const ae=g('ci-age'); if(ae)ae.textContent=by?('年龄约 '+(new Date().getFullYear()-parseInt(by,10))+' 岁'):'';
+    const be=g('ci-bmi');
+    if(be&&ht&&wt){const bmi=+(wt/((ht/100)**2)).toFixed(1);const cat=bmi<18.5?'偏瘦':bmi<24?'正常':bmi<28?'超重':'偏高';be.textContent='BMI '+bmi+'（'+cat+'）';}else if(be)be.textContent='';
+    const phOk=/^1[3-9]\d{9}$/.test(ph), pe=g('ci-phone-err'), pw=g('ci-phone-wrap');
+    if(ph.length>0&&!phOk){if(pe)pe.style.display='block';if(pw)pw.classList.add('err');}else{if(pe)pe.style.display='none';if(pw)pw.classList.remove('err');}
+    const obj={name:nm.trim(),phone:ph.trim(),city:ct.trim(),birth:{y:by?parseInt(by):null,m:bm?parseInt(bm):null},ht:ht||null,wt:wt||null};
+    const a=this.state.answers; a.A01=obj; a.NAME=obj.name; a.PHONE=obj.phone; a.CITY=obj.city; a.BIRTH={y:obj.birth.y,m:obj.birth.m}; a.HW={HT:obj.ht,WT:obj.wt}; a.PROFILE={NAME:obj.name,PHONE:obj.phone,CITY:obj.city};
+    this.saveState();
+    const btn=document.getElementById('primaryBtn'); if(btn)btn.disabled=!this.isCIValid();
+  },
+
+  /* ---------- 提交 / 结果 ---------- */
+  tplSubmit(){
+    return `
+    <div class="submit-screen">
+      <div class="submit-orb"><div class="ring"></div><div class="ring r2"></div><div class="core"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div></div>
+      <div class="submit-title">正在生成您的评估</div>
+      <div class="submit-sub">整合您的健康数据中…</div>
+    </div>`;
+  },
+  tplFeedback(){
+    const a=this.state.answers;
+    const n=this.computeFilledCount();
+    let dims=computeFocusDims(a);
+    const dimHtml = dims.length
+      ? dims.map(d=>`<span class="fb-dim"><span class="d-dot"></span>${d}</span>`).join('')
+      : `<span class="fb-dim"><span class="d-dot"></span>整体状态平稳</span>`;
+    const wantTest = a.INTENT==='①';
+    const nextTitle = wantTest ? '专业顾问将很快与您联系' : '专业顾问将很快与您联系';
+    const nextDesc = wantTest
+      ? '您希望了解自己的肠道微生态状况——专业顾问将在 24 小时内与您联系，为您安排肠道微生态检测与个性化调理方案。'
+      : '专业顾问将在 24 小时内与您联系，为您解读这份评估，并提供产后肠道与整体恢复的调理建议。';
+    return `
+    <div class="stagger" style="padding-top:10px">
+      <div class="fb-orb"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+      <h2 class="fb-title">评估已完成</h2>
+      <p class="fb-sub">感谢您的耐心填写，共 <b class="num">${n}</b> 项健康数据已安全采集。</p>
+      <div class="fb-card">
+        <div class="fb-card-h"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> 为您识别的关注维度</div>
+        <div class="fb-dims">${dimHtml}</div>
+        <p class="body-sm" style="margin-top:14px">以上维度均与肠道微生态存在关联，可作为后续评估与调理的重点方向。</p>
+      </div>
+      <div class="fb-next">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <div><h4>${nextTitle}</h4><p>${nextDesc}</p></div>
+      </div>
+      <p class="fb-disc">本评估为健康管理工具，不构成疾病诊断或治疗建议。<br>嘉兴悦程妇产医院 · 衰老评估中心</p>
+    </div>`;
+  },
+  computeFilledCount(){
+    const a=this.state.answers; const skip=['A01','NAME','PHONE','CITY','BIRTH','HW','PROFILE'];
+    return Object.keys(a).filter(k=>!skip.includes(k)&&a[k]!=null&&!(Array.isArray(a[k])&&a[k].length===0)).length;
+  },
+  uploadToCloud(){
+    try{
+      const a=this.state.answers;
+      const age=(a.BIRTH&&a.BIRTH.y)?(new Date().getFullYear()-a.BIRTH.y):null;
+      const dims=computeFocusDims(a);
+      const tags=dims.map(d=>({level:'focus',code:d,name:d}));
+      if(a.INTENT==='①') tags.unshift({level:'high',code:'TEST_INTENT',name:'肠道菌群检测意向'});
+      const filledCount=this.computeFilledCount();
+      if(typeof uploadSurveyData==='function') uploadSurveyData(a,'POSTPARTUM','产后健康与肠道微生态评估',age,tags,null,filledCount);
+    }catch(e){ console.error('uploadToCloud error',e); }
+  }
+};
+
+/* ===== 关注维度识别（用于结果页与上报） ===== */
+function computeFocusDims(a){
+  const dims=[];
+  const has=(f,vals)=>{const v=a[f];return Array.isArray(v)?v.some(x=>vals.includes(x)):vals.includes(v);};
+  const multiHit=(f,excl)=>{const v=a[f];return Array.isArray(v)&&v.filter(x=>x!==excl&&x!=='不便回答').length>0;};
+  if(has('FREQ',['③','④'])||has('BRISTOL',['①','②','⑥','⑦'])||multiHit('BOWEL_SX','⑤')||multiHit('GUT_SX','⑤')) dims.push('肠道功能');
+  if(has('WT',['③','④'])||multiHit('METAB','⑤')) dims.push('体重代谢');
+  if(multiHit('SKIN','⑤')||has('SKIN_SAT',['③','④'])||has('HAIR',['③'])) dims.push('皮肤状态');
+  if(multiHit('ENERGY','⑤')||has('MOOD',['③','④'])||has('SLEEP',['③'])) dims.push('精力情绪');
+  const sx=a.SEX_SX,vg=a.VAG;
+  if((Array.isArray(sx)&&sx.some(x=>['①','②','③'].includes(x)))||(Array.isArray(vg)&&vg.some(x=>['①','②','③','④'].includes(x)))) dims.push('私密健康');
+  const mp={'①':'肠道功能','②':'体重代谢','③':'皮肤状态','④':'精力情绪','⑤':'精力情绪','⑥':'母乳支持','⑦':'私密健康','⑧':'整体抗衰'};
+  if(Array.isArray(a.IMPROVE)) a.IMPROVE.forEach(v=>{ if(mp[v]) dims.push(mp[v]); });
+  return [...new Set(dims)].slice(0,5);
+}
+
+document.addEventListener('DOMContentLoaded',()=>App.init());
+</script>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
+<script>
+// 腾讯云云开发数据上报（通过云函数 notify-new-survey 中转：写库 + 企业微信群通知）
+const CLOUDBASE_UPLOADED_KEY = 'ycgut_cloudbase_uploaded_v1';
+const ENV_ID = 'yuecheng-survey-d4fucklsf6b68aaf';
+const CLOUD_FUNCTION = 'notify-new-survey';
+
+async function initCloudBase(){
+  try{
+    if(typeof cloudbase==='undefined') return null;
+    const app=cloudbase.init({env:ENV_ID});
+    await app.auth().signInAnonymously();
+    return app;
+  }catch(e){ console.error('CloudBase init failed',e); return null; }
+}
+async function uploadSurveyData(answers,branch,branchName,age,tags,alertInfo,filledCount){
+  try{
+    const last=localStorage.getItem(CLOUDBASE_UPLOADED_KEY);
+    if(last){ const hours=(Date.now()-parseInt(last))/(1000*60*60); if(hours<24){ console.log('CloudBase: already uploaded within 24h'); return; } }
+    const app=await initCloudBase(); if(!app) return;
+    const result=await app.callFunction({ name:CLOUD_FUNCTION, data:{
+      answers:answers, branch:branch, branchName:branchName, age:age, tags:tags, alert:alertInfo, filledCount:filledCount,
+      contact:{ name:(answers&&answers.NAME)||'', phone:(answers&&answers.PHONE)||'', city:(answers&&answers.CITY)||'' },
+      userAgent:navigator.userAgent, screenWidth:window.innerWidth, timestamp:Date.now()
+    }});
+    const ret=(result&&result.result)||{};
+    console.log('Survey: upload + notify success',ret);
+    localStorage.setItem(CLOUDBASE_UPLOADED_KEY,Date.now().toString());
+    try{ const cnt=parseInt(localStorage.getItem('ycgut_submitted')||'0',10); localStorage.setItem('ycgut_submitted',String((isNaN(cnt)?0:cnt)+1)); }catch(e){}
+  }catch(e){ console.error('Cloud function call failed',e); }
+}
+</script>
+</body>
+</html>
